@@ -1,0 +1,83 @@
+use std::collections::HashMap;
+use clap::error::ContextValue::Strings;
+use serde::{Deserialize, Serialize};
+use mysql::*;
+use mysql::prelude::*;
+use heck::ToLowerCamelCase;
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct Columns {
+    pub table_name: String,
+    pub column_name: String,
+    pub is_nullable: String,
+    pub data_type: String,
+    pub column_type: String,
+    pub column_key: String,
+    pub column_comment: String,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct JavaColumns {
+    pub db_name: String,
+    pub java_name: String,
+    pub db_type: String,
+    pub java_type: String,
+    pub column_comment: String,
+}
+
+pub fn get_columns(url: &str, db_name: &str, tb_name: &str) -> Vec<Columns> {
+    let raw_sql = format!("select TABLE_NAME as table_name, COLUMN_NAME as column_name, DATA_TYPE as data_type,\
+    COLUMN_KEY as column_key,IS_NULLABLE as is_nullable,COLUMN_TYPE as column_type,COLUMN_COMMENT as column_comment \
+    from COLUMNS where TABLE_SCHEMA = '{db_name}' and TABLE_NAME = '{tb_name}'", db_name = db_name, tb_name = tb_name);
+
+    Pool::new(url).unwrap().get_conn().unwrap().query_map(
+        raw_sql,
+        |(table_name, column_name, data_type, column_key, is_nullable, column_type, column_comment)| {
+            Columns { table_name, column_name, data_type, column_key, is_nullable, column_type, column_comment }
+        },
+    ).unwrap()
+}
+
+fn get_java_type(db_type: &str) -> String {
+    let mut map = HashMap::new();
+
+    map.insert("int", String::from("int"));
+    map.insert("tinyint", String::from("int"));
+    map.insert("smallint", String::from("int"));
+    map.insert("mediumint", String::from("int"));
+    map.insert("bigint", String::from("int"));
+    map.insert("bool", String::from("bool"));
+    map.insert("enum", String::from("String"));
+    map.insert("set", String::from("String"));
+    map.insert("varchar", String::from("String"));
+    map.insert("char", String::from("String"));
+    map.insert("datetime", String::from("Date"));
+
+    return match map.get(db_type) {
+        Some(v) => { v.to_string() }
+        None => {
+            String::from("String")
+        }
+    };
+}
+
+// fn db_java_name(column_name: &str) -> String {
+//     let column_names = column_name.split("_").collect();
+//     String::from("String")
+// }
+
+
+pub fn get_java_columns(columns: Vec<Columns>) -> Vec<JavaColumns> {
+    let mut java_columns = Vec::new();
+
+    for x in columns {
+        java_columns.push(JavaColumns {
+            db_name: x.column_name.clone(),
+            java_name: ToLowerCamelCase::to_lower_camel_case(x.column_name.as_str()),
+            db_type: x.data_type.clone(),
+            java_type: get_java_type(x.data_type.as_str()).to_string(),
+            column_comment: x.column_comment,
+        })
+    }
+    java_columns
+}
