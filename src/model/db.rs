@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-use clap::error::ContextValue::Strings;
 use serde::{Deserialize, Serialize};
 use mysql::*;
 use mysql::prelude::*;
@@ -38,6 +37,11 @@ pub fn get_columns(url: &str, db_name: &str, tb_name: &str) -> Vec<Columns> {
     ).unwrap()
 }
 
+pub fn get_table_comment(url: &str, db_name: &str, tb_name: &str) -> String {
+    Pool::new(url).unwrap().get_conn().unwrap().exec_first("select TABLE_COMMENT as table_comment \
+    from TABLES where TABLE_SCHEMA =:db_name and TABLE_NAME =:tb_name", params! {"tb_name"=>tb_name,"db_name"=>db_name}).unwrap().unwrap()
+}
+
 fn get_java_type(db_type: &str) -> String {
     let mut map = HashMap::new();
 
@@ -61,12 +65,7 @@ fn get_java_type(db_type: &str) -> String {
     };
 }
 
-// fn db_java_name(column_name: &str) -> String {
-//     let column_names = column_name.split("_").collect();
-//     String::from("String")
-// }
-
-
+// 把表字段转换成java字段
 pub fn get_java_columns(columns: Vec<Columns>) -> Vec<JavaColumns> {
     let mut java_columns = Vec::new();
 
