@@ -11,7 +11,7 @@ public interface {{class_name}}Dao {
 
    {{class_name}} query({{class_name}} record);
 
-   List<{{class_name}}> querySysRoleList({{class_name}} record);
+   List<{{class_name}}> query{{class_name}}List({{class_name}} record);
 
    int insert({{class_name}} record);
 

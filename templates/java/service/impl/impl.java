@@ -1,7 +1,9 @@
 package {{package_name}}.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,17 +21,28 @@ public class {{class_name}}ServiceImpl implements {{class_name}}Service {
 
    @Override
    public {{class_name}}Resp query({{class_name}}Req record){
-       return recordDao.query(record);
+
+       return null;
    }
 
    @Override
    public List<{{class_name}}Resp> query{{class_name}}List({{class_name}}Req record){
-        return recordDao.query{{class_name}}List(record);
+        {{class_name}} target = new {{class_name}}();
+	   //BeanUtils.copyProperties(record,target);
+
+	   List<{{class_name}}> query = recordDao.query{{class_name}}List(target);
+	   return query.stream().map(x -> {
+		   {{class_name}}Resp resp = new {{class_name}}Resp();
+		   BeanUtils.copyProperties(x, resp);
+		   return resp;
+	   }).collect(Collectors.toList());
    }
 
    @Override
    public int insert({{class_name}}Req record){
-        return recordDao.insert(record);
+        {{class_name}} target = new {{class_name}}();
+
+        return recordDao.insert(target);
    }
 
    @Override
@@ -39,7 +52,9 @@ public class {{class_name}}ServiceImpl implements {{class_name}}Service {
 
    @Override
    public int update({{class_name}}Req record){
-        return recordDao.update(record);
+        {{class_name}} target = new {{class_name}}();
+
+        return recordDao.update(target);
    }
 
 }

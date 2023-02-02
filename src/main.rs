@@ -14,6 +14,21 @@ use crate::templates::java::vo::req::get_req;
 use crate::templates::java::vo::resp::get_resp;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+
+
+    // 待生成代码的表名
+    let table_name = "sys_user,sys_role_user,sys_role,sys_menu_role,sys_menu";
+
+    let table_names: Vec<&str> = table_name.split(",").collect();
+
+    for x in table_names {
+        generate(x);
+    }
+
+    Ok(())
+}
+
+fn generate(table_name: &str) {
     // 模板引擎
     let mut tera = match Tera::new("templates/**/*.*") {
         Ok(t) => t,
@@ -22,16 +37,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             ::std::process::exit(1);
         }
     };
-
     // 数据库地址
     let url = "mysql://root:r-wz9wop62956dh5k9ed@rm-wz9a2yv489d123yqkdo.mysql.rds.aliyuncs.com:3306/information_schema";
     // 待生成代码的数据库
     let db_name = "rustdb";
-    // 待生成代码的表名
-    let table_name = "sys_role";
 
     // 获取表字段
     let db_columns = get_columns(url, db_name, table_name);
+    if db_columns.clone().len() == 0 {
+        return;
+    }
     // 把表字段转换成java字段
     let java_columns = get_java_columns(db_columns.clone());
 
@@ -56,8 +71,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // create_from_tpl(&mut tera, class_name, &mut context);
 
     create_from_str(tera, class_name, &mut context);
-
-    Ok(())
 }
 
 fn create_from_str(mut tera: Tera, class_name: &str, mut context: &mut Context) {
