@@ -2,7 +2,7 @@ package {{package_name}}.dao;
 
 import java.util.List;
 
-import {{package_name}}.bean.{{class_name}};
+import {{package_name}}.entity.{{class_name}};
 
 public interface {{class_name}}Dao {
 

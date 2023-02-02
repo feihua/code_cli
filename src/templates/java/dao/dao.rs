@@ -1,10 +1,12 @@
 pub fn get_dao() -> &'static str {
     "package {{package_name}}.dao;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
-import {{package_name}}.bean.{{class_name}};
+import {{package_name}}.entity.{{class_name}};
 
+@Mapper
 public interface {{class_name}}Dao {
 
    {{class_name}} query({{class_name}} record);

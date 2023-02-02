@@ -21,6 +21,7 @@ pub struct JavaColumns {
     pub java_name: String,
     pub db_type: String,
     pub java_type: String,
+    pub jdbc_type: String,
     pub column_comment: String,
 }
 
@@ -46,16 +47,41 @@ fn get_java_type(db_type: &str) -> String {
     let mut map = HashMap::new();
 
     map.insert("int", String::from("int"));
-    map.insert("tinyint", String::from("int"));
-    map.insert("smallint", String::from("int"));
+    map.insert("tinyint", String::from("short"));
+    map.insert("smallint", String::from("short"));
     map.insert("mediumint", String::from("int"));
-    map.insert("bigint", String::from("int"));
+    map.insert("bigint", String::from("long"));
     map.insert("bool", String::from("bool"));
     map.insert("enum", String::from("String"));
     map.insert("set", String::from("String"));
     map.insert("varchar", String::from("String"));
     map.insert("char", String::from("String"));
     map.insert("datetime", String::from("Date"));
+
+    return match map.get(db_type) {
+        Some(v) => { v.to_string() }
+        None => {
+            String::from("String")
+        }
+    };
+}
+
+fn get_jdbc_type(db_type: &str) -> String {
+    let mut map = HashMap::new();
+
+    map.insert("int", String::from("INTEGER"));
+    map.insert("tinyint", String::from("TINYINT"));
+    map.insert("smallint", String::from("SMALLINT"));
+    map.insert("integer", String::from("INTEGER"));
+    map.insert("double", String::from("DOUBLE"));
+    map.insert("decimal", String::from("DECIMAL"));
+    map.insert("bigint", String::from("BIGINT"));
+    map.insert("varchar", String::from("VARCHAR"));
+    map.insert("char", String::from("CHAR"));
+    map.insert("date", String::from("DATE"));
+    map.insert("datetime", String::from("TIMESTAMP"));
+    map.insert("timestamp", String::from("TIMESTAMP"));
+    map.insert("time", String::from("TIME"));
 
     return match map.get(db_type) {
         Some(v) => { v.to_string() }
@@ -75,8 +101,23 @@ pub fn get_java_columns(columns: Vec<Columns>) -> Vec<JavaColumns> {
             java_name: ToLowerCamelCase::to_lower_camel_case(x.column_name.as_str()),
             db_type: x.data_type.clone(),
             java_type: get_java_type(x.data_type.as_str()).to_string(),
+            jdbc_type: get_jdbc_type(x.data_type.as_str()).to_string(),
             column_comment: x.column_comment,
         })
     }
     java_columns
+}
+
+// 把表字段拼接在一起
+pub fn get_all_columns(columns: Vec<Columns>) -> String {
+    let mut all_columns = String::from("");
+
+    for x in columns {
+        all_columns.push_str(x.column_name.as_str());
+        all_columns.push_str(", ");
+    }
+
+    let size = all_columns.len() - 2;
+    let new_all_columns = &all_columns[0..size];
+    new_all_columns.to_string()
 }
