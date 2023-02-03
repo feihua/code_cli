@@ -19,10 +19,11 @@ pub fn get_mapper() -> &'static str {
         select
         <include refid=\"Base_Column_List\"/>
         from {{table_name}}
-        where 1=1 {% for column in java_columns %}
-        <!--<if test=\"{{column.java_name}} != null\">-->
-        <!--    and {{column.db_name}} = #{ {{column.java_name}}}-->
-        <!--</if>-->{% endfor %}
+        <where> {% for column in java_columns %}
+            <!--<if test=\"{{column.java_name}} != null\">-->
+            <!--    and {{column.db_name}} = #{ {{column.java_name}}}-->
+            <!--</if>-->{% endfor %}
+        </where>
     </select>
 
     <insert id=\"insert\" parameterType=\"{{package_name}}.entity.{{class_name}}\">
@@ -50,10 +51,11 @@ pub fn get_mapper() -> &'static str {
                 {{column.db_name}} = #{ {{column.java_name}},jdbcType={{column.jdbc_type}}},
             </if>{% endfor %}
         </set>
-        where 1=1 {% for column in java_columns %}
+        <where> {% for column in java_columns %}
             <if test=\"{{column.java_name}} != null\">
                 and {{column.db_name}} = #{ {{column.java_name}}}
             </if>{% endfor %}
+        </where>
     </update>
 
     </mapper>"
