@@ -13,6 +13,8 @@ import {{package_name}}.vo.req.{{class_name}}Req;
 import {{package_name}}.vo.resp.{{class_name}}Resp;
 import {{package_name}}.dao.{{class_name}}Dao;
 import {{package_name}}.service.{{class_name}}Service;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 
 @Service
 public class {{class_name}}ServiceImpl implements {{class_name}}Service {
@@ -23,16 +25,18 @@ public class {{class_name}}ServiceImpl implements {{class_name}}Service {
    @Override
    public {{class_name}}Resp query({{class_name}}Req record){
 
-       return null;
+       {{class_name}} query = recordDao.query({{class_name}}.builder().build());
+
+       return {{class_name}}Resp.builder().build();
    }
 
    @Override
    public List<{{class_name}}Resp> query{{class_name}}List({{class_name}}Req record){
-        {{class_name}} target = new {{class_name}}();
-	   //BeanUtils.copyProperties(record,target);
+       PageHelper.startPage(1, 10);
+	   List<{{class_name}}> query = recordDao.query{{class_name}}List({{class_name}}.builder().build());
+       PageInfo<{{class_name}}> pageInfo = new PageInfo<>(query);
 
-	   List<{{class_name}}> query = recordDao.query{{class_name}}List(target);
-	   return query.stream().map(x -> {
+	   return pageInfo.getList().stream().map(x -> {
 		   {{class_name}}Resp resp = new {{class_name}}Resp();
 		   BeanUtils.copyProperties(x, resp);
 		   return resp;
@@ -41,9 +45,8 @@ public class {{class_name}}ServiceImpl implements {{class_name}}Service {
 
    @Override
    public int insert({{class_name}}Req record){
-        {{class_name}} target = new {{class_name}}();
 
-        return recordDao.insert(target);
+        return recordDao.insert({{class_name}}.builder().build());
    }
 
    @Override
@@ -53,9 +56,8 @@ public class {{class_name}}ServiceImpl implements {{class_name}}Service {
 
    @Override
    public int update({{class_name}}Req record){
-        {{class_name}} target = new {{class_name}}();
 
-        return recordDao.update(target);
+        return recordDao.update({{class_name}}.builder().build());
    }
 
 }"
