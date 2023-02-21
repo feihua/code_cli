@@ -12,7 +12,7 @@ pub struct Columns {
     pub data_type: String,
     pub column_type: String,
     pub column_key: String,
-    pub column_comment: String,
+    pub column_comment: Option<String>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -22,6 +22,7 @@ pub struct JavaColumns {
     pub db_type: String,
     pub java_type: String,
     pub jdbc_type: String,
+    pub ts_type: String,
     pub column_comment: String,
 }
 
@@ -91,6 +92,32 @@ fn get_jdbc_type(db_type: &str) -> String {
     };
 }
 
+fn get_ts_type(db_type: &str) -> String {
+    let mut map = HashMap::new();
+
+    map.insert("int", String::from("number"));
+    map.insert("tinyint", String::from("number"));
+    map.insert("smallint", String::from("number"));
+    map.insert("integer", String::from("number"));
+    map.insert("double", String::from("number"));
+    map.insert("boolean", String::from("boolean"));
+    map.insert("decimal", String::from("number"));
+    map.insert("bigint", String::from("number"));
+    map.insert("varchar", String::from("string"));
+    map.insert("char", String::from("string"));
+    map.insert("date", String::from("string"));
+    map.insert("datetime", String::from("string"));
+    map.insert("timestamp", String::from("string"));
+    map.insert("time", String::from("string"));
+
+    return match map.get(db_type) {
+        Some(v) => { v.to_string() }
+        None => {
+            String::from("String")
+        }
+    };
+}
+
 // 把表字段转换成java字段
 pub fn get_java_columns(columns: Vec<Columns>) -> Vec<JavaColumns> {
     let mut java_columns = Vec::new();
@@ -102,7 +129,8 @@ pub fn get_java_columns(columns: Vec<Columns>) -> Vec<JavaColumns> {
             db_type: x.data_type.clone(),
             java_type: get_java_type(x.data_type.as_str()).to_string(),
             jdbc_type: get_jdbc_type(x.data_type.as_str()).to_string(),
-            column_comment: x.column_comment,
+            ts_type: get_ts_type(x.data_type.as_str()).to_string(),
+            column_comment: x.column_comment.unwrap_or_default(),
         })
     }
     java_columns
