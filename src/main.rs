@@ -13,23 +13,25 @@ struct Asset;
 fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // 待生成代码的表名
-    let table_name = "sys_user,sys_role_user,sys_role,sys_menu_role,sys_menu";
+    let table_name_str = "sys_user,sys_role_user,sys_role,sys_menu_role,sys_menu";
     let t_prefix = "sys_";
 
-    let table_names: Vec<&str> = table_name.split(",").collect();
+    let table_names: Vec<&str> = table_name_str.split(",").collect();
 
-    for x in table_names {
-        generate(x, t_prefix);
+    // 模板引擎
+    let mut tera =  Tera::default();
+
+    tera.autoescape_on(vec![]);
+
+    for table_name in table_names {
+        generate(&mut tera, table_name, t_prefix);
     }
 
     Ok(())
 }
 
-fn generate(original_table_name: &str, t_prefix: &str) {
-    // 模板引擎
-    let mut tera =  Tera::default();
+fn generate(mut tera: &mut Tera,original_table_name: &str, t_prefix: &str) {
 
-    tera.autoescape_on(vec![]);
 
     // 数据库地址
     let url = "mysql://root:oMbPi5munxCsBSsiLoPV@110.41.179.89:3306/information_schema";
@@ -104,18 +106,19 @@ fn create_react_from_tpl(mut tera: Tera, table_name: &str, mut context: &mut Con
 
 
 fn write_file(mut tera: Tera, context: &mut Context, template_file_name: &str, target_file_name: &str) {
-    let index_html = Asset::get(template_file_name).unwrap();
-    let index_str=std::str::from_utf8(index_html.data.as_ref());
-    // let result = tera.render(template_file_name, &context);
-    let result = tera.render_str(index_str.unwrap(), &context);
+    let template_file = Asset::get(template_file_name).unwrap();
+    let template_file_str =std::str::from_utf8(template_file.data.as_ref());
 
-    let cwd = std::env::current_dir().unwrap();
-    let folder = cwd.as_path().join("generate-from-tpl").join(target_file_name);
+    let result = tera.render_str(template_file_str.unwrap(), &context);
     let r = result.unwrap();
     println!("{}", r);
-    println!("create -------------->{:?}", folder);
+
+    let cwd = std::env::current_dir().unwrap();
+    let folder = cwd.as_path().join("generate").join(target_file_name);
     let path = folder.parent().unwrap();
     std::fs::create_dir_all(path).unwrap();
+    println!("create -------------->{:?}", folder);
+
     let mut file = std::fs::File::create(folder).unwrap();
     std::io::Write::write_all(&mut file, r.as_ref()).unwrap();
 }
