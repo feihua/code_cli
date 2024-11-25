@@ -84,7 +84,7 @@ fn get_jdbc_type(db_type: &str) -> String {
     map.insert("timestamp", String::from("TIMESTAMP"));
     map.insert("time", String::from("TIME"));
 
-    return match map.get(db_type) {
+    match map.get(db_type) {
         Some(v) => { v.to_string() }
         None => {
             String::from("String")
@@ -110,7 +110,7 @@ fn get_ts_type(db_type: &str) -> String {
     map.insert("timestamp", String::from("string"));
     map.insert("time", String::from("string"));
 
-    return match map.get(db_type) {
+    match map.get(db_type) {
         Some(v) => { v.to_string() }
         None => {
             String::from("String")
