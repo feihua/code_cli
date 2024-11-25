@@ -1,32 +1,16 @@
 pub mod model;
-pub mod templates;
 
 use crate::model::db::{get_all_columns, get_columns, get_java_columns, get_table_comment};
 use tera::{Tera, Context};
 use heck::ToUpperCamelCase;
-use crate::templates::java::controller::controller::get_controller;
-use crate::templates::java::dao::dao::get_dao;
-use crate::templates::java::entity::entity::get_entity;
-use crate::templates::java::mapper::mapper::get_mapper;
-use crate::templates::java::react::components::add_form::get_react_add;
-use crate::templates::java::react::components::search_form::get_react_search;
-use crate::templates::java::react::components::update_form::get_react_update;
-use crate::templates::java::react::data::get_react_data;
-use crate::templates::java::react::index::get_react_index;
-use crate::templates::java::react::r_service::get_react_service;
-use crate::templates::java::service::service::get_service;
-use crate::templates::java::service::service_impl::get_impl;
-use crate::templates::java::vo::req::get_req;
-use crate::templates::java::vo::resp::get_resp;
-use crate::templates::java::vue::components::add_form::get_vue_add;
-use crate::templates::java::vue::components::list_table::get_vue_list;
-use crate::templates::java::vue::components::update_form::get_vue_update;
-use crate::templates::java::vue::data::get_vue_data;
-use crate::templates::java::vue::index::get_vue_index;
-use crate::templates::java::vue::v_service::get_vue_service;
+use rust_embed::Embed;
+
+
+#[derive(Embed)]
+#[folder = "templates/"]
+struct Asset;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-
 
     // 待生成代码的表名
     let table_name = "sys_user,sys_role_user,sys_role,sys_menu_role,sys_menu";
@@ -43,20 +27,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 fn generate(original_table_name: &str, t_prefix: &str) {
     // 模板引擎
-    let mut tera = match Tera::new("templates/**/*.*") {
-        Ok(t) => t,
-        Err(e) => {
-            println!("Parsing error(s): {}", e);
-            ::std::process::exit(1);
-        }
-    };
+    let mut tera =  Tera::default();
 
     tera.autoescape_on(vec![]);
 
     // 数据库地址
-    let url = "mysql://root:r-wz9wop62956dh5k9ed@rm-wz9a2yv489d123yqkdo.mysql.rds.aliyuncs.com:3306/information_schema";
+    let url = "mysql://root:oMbPi5munxCsBSsiLoPV@110.41.179.89:3306/information_schema";
     // 待生成代码的数据库
-    let db_name = "rustdb";
+    let db_name = "better-pay";
 
     // 获取表字段
     let db_columns = get_columns(url, db_name, original_table_name);
@@ -88,43 +66,12 @@ fn generate(original_table_name: &str, t_prefix: &str) {
     context.insert("all_columns", all_columns.as_str());
 
 
-    create_from_str(tera.clone(), class_name, &mut context);
-    create_vue_from_str(tera.clone(), table_name, &mut context);
-    create_react_from_str(tera.clone(), table_name, &mut context);
-
-    // create_from_tpl(&mut tera, class_name, &mut context);
-    create_vue_from_tpl(tera.clone(), table_name, &mut context);
-    create_react_from_tpl(tera.clone(), table_name, &mut context);
+    create_from_tpl(&mut tera, class_name, &mut context);
+//     create_vue_from_tpl(tera.clone(), table_name, &mut context);
+//     create_react_from_tpl(tera.clone(), table_name, &mut context);
 }
 
-fn create_from_str(mut tera: Tera, class_name: &str, mut context: &mut Context) {
-    write_str_file(tera.clone(), &mut context, get_entity(), format!("java/entity/{}.java", class_name).as_str());
-    write_str_file(tera.clone(), &mut context, get_controller(), format!("java/controller/{}Controller.java", class_name).as_str());
-    write_str_file(tera.clone(), &mut context, get_dao(), format!("java/dao/{}Dao.java", class_name).as_str());
-    write_str_file(tera.clone(), &mut context, get_mapper(), format!("java/mapper/{}Mapper.xml", class_name).as_str());
-    write_str_file(tera.clone(), &mut context, get_service(), format!("java/service/{}Service.java", class_name).as_str());
-    write_str_file(tera.clone(), &mut context, get_impl(), format!("java/service/impl/{}ServiceImpl.java", class_name).as_str());
-    write_str_file(tera.clone(), &mut context, get_req(), format!("java/vo/req/{}Req.java", class_name).as_str());
-    write_str_file(tera.clone(), &mut context, get_resp(), format!("java/vo/resp/{}Resp.java", class_name).as_str());
-}
 
-fn create_vue_from_str(mut tera: Tera, table_name: &str, mut context: &mut Context) {
-    write_str_file(tera.clone(), &mut context, get_vue_index(), format!("java/vue/{}/index.vue", table_name).as_str());
-    write_str_file(tera.clone(), &mut context, get_vue_data(), format!("java/vue/{}/data.d.ts", table_name).as_str());
-    write_str_file(tera.clone(), &mut context, get_vue_service(), format!("java/vue/{}/service.ts", table_name).as_str());
-    write_str_file(tera.clone(), &mut context, get_vue_add(), format!("java/vue/{}/components/AddForm.vue", table_name).as_str());
-    write_str_file(tera.clone(), &mut context, get_vue_list(), format!("java/vue/{}/components/ListTable.vue", table_name).as_str());
-    write_str_file(tera.clone(), &mut context, get_vue_update(), format!("java/vue/{}/components/UpdateForm.vue", table_name).as_str());
-}
-
-fn create_react_from_str(mut tera: Tera, table_name: &str, mut context: &mut Context) {
-    write_str_file(tera.clone(), &mut context, get_react_index(), format!("java/react/{}/index.tsx", table_name).as_str());
-    write_str_file(tera.clone(), &mut context, get_react_data(), format!("java/react/{}/data.d.ts", table_name).as_str());
-    write_str_file(tera.clone(), &mut context, get_react_service(), format!("java/react/{}/service.ts", table_name).as_str());
-    write_str_file(tera.clone(), &mut context, get_react_add(), format!("java/react/{}/components/AddForm.tsx", table_name).as_str());
-    write_str_file(tera.clone(), &mut context, get_react_search(), format!("java/react/{}/components/SearchForm.tsx", table_name).as_str());
-    write_str_file(tera.clone(), &mut context, get_react_update(), format!("java/react/{}/components/UpdateForm.tsx", table_name).as_str());
-}
 
 fn create_from_tpl(mut tera: &mut Tera, class_name: &str, mut context: &mut Context) {
     write_file(tera.clone(), &mut context, "java/entity/entity.java", format!("java/entity/{}Bean.java", class_name).as_str());
@@ -156,26 +103,16 @@ fn create_react_from_tpl(mut tera: Tera, table_name: &str, mut context: &mut Con
 }
 
 
-fn write_file(tera: Tera, context: &mut Context, template_file_name: &str, target_file_name: &str) {
-    let result = tera.render(template_file_name, &context);
+fn write_file(mut tera: Tera, context: &mut Context, template_file_name: &str, target_file_name: &str) {
+    let index_html = Asset::get(template_file_name).unwrap();
+    let index_str=std::str::from_utf8(index_html.data.as_ref());
+    // let result = tera.render(template_file_name, &context);
+    let result = tera.render_str(index_str.unwrap(), &context);
 
     let cwd = std::env::current_dir().unwrap();
     let folder = cwd.as_path().join("generate-from-tpl").join(target_file_name);
     let r = result.unwrap();
     println!("{}", r);
-    println!("create -------------->{:?}", folder);
-    let path = folder.parent().unwrap();
-    std::fs::create_dir_all(path).unwrap();
-    let mut file = std::fs::File::create(folder).unwrap();
-    std::io::Write::write_all(&mut file, r.as_ref()).unwrap();
-}
-
-fn write_str_file(mut tera: Tera, context: &mut Context, template_file_str: &str, target_file_name: &str) {
-    let result = tera.render_str(template_file_str, &context);
-
-    let cwd = std::env::current_dir().unwrap();
-    let folder = cwd.as_path().join("generate").join(target_file_name);
-    let r = result.unwrap();
     println!("create -------------->{:?}", folder);
     let path = folder.parent().unwrap();
     std::fs::create_dir_all(path).unwrap();
