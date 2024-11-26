@@ -89,7 +89,7 @@ fn get_jdbc_type(db_type: &str) -> String {
         None => {
             String::from("String")
         }
-    };
+    }
 }
 
 fn get_ts_type(db_type: &str) -> String {
@@ -115,7 +115,7 @@ fn get_ts_type(db_type: &str) -> String {
         None => {
             String::from("String")
         }
-    };
+    }
 }
 
 // 把表字段转换成java字段

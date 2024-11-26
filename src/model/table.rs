@@ -9,4 +9,5 @@ pub struct TableInfo {
     pub class_name: String,       //java类名，SysUser
     pub object_name: String,      //java类的对象名称，sysUser
     pub columns: Vec<ColumnInfo>, //列的元数据
+    pub all_column_str: String,   //所有列
 }
