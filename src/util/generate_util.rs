@@ -4,7 +4,7 @@ use chrono::Local;
 use tera::{Context, Tera};
 
 // 生成文件相关操作(公共)
-pub fn generate_common(mut tera: &mut Tera) {
+pub fn generate_common(tera: &mut Tera) {
     // 包名
     let package_name = "com.example.springboottpl";
     let author = "刘飞华";

@@ -1,0 +1,317 @@
+<!--搜索条件-->
+<nz-space nzSize="small" style="margin-bottom: 15px">
+  <button *nzSpaceItem nz-button [nzType]="'primary'" (click)="showAddModal()"><span nz-icon nzType="plus"
+                                                                                     nzTheme="outline"></span>新增
+  </button>
+  <button *nzSpaceItem nz-button [nzType]="'primary'" [disabled]="setOfCheckedId.size === 0" nzDanger
+          (click)="batchDelete()"><span nz-icon nzType="delete" nzTheme="outline"></span>批量删除
+  </button>
+  <form *nzSpaceItem nz-form [nzLayout]="'inline'" [formGroup]="searchForm" (ngSubmit)="submitSearchForm()"
+        style="margin-left: 20px">
+    {{- range .TableColumn}}
+    {{- if isContain .JavaName "Sort"}}
+    {{- else if isContain .JavaName "create"}}
+    {{- else if isContain .JavaName "update"}}
+    {{- else if isContain .JavaName "id"}}
+    {{- else if isContain .JavaName "sort"}}
+    {{- else if isContain .JavaName "remark"}}
+    {{- else if isContain .JavaName "status"}}
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback>
+        <nz-select formControlName="{{.JavaName}}" style="width: 183px" nzPlaceHolder="请选择{{.ColumnComment}}">
+          <nz-option nzValue="1" nzLabel="正常"></nz-option>
+          <nz-option nzValue="0" nzLabel="禁用"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    {{- else if isContain .JavaName "Status"}}
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback>
+        <nz-select formControlName="{{.JavaName}}" style="width: 183px" nzPlaceHolder="请选择{{.ColumnComment}}">
+          <nz-option nzValue="1" nzLabel="正常"></nz-option>
+          <nz-option nzValue="0" nzLabel="禁用"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    {{- else if isContain .JavaName "Type"}}
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback>
+        <nz-select formControlName="{{.JavaName}}" style="width: 183px" nzPlaceHolder="请选择{{.ColumnComment}}">
+          <nz-option nzValue="1" nzLabel="正常"></nz-option>
+          <nz-option nzValue="0" nzLabel="禁用"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    {{- else if isContain .JavaName "remark"}}
+    {{- else}}
+    <nz-form-item>
+      <nz-form-label>{{.ColumnComment}}</nz-form-label>
+      <nz-form-control>
+        <input nz-input formControlName="{{.JavaName}}" placeholder="请输入{{.ColumnComment}}"/>
+      </nz-form-control>
+    </nz-form-item>
+    {{- end}}
+    {{- end}}
+    <nz-form-item>
+      <nz-space nzSize="small">
+        <nz-form-control *nzSpaceItem>
+          <button nz-button nzType="primary"><span nz-icon nzType="search" nzTheme="outline"></span>查询</button>
+        </nz-form-control>
+        <nz-form-control *nzSpaceItem>
+          <button nz-button (click)="resetSearchForm()"><span nz-icon nzType="clear" nzTheme="outline"></span>重置
+          </button>
+        </nz-form-control>
+      </nz-space>
+
+    </nz-form-item>
+  </form>
+</nz-space>
+
+<!--新增数据-->
+<nz-modal
+  [(nzVisible)]="isAddVisible"
+  nzTitle="新增"
+  (nzOnCancel)="handleAddCancel()"
+  (nzOnOk)="handleAddOk()"
+  [nzOkLoading]="isAddOkLoading"
+>
+  <form nz-form [formGroup]="addForm" *nzModalContent>
+    {{- range .TableColumn}}
+    {{- if isContain .JavaName "create"}}
+    {{- else if isContain .JavaName "update"}}
+    {{- else if isContain .JavaName "id"}}
+    {{- else if isContain .JavaName "Sort"}}
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback>
+        <nz-input-number formControlName="{{.JavaName}}" [nzMin]="1" [nzStep]="1" style="width: 236px"  placeholder="请输入{{.ColumnComment}}"></nz-input-number>
+      </nz-form-control>
+    </nz-form-item>
+    {{- else if isContain .JavaName "sort"}}
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback>
+        <nz-input-number formControlName="{{.JavaName}}" [nzMin]="1" [nzStep]="1" style="width: 236px"  placeholder="请输入{{.ColumnComment}}"></nz-input-number>
+      </nz-form-control>
+    </nz-form-item>
+    {{- else if isContain .JavaName "status"}}
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback>
+        <nz-radio-group formControlName="{{.JavaName}}">
+          <label nz-radio [nzValue]=1>正常</label>
+          <label nz-radio [nzValue]=0>禁用</label>
+        </nz-radio-group>
+      </nz-form-control>
+    </nz-form-item>
+    {{- else if isContain .JavaName "Status"}}
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback>
+        <nz-radio-group formControlName="{{.JavaName}}" >
+          <label nz-radio [nzValue]=1>正常</label>
+          <label nz-radio [nzValue]=0>禁用</label>
+        </nz-radio-group>
+      </nz-form-control>
+    </nz-form-item>
+    {{- else if isContain .JavaName "Type"}}
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback>
+        <nz-radio-group formControlName="{{.JavaName}}">
+          <label nz-radio [nzValue]=1>正常</label>
+          <label nz-radio [nzValue]=0>禁用</label>
+        </nz-radio-group>
+      </nz-form-control>
+    </nz-form-item>
+    {{- else if isContain .JavaName "remark"}}
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7">{{.ColumnComment}}</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback>
+        <nz-textarea-count [nzMaxCharacterCount]="128">
+          <textarea formControlName="remark" nz-input rows="2" placeholder="请输入{{.ColumnComment}}"></textarea>
+        </nz-textarea-count>
+      </nz-form-control>
+    </nz-form-item>
+    {{- else}}
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="{{.JavaName}}ErrorTpl">
+        <input nz-input formControlName="{{.JavaName}}" placeholder="请输入{{.ColumnComment}}"/>
+        <ng-template #{{.JavaName}}ErrorTpl let-control>
+          @if (control.errors?.['required']) {
+          Please input your username!
+          }
+        </ng-template>
+      </nz-form-control>
+    </nz-form-item>
+    {{- end}}
+    {{- end}}
+  </form>
+</nz-modal>
+
+<!--更新数据-->
+<nz-modal
+  [(nzVisible)]="isUpdateVisible"
+  nzTitle="编辑"
+  (nzOnCancel)="handleUpdateCancel()"
+  (nzOnOk)="handleUpdateOk()"
+  [nzOkLoading]="isUpdateOkLoading"
+>
+  <form nz-form [formGroup]="updateForm" *nzModalContent>
+    {{- range .TableColumn}}
+    {{- if isContain .JavaName "create"}}
+    {{- else if isContain .JavaName "update"}}
+    {{- else if isContain .JavaName "id"}}
+    {{- else if isContain .JavaName "Sort"}}
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback>
+        <nz-input-number formControlName="{{.JavaName}}" [nzMin]="1" [nzStep]="1" style="width: 236px"  placeholder="请输入{{.ColumnComment}}"></nz-input-number>
+      </nz-form-control>
+    </nz-form-item>
+    {{- else if isContain .JavaName "sort"}}
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback>
+        <nz-input-number formControlName="{{.JavaName}}" [nzMin]="1" [nzStep]="1" style="width: 236px"  placeholder="请输入{{.ColumnComment}}"></nz-input-number>
+      </nz-form-control>
+    </nz-form-item>
+    {{- else if isContain .JavaName "status"}}
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback>
+        <nz-radio-group formControlName="{{.JavaName}}">
+          <label nz-radio [nzValue]=1>正常</label>
+          <label nz-radio [nzValue]=0>禁用</label>
+        </nz-radio-group>
+      </nz-form-control>
+    </nz-form-item>
+    {{- else if isContain .JavaName "Status"}}
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback>
+        <nz-radio-group formControlName="{{.JavaName}}">
+          <label nz-radio [nzValue]=1>正常</label>
+          <label nz-radio [nzValue]=0>禁用</label>
+        </nz-radio-group>
+      </nz-form-control>
+    </nz-form-item>
+    {{- else if isContain .JavaName "Type"}}
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback>
+        <nz-radio-group formControlName="{{.JavaName}}">
+          <label nz-radio [nzValue]=1>正常</label>
+          <label nz-radio [nzValue]=0>禁用</label>
+        </nz-radio-group>
+      </nz-form-control>
+    </nz-form-item>
+    {{- else if isContain .JavaName "remark"}}
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7">{{.ColumnComment}}</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback>
+        <nz-textarea-count [nzMaxCharacterCount]="128">
+          <textarea formControlName="remark" nz-input rows="2" placeholder="请输入{{.ColumnComment}}"></textarea>
+        </nz-textarea-count>
+      </nz-form-control>
+    </nz-form-item>
+    {{- else}}
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="{{.JavaName}}ErrorTpl">
+        <input nz-input formControlName="{{.JavaName}}" placeholder="请输入{{.ColumnComment}}"/>
+        <ng-template #{{.JavaName}}ErrorTpl let-control>
+          @if (control.errors?.['required']) {
+          Please input your username!
+          }
+        </ng-template>
+      </nz-form-control>
+    </nz-form-item>
+    {{- end}}
+    {{- end}}
+  </form>
+</nz-modal>
+
+<!--详情信息-->
+<nz-modal
+  [(nzVisible)]="isDetailVisible"
+  nzTitle="详情"
+  (nzOnCancel)="handleDetailCancel()"
+  [nzWidth]="800"
+  [nzFooter]="null"
+>
+  <nz-descriptions *nzModalContent>
+    {{- range .TableColumn}}
+    <nz-descriptions-item nzTitle="{{.ColumnComment}}">{ { detailData.{{.JavaName}} } }</nz-descriptions-item>
+    {{- end}}
+  </nz-descriptions>
+</nz-modal>
+
+<!--列表数据-->
+<nz-table #basicTable [nzData]="listData"
+          nzShowPagination
+          nzShowSizeChanger
+          [nzTotal]="total"
+          [nzFrontPagination]="false"
+          [nzPageSize]="pageSize"
+          [nzPageIndex]="pageIndex"
+          (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
+          (nzQueryParams)="onQueryParamsChange($event)">
+  <thead>
+  <tr>
+    <th
+      [nzChecked]="checked"
+      [nzIndeterminate]="indeterminate"
+      nzLabel="Select all"
+      (nzCheckedChange)="onAllChecked($event)"
+    ></th>
+    {{- range .TableColumn}}
+    <th>{{.ColumnComment}}</th>
+    {{- end}}
+    <th>操作</th>
+  </tr>
+  </thead>
+  <tbody>
+    @for (data of basicTable.data; track data) {
+      <tr>
+        <td
+          [nzChecked]="setOfCheckedId.has(data.id)"
+          [nzLabel]="data.id"
+          (nzCheckedChange)="onItemChecked(data.id, $event)"
+        ></td>
+        {{- range .TableColumn}}
+        {{- if isContain .JavaName "Status"}}
+        <td>
+          <nz-switch [ngModel]="data.{{.JavaName}}==1" [nzControl]="true" (click)="clickSwitch(data)"></nz-switch>
+        </td>
+        {{- else if isContain .JavaName "status"}}
+        <td>
+          <nz-switch [ngModel]="data.{{.JavaName}}==1" [nzControl]="true" (click)="clickSwitch(data)"></nz-switch>
+        </td>
+        {{- else}}
+        <td>{ {data.{{.JavaName}}} }</td>
+        {{- end}}
+        {{- end}}
+        <td>
+          <a nz-button nzType="link" (click)="showDetailModal(data)" style="padding: 0">
+            <span nz-icon nzType="search" nzTheme="outline"></span>详情
+          </a>
+          <nz-divider nzType="vertical"></nz-divider>
+          <a nz-button nzType="link" (click)="showUpdateModal(data)" style="padding: 0">
+            <span nz-icon nzType="edit" nzTheme="outline"></span>编辑
+          </a>
+          <nz-divider nzType="vertical"></nz-divider>
+          <a nz-button nzType="link" (click)="showDeleteConfirm([data.id])" nzDanger="true" style="padding: 0">
+            <span nz-icon nzType="delete" nzTheme="outline"></span>删除
+          </a>
+        </td>
+      </tr>
+    }
+  </tbody>
+</nz-table>
+
+

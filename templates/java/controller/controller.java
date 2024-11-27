@@ -88,7 +88,7 @@ public class {{table_info.class_name}}Controller {
      * 查询{{table_info.table_comment}}详情
      *
      * @param {{table_info.object_name}}Req 请求参数
-     * @return int
+     * @return Result
      * @author {{author}}
      * @date: {{create_time}}
      */
@@ -104,7 +104,7 @@ public class {{table_info.class_name}}Controller {
      * @param {{table_info.object_name}}Req 请求参数
      * @param pageNum 当前页
      * @param pageSize 每页的数量
-     * @return int
+     * @return ResultPage
      * @author {{author}}
      * @date: {{create_time}}
      */
