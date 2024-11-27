@@ -1,14 +1,20 @@
 use crate::model::table::TableInfo;
 use crate::util::file_util::write_file;
+use chrono::Local;
 use tera::{Context, Tera};
 
 // 生成文件相关操作
 pub fn generate(mut tera: &mut Tera, table_info: TableInfo) {
     // 包名
     let package_name = "com.example.springboottpl";
+    let author = "刘飞华";
+    let fmt = "%Y/%m/%d %H:%M:%S";
+    let create_time = Local::now().format(fmt).to_string();
 
     let mut context = Context::new();
     context.insert("table_info", &table_info);
+    context.insert("author", author);
+    context.insert("create_time", create_time.as_str());
     context.insert("package_name", package_name);
     // context.insert("table_name", table_info.table_name.as_str());
     // context.insert("table_comment", table_info.table_comment.as_str());
@@ -29,18 +35,19 @@ fn create_from_tpl(tera: &mut Tera, class_name: &str, mut context: &mut Context)
         "java/entity/entity.java",
         format!("java/entity/{}Bean.java", class_name).as_str(),
     );
+    write_file(
+        tera.clone(),
+        &mut context,
+        "java/dao/dao.java",
+        format!("java/dao/{}Dao.java", class_name).as_str(),
+    );
     // write_file(
     //     tera.clone(),
     //     &mut context,
     //     "java/controller/controller.java",
     //     format!("java/controller/{}Controller.java", class_name).as_str(),
     // );
-    // write_file(
-    //     tera.clone(),
-    //     &mut context,
-    //     "java/dao/dao.java",
-    //     format!("java/dao/{}Dao.java", class_name).as_str(),
-    // );
+
     // write_file(
     //     tera.clone(),
     //     &mut context,
