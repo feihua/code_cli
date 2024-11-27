@@ -1,4 +1,3 @@
-use mysql::Column;
 use serde::{Deserialize, Serialize};
 
 // 列信息

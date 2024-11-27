@@ -14,13 +14,18 @@ pub struct TableEntity {
 }
 
 // 数据库相关操作
-pub struct DbUtil {
-    db_info: DbInfo,
-}
+pub struct DbUtil {}
 
 impl DbUtil {
     // 获取所有表信息
-    pub fn get_tables(url: &str, db_name: &str, table_name_str: &str, t_prefix: &str) {
+    pub fn get_tables(db_info: DbInfo) -> Vec<TableInfo> {
+        let binding = db_info.get_url().clone();
+        let url = binding.as_str();
+
+        let db_name = db_info.table_db.as_str();
+        let table_name_str = db_info.table_name_str.as_str();
+        let t_prefix = db_info.t_prefix.as_str();
+
         let req_tables: Vec<&str> = table_name_str.split(",").collect();
 
         let mut table_list = vec![];
@@ -70,6 +75,8 @@ impl DbUtil {
 
             println!("tables: {:?}", tables);
         }
+
+        tables
     }
 
     // 获取表的列信息
