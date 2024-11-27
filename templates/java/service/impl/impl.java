@@ -7,56 +7,113 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import {{package_name}}.entity.{{class_name}};
-import {{package_name}}.vo.req.{{class_name}}Req;
-import {{package_name}}.vo.resp.{{class_name}}Resp;
-import {{package_name}}.dao.{{class_name}}Dao;
-import {{package_name}}.service.{{class_name}}Service;
+import {{package_name}}.entity.*;
+import {{package_name}}.vo.req.*;
+import {{package_name}}.vo.resp.*;
+import {{package_name}}.dao.{{table_info.class_name}}Dao;
+import {{package_name}}.service.{{table_info.class_name}}Service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
+/**
+ * 描述：{{table_info.table_comment}}
+ * 作者：{{author}}
+ * 日期：{{create_time}}
+ */
 @Service
-public class {{class_name}}ServiceImpl implements {{class_name}}Service {
+public class {{table_info.class_name}}ServiceImpl implements {{table_info.class_name}}Service {
 
-   @Autowired
-   private {{class_name}}Dao recordDao;
+    @Autowired
+    private {{table_info.class_name}}Dao {{table_info.object_name}}Dao;
 
-   @Override
-   public {{class_name}}Resp query({{class_name}}Req record){
+    /**
+     * 添加{{table_info.table_comment}}
+     *
+     * @param {{table_info.object_name}} 请求参数
+     * @return int
+     * @author {{author}}
+     * @date: {{create_time}}
+     */
+    @Override
+	int insert{{table_info.class_name}}({{table_info.class_name}}Req {{table_info.object_name}}) {
+        return {{table_info.object_name}}Dao.insert{{table_info.class_name}}({{table_info.class_name}}.builder().build());
+	}
 
-       {{class_name}} query = recordDao.query({{class_name}}.builder().build());
+    /**
+     * 删除{{table_info.table_comment}}
+     *
+     * @param ids 请求参数
+     * @return int
+     * @author {{author}}
+     * @date: {{create_time}}
+     */
+    @Override
+	int delete{{table_info.class_name}}(List<Integer> ids) {
+        return {{table_info.object_name}}Dao.delete{{table_info.class_name}}(ids);
+	}
 
-       return {{class_name}}Resp.builder().build();
-   }
+    /**
+     * 修改{{table_info.table_comment}}
+     *
+     * @param {{table_info.object_name}} 请求参数
+     * @return int
+     * @author {{author}}
+     * @date: {{create_time}}
+     */
+    @Override
+    int update{{table_info.class_name}}({{table_info.class_name}}Req {{table_info.object_name}}) {
+      return {{table_info.object_name}}Dao.update{{table_info.class_name}}({{table_info.class_name}}.builder().build());
+    }
 
-   @Override
-   public List<{{class_name}}Resp> query{{class_name}}List({{class_name}}Req record){
-       PageHelper.startPage(1, 10);
-       	   List<{{class_name}}> query = recordDao.query{{class_name}}List({{class_name}}.builder().build());
-              PageInfo<{{class_name}}> pageInfo = new PageInfo<>(query);
+    /**
+     * 修改{{table_info.table_comment}}状态
+     *
+     * @param {{table_info.object_name}} 请求参数
+     * @return int
+     * @author {{author}}
+     * @date: {{create_time}}
+     */
+    @Override
+    int update{{table_info.class_name}}Status({{table_info.class_name}}Req {{table_info.object_name}}) {
+      return {{table_info.object_name}}Dao.update{{table_info.class_name}}Status({{table_info.class_name}}.builder().build());
+    }
 
-       	   return pageInfo.getList().stream().map(x -> {
-       		   {{class_name}}Resp resp = new {{class_name}}Resp();
-       		   BeanUtils.copyProperties(x, resp);
-       		   return resp;
-       	   }).collect(Collectors.toList());
-   }
+    /**
+     * 查询{{table_info.table_comment}}详情
+     *
+     * @param {{table_info.object_name}} 请求参数
+     * @return {{table_info.class_name}}Resp
+     * @author {{author}}
+     * @date: {{create_time}}
+     */
+    @Override
+    {{table_info.class_name}}Resp query{{table_info.class_name}}Detail({{table_info.class_name}}Req {{table_info.object_name}}) {
+       {{table_info.class_name}} query = {{table_info.object_name}}Dao.query{{table_info.class_name}}Detail({{table_info.class_name}}.builder().build());
 
-   @Override
-   public int insert({{class_name}}Req record){
+       return {{table_info.class_name}}Resp.builder().build();
+    }
 
-        return recordDao.insert({{class_name}}.builder().build());
-   }
+    /**
+     * 查询{{table_info.table_comment}}列表
+     *
+     * @param {{table_info.object_name}} 请求参数
+     * @return List<{{table_info.class_name}}Resp>
+     * @author {{author}}
+     * @date: {{create_time}}
+     */
+    @Override
+    List<{{table_info.class_name}}Resp> query{{table_info.class_name}}List({{table_info.class_name}}Req {{table_info.object_name}}) {
+       PageHelper.startPage({{table_info.object_name}}.getPageNum(), {{table_info.object_name}}.getPageSize());
+	   List<{{table_info.class_name}}> query = {{table_info.object_name}}Dao.query{{table_info.class_name}}List({{table_info.class_name}}.builder().build());
+       PageInfo<{{table_info.class_name}}> pageInfo = new PageInfo<>(query);
 
-   @Override
-   public int delete(int id){
-        return recordDao.delete(id);
-   }
+	   List<{{table_info.class_name}}Resp> list = pageInfo.getList().stream().map(x -> {
+		   {{table_info.class_name}}Resp resp = new {{table_info.class_name}}Resp();
+		   BeanUtils.copyProperties(x, resp);
+		   return resp;
+	   }).collect(Collectors.toList());
 
-   @Override
-   public int update({{class_name}}Req record){
-
-        return recordDao.update({{class_name}}.builder().build());
-   }
+        return new ResultPage<>(list,pageInfo.getPageNum(),pageInfo.getPageSize(),pageInfo.getTotal());
+    }
 
 }
