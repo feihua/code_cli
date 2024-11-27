@@ -59,27 +59,24 @@ fn create_from_tpl(tera: &mut Tera, class_name: &str, mut context: &mut Context)
         "java/controller/controller.java",
         format!("java/controller/{}Controller.java", class_name).as_str(),
     );
-
     // write_file(
     //     tera.clone(),
     //     &mut context,
     //     "java/mapper/mapper.xml",
     //     format!("java/mapper/{}Mapper.xml", class_name).as_str(),
     // );
-
-
-    // write_file(
-    //     tera.clone(),
-    //     &mut context,
-    //     "java/vo/req.java",
-    //     format!("java/vo/req/{}Req.java", class_name).as_str(),
-    // );
-    // write_file(
-    //     tera.clone(),
-    //     &mut context,
-    //     "java/vo/resp.java",
-    //     format!("java/vo/resp/{}Resp.java", class_name).as_str(),
-    // );
+    write_file(
+        tera.clone(),
+        &mut context,
+        "java/vo/req.java",
+        format!("java/vo/req/{}Req.java", class_name).as_str(),
+    );
+    write_file(
+        tera.clone(),
+        &mut context,
+        "java/vo/resp.java",
+        format!("java/vo/resp/{}Resp.java", class_name).as_str(),
+    );
 }
 
 // fn create_vue_from_tpl(mut tera: Tera, table_name: &str, mut context: &mut Context) {
