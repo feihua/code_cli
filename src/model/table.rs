@@ -11,3 +11,19 @@ pub struct TableInfo {
     pub columns: Vec<ColumnInfo>, //列的元数据
     pub all_column_str: String,   //所有列
 }
+
+impl TableInfo {
+    // 把表字段拼接在一起
+    pub fn get_all_column(&self) -> String {
+        let mut all_columns = String::from("");
+
+        for x in self.columns.iter() {
+            all_columns.push_str(x.column_name.as_str());
+            all_columns.push_str(", ");
+        }
+
+        let size = all_columns.len() - 2;
+        let new_all_columns = &all_columns[0..size];
+        new_all_columns.to_string()
+    }
+}

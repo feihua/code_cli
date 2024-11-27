@@ -71,6 +71,7 @@ impl DbUtil {
             };
             let res = Self::get_table_columns(url, db_name, x.table_name.as_str());
             info.columns = res;
+            info.all_column_str = info.get_all_column();
             tables.push(info);
 
             println!("tables: {:?}", tables);

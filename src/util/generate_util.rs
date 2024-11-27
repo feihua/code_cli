@@ -8,12 +8,14 @@ pub fn generate(mut tera: &mut Tera, table_info: TableInfo) {
     let package_name = "com.example.springboottpl";
 
     let mut context = Context::new();
-    context.insert("table_name", table_info.table_name.as_str());
-    context.insert("table_comment", table_info.table_comment.as_str());
+    context.insert("table_info", &table_info);
     context.insert("package_name", package_name);
-    context.insert("class_name", table_info.class_name.as_str());
-    context.insert("java_columns", &table_info.columns);
-    context.insert("all_columns", "all_columns.as_str()");
+    // context.insert("table_name", table_info.table_name.as_str());
+    // context.insert("table_comment", table_info.table_comment.as_str());
+    // context.insert("package_name", package_name);
+    // context.insert("class_name", table_info.class_name.as_str());
+    // context.insert("java_columns", &table_info.columns);
+    // context.insert("all_columns", "all_columns.as_str()");
 
     create_from_tpl(&mut tera, table_info.class_name.as_str(), &mut context);
     //     create_vue_from_tpl(tera.clone(), table_name, &mut context);
@@ -27,48 +29,48 @@ fn create_from_tpl(tera: &mut Tera, class_name: &str, mut context: &mut Context)
         "java/entity/entity.java",
         format!("java/entity/{}Bean.java", class_name).as_str(),
     );
-    write_file(
-        tera.clone(),
-        &mut context,
-        "java/controller/controller.java",
-        format!("java/controller/{}Controller.java", class_name).as_str(),
-    );
-    write_file(
-        tera.clone(),
-        &mut context,
-        "java/dao/dao.java",
-        format!("java/dao/{}Dao.java", class_name).as_str(),
-    );
-    write_file(
-        tera.clone(),
-        &mut context,
-        "java/mapper/mapper.xml",
-        format!("java/mapper/{}Mapper.xml", class_name).as_str(),
-    );
-    write_file(
-        tera.clone(),
-        &mut context,
-        "java/service/service.java",
-        format!("java/service/{}Service.java", class_name).as_str(),
-    );
-    write_file(
-        tera.clone(),
-        &mut context,
-        "java/service/impl/impl.java",
-        format!("java/service/impl/{}ServiceImpl.java", class_name).as_str(),
-    );
-    write_file(
-        tera.clone(),
-        &mut context,
-        "java/vo/req.java",
-        format!("java/vo/req/{}Req.java", class_name).as_str(),
-    );
-    write_file(
-        tera.clone(),
-        &mut context,
-        "java/vo/resp.java",
-        format!("java/vo/resp/{}Resp.java", class_name).as_str(),
-    );
+    // write_file(
+    //     tera.clone(),
+    //     &mut context,
+    //     "java/controller/controller.java",
+    //     format!("java/controller/{}Controller.java", class_name).as_str(),
+    // );
+    // write_file(
+    //     tera.clone(),
+    //     &mut context,
+    //     "java/dao/dao.java",
+    //     format!("java/dao/{}Dao.java", class_name).as_str(),
+    // );
+    // write_file(
+    //     tera.clone(),
+    //     &mut context,
+    //     "java/mapper/mapper.xml",
+    //     format!("java/mapper/{}Mapper.xml", class_name).as_str(),
+    // );
+    // write_file(
+    //     tera.clone(),
+    //     &mut context,
+    //     "java/service/service.java",
+    //     format!("java/service/{}Service.java", class_name).as_str(),
+    // );
+    // write_file(
+    //     tera.clone(),
+    //     &mut context,
+    //     "java/service/impl/impl.java",
+    //     format!("java/service/impl/{}ServiceImpl.java", class_name).as_str(),
+    // );
+    // write_file(
+    //     tera.clone(),
+    //     &mut context,
+    //     "java/vo/req.java",
+    //     format!("java/vo/req/{}Req.java", class_name).as_str(),
+    // );
+    // write_file(
+    //     tera.clone(),
+    //     &mut context,
+    //     "java/vo/resp.java",
+    //     format!("java/vo/resp/{}Resp.java", class_name).as_str(),
+    // );
 }
 
 // fn create_vue_from_tpl(mut tera: Tera, table_name: &str, mut context: &mut Context) {
