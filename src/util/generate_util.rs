@@ -53,12 +53,12 @@ fn create_from_tpl(tera: &mut Tera, class_name: &str, mut context: &mut Context)
         "java/service/impl/impl.java",
         format!("java/service/impl/{}ServiceImpl.java", class_name).as_str(),
     );
-    // write_file(
-    //     tera.clone(),
-    //     &mut context,
-    //     "java/controller/controller.java",
-    //     format!("java/controller/{}Controller.java", class_name).as_str(),
-    // );
+    write_file(
+        tera.clone(),
+        &mut context,
+        "java/controller/controller.java",
+        format!("java/controller/{}Controller.java", class_name).as_str(),
+    );
 
     // write_file(
     //     tera.clone(),

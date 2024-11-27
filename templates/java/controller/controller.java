@@ -1,58 +1,115 @@
 package {{package_name}}.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import {{package_name}}.vo.req.{{class_name}}Req;
-import {{package_name}}.vo.resp.{{class_name}}Resp;
-import {{package_name}}.service.{{class_name}}Service;
 
-@Api(tags = "{{table_comment}}")
+import {{package_name}}.vo.req.*;
+import {{package_name}}.vo.resp.*;
+import {{package_name}}.service.{{table_info.class_name}}Service;
+
+/**
+ * 描述：{{table_info.table_comment}}
+ * 作者：{{author}}
+ * 日期：{{create_time}}
+ */
+@Tag(name = "{{table_info.table_comment}}")
 @RestController
-@RequestMapping("/{{table_name}}")
-public class {{class_name}}Controller {
+@RequestMapping("/{{table_info.object_name}}")
+public class {{table_info.class_name}}Controller {
 
-   @Autowired
-   private {{class_name}}Service recordService;
+    @Autowired
+    private {{table_info.class_name}}Service recordService;
 
-   @ApiOperation("查询{{table_comment}}")
-   @PostMapping("/query")
-   public {{class_name}}Resp query(@RequestBody @Valid {{class_name}}Req record){
-       return recordService.query(record);
-   }
+    /**
+     * 添加{{table_info.table_comment}}
+     *
+     * @param {{table_info.object_name}} 请求参数
+     * @return int
+     * @author {{author}}
+     * @date: {{create_time}}
+     */
+    @Operation(summary = "添加{{table_info.table_comment}}")
+    @PostMapping("/insert{{table_info.class_name}}")
+    public Result<Integer> insert{{table_info.class_name}}(@RequestBody @Valid {{table_info.class_name}}Req {{table_info.object_name}}Req){
+        return Result.success({{table_info.class_name}}Service.insert{{table_info.class_name}}({{table_info.object_name}}Req));
+    }
 
-   @ApiOperation("查询{{table_comment}}列表")
-   @PostMapping("/query{{class_name}}List")
-   public List<{{class_name}}Resp> query{{class_name}}List(@RequestBody @Valid {{class_name}}Req record){
-        return recordService.query{{class_name}}List(record);
-   }
+    /**
+     * 删除{{table_info.table_comment}}
+     *
+     * @param {{table_info.object_name}} 请求参数
+     * @return int
+     * @author {{author}}
+     * @date: {{create_time}}
+     */
+    @Operation(summary = "删除{{table_info.table_comment}}")
+    @PostMapping("/delete{{table_info.class_name}}")
+    public Result<Integer> delete{{table_info.class_name}}(ids){
+        return Result.success({{table_info.class_name}}Service.delete{{table_info.class_name}}(ids));
+    }
 
-   @ApiOperation("添加{{table_comment}}")
-   @PostMapping("/insert")
-   public int insert(@RequestBody @Valid {{class_name}}Req record){
-        return recordService.insert(record);
-   }
+    /**
+     * 更新{{table_info.table_comment}}
+     *
+     * @param {{table_info.object_name}} 请求参数
+     * @return int
+     * @author {{author}}
+     * @date: {{create_time}}
+     */
+    @Operation(summary = "更新{{table_info.table_comment}}")
+    @PostMapping("/update{{table_info.class_name}}")
+    public Result<Integer> update{{table_info.class_name}}(@RequestBody @Valid {{table_info.class_name}}Req {{table_info.object_name}}Req){
+        return Result.success({{table_info.class_name}}Service.update{{table_info.class_name}}({{table_info.object_name}}Req));
+    }
 
-   @ApiOperation("删除{{table_comment}}")
-   @PostMapping("/delete")
-   public int delete(int id){
-        return recordService.delete(id);
-   }
+    /**
+     * 更新{{table_info.table_comment}}状态
+     *
+     * @param {{table_info.object_name}} 请求参数
+     * @return int
+     * @author {{author}}
+     * @date: {{create_time}}
+     */
+    @Operation(summary = "更新{{table_info.table_comment}}状态")
+    @PostMapping("/update{{table_info.class_name}}Status")
+    public Result<Integer> update{{table_info.class_name}}Status(@RequestBody @Valid {{table_info.class_name}}Req {{table_info.object_name}}Req){
+        return Result.success({{table_info.class_name}}Service.update{{table_info.class_name}}Status({{table_info.object_name}}Req));
+    }
 
-   @ApiOperation("更新{{table_comment}}")
-   @PostMapping("/update")
-   public int update(@RequestBody @Valid {{class_name}}Req record){
-        return recordService.update(record);
-   }
+    /**
+     * 查询{{table_info.table_comment}}详情
+     *
+     * @param {{table_info.object_name}} 请求参数
+     * @return int
+     * @author {{author}}
+     * @date: {{create_time}}
+     */
+    @Operation(summary = "查询{{table_info.table_comment}}详情")
+    @PostMapping("/query{{table_info.class_name}}Detail")
+    public Result<{{table_info.class_name}}Resp> query{{table_info.class_name}}Detail(@RequestBody @Valid {{table_info.class_name}}Req {{table_info.object_name}}Req){
+        return Result.success({{table_info.class_name}}Service.query{{table_info.class_name}}Detail({{table_info.object_name}}Req));
+    }
+
+    /**
+     * 查询{{table_info.table_comment}}列表
+     *
+     * @param {{table_info.object_name}} 请求参数
+     * @return int
+     * @author {{author}}
+     * @date: {{create_time}}
+     */
+    @Operation(summary = "查询{{table_info.table_comment}}列表")
+    @PostMapping("/query{{table_info.class_name}}List")
+    public ResultPage<{{table_info.class_name}}Resp> query{{table_info.class_name}}List(@RequestBody @Valid {{table_info.class_name}}Req {{table_info.object_name}}Req){
+        return Result.success({{table_info.class_name}}Service.query{{table_info.class_name}}List({{table_info.object_name}}Req));
+    }
 
 }

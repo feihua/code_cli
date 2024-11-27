@@ -2,6 +2,7 @@ package {{package_name}}.service;
 
 import java.util.List;
 
+import {{package_name}}.util.ResultPage;
 import {{package_name}}.vo.req.*;
 import {{package_name}}.vo.resp.*;
 
@@ -66,10 +67,10 @@ public interface {{table_info.class_name}}Service {
      * 查询{{table_info.table_comment}}列表
      *
      * @param {{table_info.object_name}} 请求参数
-     * @return List<{{table_info.class_name}}Resp>
+     * @return ResultPage
      * @author {{author}}
      * @date: {{create_time}}
      */
-    List<{{table_info.class_name}}Resp> query{{table_info.class_name}}List({{table_info.class_name}}Req {{table_info.object_name}});
+    ResultPage<{{table_info.class_name}}Resp> query{{table_info.class_name}}List({{table_info.class_name}}Req {{table_info.object_name}});
 
 }

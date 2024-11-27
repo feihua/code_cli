@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import {{package_name}}.entity.*;
+import {{package_name}}.util.ResultPage;
 import {{package_name}}.vo.req.*;
 import {{package_name}}.vo.resp.*;
 import {{package_name}}.dao.{{table_info.class_name}}Dao;
@@ -97,12 +98,12 @@ public class {{table_info.class_name}}ServiceImpl implements {{table_info.class_
      * 查询{{table_info.table_comment}}列表
      *
      * @param {{table_info.object_name}} 请求参数
-     * @return List<{{table_info.class_name}}Resp>
+     * @return ResultPage
      * @author {{author}}
      * @date: {{create_time}}
      */
     @Override
-    List<{{table_info.class_name}}Resp> query{{table_info.class_name}}List({{table_info.class_name}}Req {{table_info.object_name}}) {
+    ResultPage<{{table_info.class_name}}Resp> query{{table_info.class_name}}List({{table_info.class_name}}Req {{table_info.object_name}}) {
        PageHelper.startPage({{table_info.object_name}}.getPageNum(), {{table_info.object_name}}.getPageSize());
 	   List<{{table_info.class_name}}> query = {{table_info.object_name}}Dao.query{{table_info.class_name}}List({{table_info.class_name}}.builder().build());
        PageInfo<{{table_info.class_name}}> pageInfo = new PageInfo<>(query);
