@@ -3,6 +3,33 @@ use crate::util::file_util::write_file;
 use chrono::Local;
 use tera::{Context, Tera};
 
+// 生成文件相关操作(公共)
+pub fn generate_common(mut tera: &mut Tera) {
+    // 包名
+    let package_name = "com.example.springboottpl";
+    let author = "刘飞华";
+    let fmt = "%Y/%m/%d %H:%M:%S";
+    let create_time = Local::now().format(fmt).to_string();
+
+    let mut context = Context::new();
+    context.insert("author", author);
+    context.insert("create_time", create_time.as_str());
+    context.insert("package_name", package_name);
+
+    write_file(
+        tera.clone(),
+        &mut context,
+        "java/util/Result.java",
+        "java/util/Result.java",
+    );
+    write_file(
+        tera.clone(),
+        &mut context,
+        "java/util/ResultPage.java",
+        "java/util/ResultPage.java",
+    );
+}
+
 // 生成文件相关操作
 pub fn generate(mut tera: &mut Tera, table_info: TableInfo) {
     // 包名
@@ -16,12 +43,6 @@ pub fn generate(mut tera: &mut Tera, table_info: TableInfo) {
     context.insert("author", author);
     context.insert("create_time", create_time.as_str());
     context.insert("package_name", package_name);
-    // context.insert("table_name", table_info.table_name.as_str());
-    // context.insert("table_comment", table_info.table_comment.as_str());
-    // context.insert("package_name", package_name);
-    // context.insert("class_name", table_info.class_name.as_str());
-    // context.insert("java_columns", &table_info.columns);
-    // context.insert("all_columns", "all_columns.as_str()");
 
     create_from_tpl(&mut tera, table_info.class_name.as_str(), &mut context);
     //     create_vue_from_tpl(tera.clone(), table_name, &mut context);
@@ -33,7 +54,7 @@ fn create_from_tpl(tera: &mut Tera, class_name: &str, mut context: &mut Context)
         tera.clone(),
         &mut context,
         "java/entity/entity.java",
-        format!("java/entity/{}Bean.java", class_name).as_str(),
+        format!("java/entity/{}.java", class_name).as_str(),
     );
     write_file(
         tera.clone(),
@@ -59,12 +80,12 @@ fn create_from_tpl(tera: &mut Tera, class_name: &str, mut context: &mut Context)
         "java/controller/controller.java",
         format!("java/controller/{}Controller.java", class_name).as_str(),
     );
-    // write_file(
-    //     tera.clone(),
-    //     &mut context,
-    //     "java/mapper/mapper.xml",
-    //     format!("java/mapper/{}Mapper.xml", class_name).as_str(),
-    // );
+    write_file(
+        tera.clone(),
+        &mut context,
+        "java/mapper/mapper.xml",
+        format!("java/mapper/{}Mapper.xml", class_name).as_str(),
+    );
     write_file(
         tera.clone(),
         &mut context,

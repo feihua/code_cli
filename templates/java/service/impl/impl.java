@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import {{package_name}}.entity.*;
-import {{package_name}}.util.ResultPage;
+import {{package_name}}.util.*;
 import {{package_name}}.vo.req.*;
 import {{package_name}}.vo.resp.*;
 import {{package_name}}.dao.{{table_info.class_name}}Dao;
@@ -36,7 +36,7 @@ public class {{table_info.class_name}}ServiceImpl implements {{table_info.class_
      * @date: {{create_time}}
      */
     @Override
-	int insert{{table_info.class_name}}({{table_info.class_name}}Req {{table_info.object_name}}) {
+	public int insert{{table_info.class_name}}({{table_info.class_name}}Req {{table_info.object_name}}) {
         return {{table_info.object_name}}Dao.insert{{table_info.class_name}}({{table_info.class_name}}.builder().build());
 	}
 
@@ -49,7 +49,7 @@ public class {{table_info.class_name}}ServiceImpl implements {{table_info.class_
      * @date: {{create_time}}
      */
     @Override
-	int delete{{table_info.class_name}}(List<Integer> ids) {
+	public int delete{{table_info.class_name}}(List<Integer> ids) {
         return {{table_info.object_name}}Dao.delete{{table_info.class_name}}(ids);
 	}
 
@@ -62,7 +62,7 @@ public class {{table_info.class_name}}ServiceImpl implements {{table_info.class_
      * @date: {{create_time}}
      */
     @Override
-    int update{{table_info.class_name}}({{table_info.class_name}}Req {{table_info.object_name}}) {
+    public int update{{table_info.class_name}}({{table_info.class_name}}Req {{table_info.object_name}}) {
       return {{table_info.object_name}}Dao.update{{table_info.class_name}}({{table_info.class_name}}.builder().build());
     }
 
@@ -75,7 +75,7 @@ public class {{table_info.class_name}}ServiceImpl implements {{table_info.class_
      * @date: {{create_time}}
      */
     @Override
-    int update{{table_info.class_name}}Status({{table_info.class_name}}Req {{table_info.object_name}}) {
+    public int update{{table_info.class_name}}Status({{table_info.class_name}}Req {{table_info.object_name}}) {
       return {{table_info.object_name}}Dao.update{{table_info.class_name}}Status({{table_info.class_name}}.builder().build());
     }
 
@@ -88,7 +88,7 @@ public class {{table_info.class_name}}ServiceImpl implements {{table_info.class_
      * @date: {{create_time}}
      */
     @Override
-    {{table_info.class_name}}Resp query{{table_info.class_name}}Detail({{table_info.class_name}}Req {{table_info.object_name}}) {
+    public {{table_info.class_name}}Resp query{{table_info.class_name}}Detail({{table_info.class_name}}Req {{table_info.object_name}}) {
        {{table_info.class_name}} query = {{table_info.object_name}}Dao.query{{table_info.class_name}}Detail({{table_info.class_name}}.builder().build());
 
        return {{table_info.class_name}}Resp.builder().build();
@@ -98,13 +98,15 @@ public class {{table_info.class_name}}ServiceImpl implements {{table_info.class_
      * 查询{{table_info.table_comment}}列表
      *
      * @param {{table_info.object_name}} 请求参数
+     * @param pageNum 当前页
+     * @param pageSize 每页的数量
      * @return ResultPage
      * @author {{author}}
      * @date: {{create_time}}
      */
     @Override
-    ResultPage<{{table_info.class_name}}Resp> query{{table_info.class_name}}List({{table_info.class_name}}Req {{table_info.object_name}}) {
-       PageHelper.startPage({{table_info.object_name}}.getPageNum(), {{table_info.object_name}}.getPageSize());
+    public ResultPage<{{table_info.class_name}}Resp> query{{table_info.class_name}}List({{table_info.class_name}}Req {{table_info.object_name}}, Integer pageNum, Integer pageSize) {
+       PageHelper.startPage(pageNum, pageSize);
 	   List<{{table_info.class_name}}> query = {{table_info.object_name}}Dao.query{{table_info.class_name}}List({{table_info.class_name}}.builder().build());
        PageInfo<{{table_info.class_name}}> pageInfo = new PageInfo<>(query);
 

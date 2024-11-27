@@ -3,7 +3,7 @@ pub mod util;
 
 use crate::model::db_info::DbInfo;
 use crate::util::db_util::DbUtil;
-use crate::util::generate_util::generate;
+use crate::util::generate_util::{generate, generate_common};
 use rust_embed::Embed;
 use tera::Tera;
 
@@ -24,6 +24,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     info.table_db = String::from("better-pay"); //业务数据库
     info.table_name_str = String::from("sys_user,sys_role_menu"); //待生成的表
     info.t_prefix = String::from("sys_"); //生成时，待去掉的表前缀
+
+    generate_common(&mut tera);
 
     let table_info_list = DbUtil::get_tables(info);
     for x in table_info_list {

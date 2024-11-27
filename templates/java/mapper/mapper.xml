@@ -1,64 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="{{package_name}}.dao.{{class_name}}Dao">
+<mapper namespace="{{package_name}}.dao.{{table_info.class_name}}Dao">
 
-    <resultMap id="BaseResultMap" type="{{package_name}}.entity.{{class_name}}">
-        {% for column in java_columns %}
-        <result column="{{column.db_name}}" property="{{column.java_name}}" jdbcType="{{column.jdbc_type}}"/>{% endfor
-        %}
-
+    <resultMap id="BaseResultMap" type="{{package_name}}.entity.{{table_info.class_name}}">
+        {% for column in table_info.columns %}
+        <result column="{{column.column_name}}" property="{{column.java_name}}" jdbcType="{{column.jdbc_type}}"/>
+        {%- endfor %}
     </resultMap>
 
     <sql id="Base_Column_List">
-        {{all_columns}}
+        {{table_info.all_column_str}}
     </sql>
-
-    <select id="query" parameterType="{{package_name}}.entity.{{class_name}}" resultMap="BaseResultMap">
-
-    </select>
-
-    <select id="query{{class_name}}List" parameterType="{{package_name}}.entity.{{class_name}}"
-            resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from {{table_name}}
-        <where>{% for column in java_columns %}
+    <!--添加{{table_info.table_comment}}-->
+    <insert id="insert{{table_info.class_name}}" parameterType="{{package_name}}.entity.{{table_info.class_name}}">
+        insert into {{table_info.table_name}}
+        <trim prefix="(" suffix=")" suffixOverrides=",">{% for column in table_info.columns %}
             <if test="{{column.java_name}} != null">
-                and {{column.db_name}} = #{ {{column.java_name}}}
-            </if>{% endfor %}
-        </where>
-    </select>
-
-    <insert id="insert" parameterType="{{package_name}}.entity.{{class_name}}">
-        insert into {{table_name}}
-        <trim prefix="(" suffix=")" suffixOverrides=",">{% for column in java_columns %}
-            <if test="{{column.java_name}} != null">
-                {{column.db_name}},
+                {{column.column_name}},
             </if>{% endfor %}
         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">{% for column in java_columns %}
+        <trim prefix="values (" suffix=")" suffixOverrides=",">{% for column in table_info.columns %}
             <if test="{{column.java_name}} != null">
                 #{ {{column.java_name}},jdbcType={{column.jdbc_type}} },
             </if>{% endfor %}
         </trim>
     </insert>
 
-    <delete id="delete" parameterType="java.lang.Integer">
-        delete from {{table_name}} where id = #{id,jdbcType=DECIMAL}
+    <!--删除{{table_info.table_comment}}-->
+    <delete id="delete{{table_info.class_name}}">
+        delete from {{table_info.table_name}} where id in
+        <foreach collection="list" item="id" index="index"
+        open="(" close=")" separator=",">
+        #{id}
+        </foreach>
     </delete>
 
-    <update id="update" parameterType="{{package_name}}.entity.{{class_name}}">
-        update {{table_name}}
-        <set>{% for column in java_columns %}
+    <!--修改{{table_info.table_comment}}-->
+    <update id="update{{table_info.class_name}}" parameterType="{{package_name}}.entity.{{table_info.class_name}}">
+        update {{table_info.table_name}}
+        <set>{% for column in table_info.columns %}
             <if test="{{column.java_name}} != null">
-                {{column.db_name}} = #{ {{column.java_name}},jdbcType={{column.jdbc_type}}},
+                {{column.column_name}} = #{ {{column.java_name}},jdbcType={{column.jdbc_type}}},
             </if>{% endfor %}
         </set>
-        <where>{% for column in java_columns %}
+        <where>{% for column in table_info.columns %}
             <if test="{{column.java_name}} != null">
-                and {{column.db_name}} = #{ {{column.java_name}}}
+                and {{column.column_name}} = #{ {{column.java_name}}}
             </if>{% endfor %}
         </where>
     </update>
+
+    <!--修改{{table_info.table_comment}}状态-->
+    <update id="update{{table_info.class_name}}Status" parameterType="{{package_name}}.entity.{{table_info.class_name}}">
+        update {{table_info.table_name}}
+        <set>{% for column in table_info.columns %}
+            <if test="{{column.java_name}} != null">
+                {{column.column_name}} = #{ {{column.java_name}},jdbcType={{column.jdbc_type}}},
+            </if>{% endfor %}
+        </set>
+        <where>{% for column in table_info.columns %}
+            <if test="{{column.java_name}} != null">
+                and {{column.column_name}} = #{ {{column.java_name}}}
+            </if>{% endfor %}
+        </where>
+    </update>
+
+    <!--查询{{table_info.table_comment}}详情-->
+    <select id="query{{table_info.class_name}}Detail" parameterType="{{package_name}}.entity.{{table_info.class_name}}" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from {{table_info.table_name}}
+        <where>{% for column in table_info.columns %}
+            <if test="{{column.java_name}} != null">
+                and {{column.column_name}} = #{ {{column.java_name}}}
+            </if>{% endfor %}
+        </where>
+    </select>
+
+    <!--查询{{table_info.table_comment}}列表-->
+    <select id="query{{table_info.class_name}}List" parameterType="{{package_name}}.entity.{{table_info.class_name}}" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from {{table_info.table_name}}
+        <where>{% for column in table_info.columns %}
+            <if test="{{column.java_name}} != null">
+                and {{column.column_name}} = #{ {{column.java_name}}}
+            </if>{% endfor %}
+        </where>
+    </select>
 
 </mapper>

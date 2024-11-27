@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 import java.util.Date;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,10 +21,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "{{table_info.table_comment}}请求vo")
-public class {{table_info.class_name}}Resp implements Serializable {
+public class {{table_info.class_name}}Req implements Serializable {
 {% for column in table_info.columns %}
-    @Schema(description = "{{column.column_comment}}")
-    @NotBlank(message = "mobile手机不能为空")
+    @Schema(description = "{{column.column_comment}}", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotBlank(message = "{{column.column_comment}}{{column.java_name}}不能为空")
     private {{column.java_type}} {{column.java_name}};
 {% endfor %}
 

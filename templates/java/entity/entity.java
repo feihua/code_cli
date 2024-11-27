@@ -21,5 +21,5 @@ public class {{table_info.class_name}} implements Serializable {
 {% for column in table_info.columns %}
     //{{column.column_comment}}
     private {{column.java_type}} {{column.java_name}};
-{% endfor %}
+{%- endfor %}
 }

@@ -1,7 +1,6 @@
 package {{package_name}}.vo.resp;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -26,4 +25,5 @@ public class {{table_info.class_name}}Resp implements Serializable {
     @Schema(description = "{{column.column_comment}}")
     private {{column.java_type}} {{column.java_name}};
 {% endfor %}
+
 }
