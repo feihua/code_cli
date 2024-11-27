@@ -41,6 +41,12 @@ fn create_from_tpl(tera: &mut Tera, class_name: &str, mut context: &mut Context)
         "java/dao/dao.java",
         format!("java/dao/{}Dao.java", class_name).as_str(),
     );
+    write_file(
+        tera.clone(),
+        &mut context,
+        "java/service/service.java",
+        format!("java/service/{}Service.java", class_name).as_str(),
+    );
     // write_file(
     //     tera.clone(),
     //     &mut context,
@@ -54,12 +60,7 @@ fn create_from_tpl(tera: &mut Tera, class_name: &str, mut context: &mut Context)
     //     "java/mapper/mapper.xml",
     //     format!("java/mapper/{}Mapper.xml", class_name).as_str(),
     // );
-    // write_file(
-    //     tera.clone(),
-    //     &mut context,
-    //     "java/service/service.java",
-    //     format!("java/service/{}Service.java", class_name).as_str(),
-    // );
+
     // write_file(
     //     tera.clone(),
     //     &mut context,
