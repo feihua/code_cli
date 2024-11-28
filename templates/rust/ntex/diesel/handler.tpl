@@ -18,9 +18,9 @@ use crate::vo::{{.RustName}}_vo::{*};
 
 
 /**
- *添加{{.Comment}}
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *添加{{table_info.table_comment}}
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[web::post("/add{{.JavaName}}")]
 pub async fn add_{{.RustName}}(item: Json<Add{{.JavaName}}Req>) -> Result<impl web::Responder, web::Error> {
@@ -62,9 +62,9 @@ pub async fn add_{{.RustName}}(item: Json<Add{{.JavaName}}Req>) -> Result<impl w
 
 
 /**
- *删除{{.Comment}}
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *删除{{table_info.table_comment}}
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[web::post("/delete{{.JavaName}}")]
 pub async fn delete_{{.RustName}}(item: Json<Delete{{.JavaName}}Req>) -> Result<impl web::Responder, web::Error> {
@@ -86,9 +86,9 @@ pub async fn delete_{{.RustName}}(item: Json<Delete{{.JavaName}}Req>) -> Result<
 }
 
 /**
- *更新{{.Comment}}
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *更新{{table_info.table_comment}}
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[web::post("/update{{.JavaName}}")]
 pub async fn update_{{.RustName}}(item: Json<Update{{.JavaName}}Req>) -> Result<impl web::Responder, web::Error> {
@@ -129,9 +129,9 @@ pub async fn update_{{.RustName}}(item: Json<Update{{.JavaName}}Req>) -> Result<
 }
 
 /**
- *更新{{.Comment}}状态
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *更新{{table_info.table_comment}}状态
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[web::post("/update{{.JavaName}}Status")]
 pub async fn update_{{.RustName}}_status(item: Json<Update{{.JavaName}}StatusReq>) -> Result<impl web::Responder, web::Error> {
@@ -153,9 +153,9 @@ pub async fn update_{{.RustName}}_status(item: Json<Update{{.JavaName}}StatusReq
 }
 
 /**
- *查询{{.Comment}}详情
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *查询{{table_info.table_comment}}详情
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[web::post("/query{{.JavaName}}Detail")]
 pub async fn query_{{.RustName}}_detail(item: Json<Query{{.JavaName}}DetailReq>) -> Result<impl web::Responder, web::Error> {
@@ -194,9 +194,9 @@ pub async fn query_{{.RustName}}_detail(item: Json<Query{{.JavaName}}DetailReq>)
 
 
 /**
- *查询{{.Comment}}列表
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *查询{{table_info.table_comment}}列表
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[web::post("/query{{.JavaName}}List")]
 pub async fn query_{{.RustName}}_list(item: Json<Query{{.JavaName}}ListReq>) -> Result<impl web::Responder, web::Error> {

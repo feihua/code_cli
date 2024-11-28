@@ -11,9 +11,9 @@ use crate::vo::*;
 use crate::vo::{{.RustName}}_vo::{*};
 
 /**
- *添加{{.Comment}}
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *添加{{table_info.table_comment}}
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[post("/add{{.JavaName}}", data = "<item>")]
 pub async fn add_{{.RustName}}(item: Json<Add{{.JavaName}}Req>, _auth: Token) -> Value {
@@ -46,9 +46,9 @@ pub async fn add_{{.RustName}}(item: Json<Add{{.JavaName}}Req>, _auth: Token) ->
 }
 
 /**
- *删除{{.Comment}}
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *删除{{table_info.table_comment}}
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[post("/delete{{.JavaName}}", data = "<item>")]
 pub async fn delete_{{.RustName}}(item: Json<Delete{{.JavaName}}Req>, _auth: Token) -> Value {
@@ -61,9 +61,9 @@ pub async fn delete_{{.RustName}}(item: Json<Delete{{.JavaName}}Req>, _auth: Tok
 }
 
 /**
- *更新{{.Comment}}
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *更新{{table_info.table_comment}}
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[post("/update{{.JavaName}}", data = "<item>")]
 pub async fn update_{{.RustName}}(item: Json<Update{{.JavaName}}Req>, _auth: Token) -> Value {
@@ -95,9 +95,9 @@ pub async fn update_{{.RustName}}(item: Json<Update{{.JavaName}}Req>, _auth: Tok
 }
 
 /**
- *更新{{.Comment}}状态
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *更新{{table_info.table_comment}}状态
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[post("/update{{.JavaName}}Status", data = "<item>")]
 pub async fn update_{{.RustName}}_status(item: Json<Update{{.JavaName}}StatusReq>, _auth: Token) -> Value {
@@ -112,9 +112,9 @@ pub async fn update_{{.RustName}}_status(item: Json<Update{{.JavaName}}StatusReq
 }
 
 /**
- *查询{{.Comment}}详情
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *查询{{table_info.table_comment}}详情
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[post("/query{{.JavaName}}Detail", data = "<item>")]
 pub async fn query_{{.RustName}}_detail(item: Json<Query{{.JavaName}}DetailReq>, _auth: Token) -> Value {
@@ -151,9 +151,9 @@ pub async fn query_{{.RustName}}_detail(item: Json<Query{{.JavaName}}DetailReq>,
 
 
 /**
- *查询{{.Comment}}列表
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *查询{{table_info.table_comment}}列表
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[post("/query{{.JavaName}}List", data = "<item>")]
 pub async fn query_{{.RustName}}_list(item: Json<Query{{.JavaName}}ListReq>, _auth: Token) -> Value {

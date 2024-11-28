@@ -9,9 +9,9 @@ use crate::vo::*;
 use crate::vo::{{.RustName}}_vo::*;
 use crate::vo::{err_result_msg, ok_result_msg, ok_result_page};
 /**
- *添加{{.Comment}}
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *添加{{table_info.table_comment}}
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[post("/add{{.JavaName}}")]
 pub async fn add_{{.RustName}}(item: web::Json<Add{{.JavaName}}Req>, data: web::Data<AppState>) -> Result<impl Responder> {
@@ -39,13 +39,13 @@ pub async fn add_{{.RustName}}(item: web::Json<Add{{.JavaName}}Req>, data: web::
     };
 
     {{.UpperOriginalName}}::insert({{.RustName}}).exec(conn).await.unwrap();
-    Ok(web::Json(ok_result_msg("添加{{.Comment}}成功!")))
+    Ok(web::Json(ok_result_msg("添加{{table_info.table_comment}}成功!")))
 }
 
 /**
- *删除{{.Comment}}
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *删除{{table_info.table_comment}}
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[post("/delete{{.JavaName}}")]
 pub async fn delete_{{.RustName}}(item: web::Json<Delete{{.JavaName}}Req>, data: web::Data<AppState>) -> Result<impl Responder> {
@@ -55,13 +55,13 @@ pub async fn delete_{{.RustName}}(item: web::Json<Delete{{.JavaName}}Req>, data:
 
     {{.UpperOriginalName}}::delete_many().filter({{.UpperOriginalName}}::Column::Id.is_in(req.ids)).exec(conn).await.unwrap();
 
-    Ok(web::Json(ok_result_msg("删除{{.Comment}}成功!")))
+    Ok(web::Json(ok_result_msg("删除{{table_info.table_comment}}成功!")))
 }
 
 /**
- *更新{{.Comment}}
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *更新{{table_info.table_comment}}
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[post("/update{{.JavaName}}")]
 pub async fn update_{{.RustName}}(item: web::Json<Update{{.JavaName}}Req>, data: web::Data<AppState>) -> Result<impl Responder> {
@@ -70,7 +70,7 @@ pub async fn update_{{.RustName}}(item: web::Json<Update{{.JavaName}}Req>, data:
     let req = item.0;
 
     if {{.UpperOriginalName}}::find_by_id(item.id.clone()).one(conn).await.unwrap_or_default().is_none() {
-        return Ok(web::Json(err_result_msg("{{.Comment}}不存在,不能更新!")))
+        return Ok(web::Json(err_result_msg("{{table_info.table_comment}}不存在,不能更新!")))
     }
 
     let {{.RustName}} = {{.OriginalName}}::ActiveModel {
@@ -92,13 +92,13 @@ pub async fn update_{{.RustName}}(item: web::Json<Update{{.JavaName}}Req>, data:
     };
 
     {{.UpperOriginalName}}::update({{.RustName}}).exec(conn).await.unwrap();
-    Ok(web::Json(ok_result_msg("更新{{.Comment}}成功!")))
+    Ok(web::Json(ok_result_msg("更新{{table_info.table_comment}}成功!")))
 }
 
 /**
- *更新{{.Comment}}状态
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *更新{{table_info.table_comment}}状态
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[post("/update{{.JavaName}}Status")]
 pub async fn update_{{.RustName}}_status(item: web::Json<Update{{.JavaName}}StatusReq>, data: web::Data<AppState>) -> Result<impl Responder> {
@@ -112,13 +112,13 @@ pub async fn update_{{.RustName}}_status(item: web::Json<Update{{.JavaName}}Stat
     //    .exec(&conn)
     //    .await.unwrap();
 
-    Ok(web::Json(ok_result_msg("更新{{.Comment}}状态成功!")))
+    Ok(web::Json(ok_result_msg("更新{{table_info.table_comment}}状态成功!")))
 }
 
 /**
- *查询{{.Comment}}详情
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *查询{{table_info.table_comment}}详情
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[post("/query{{.JavaName}}Detail")]
 pub async fn query_{{.RustName}}_detail(item: web::Json<Query{{.JavaName}}DetailReq>, data: web::Data<AppState>) -> Result<impl Responder> {
@@ -155,9 +155,9 @@ pub async fn query_{{.RustName}}_detail(item: web::Json<Query{{.JavaName}}Detail
 }
 
 /**
- *查询{{.Comment}}列表
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *查询{{table_info.table_comment}}列表
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[post("/query{{.JavaName}}List")]
 pub async fn query_{{.RustName}}_list(item: web::Json<Query{{.JavaName}}ListReq>, data: web::Data<AppState>) -> Result<impl Responder> {

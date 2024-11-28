@@ -12,9 +12,9 @@ use crate::vo::*;
 use crate::vo::{{.RustName}}_vo::{*};
 
 /**
- *添加{{.Comment}}
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *添加{{table_info.table_comment}}
+ *author：{{author}}
+ *date：{{create_time}}
  */
 pub async fn add_{{.RustName}}(State(state): State<Arc<AppState>>, Json(item): Json<Add{{.JavaName}}Req>) -> impl IntoResponse {
     log::info!("add_{{.RustName}} params: {:?}", &item);
@@ -44,9 +44,9 @@ pub async fn add_{{.RustName}}(State(state): State<Arc<AppState>>, Json(item): J
 }
 
 /**
- *删除{{.Comment}}
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *删除{{table_info.table_comment}}
+ *author：{{author}}
+ *date：{{create_time}}
  */
 pub async fn delete_{{.RustName}}(State(state): State<Arc<AppState>>, Json(item): Json<Delete{{.JavaName}}Req>) -> impl IntoResponse {
     log::info!("delete_{{.RustName}} params: {:?}", &item);
@@ -58,9 +58,9 @@ pub async fn delete_{{.RustName}}(State(state): State<Arc<AppState>>, Json(item)
 }
 
 /**
- *更新{{.Comment}}
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *更新{{table_info.table_comment}}
+ *author：{{author}}
+ *date：{{create_time}}
  */
 pub async fn update_{{.RustName}}(State(state): State<Arc<AppState>>, Json(item): Json<Update{{.JavaName}}Req>) -> impl IntoResponse {
     log::info!("update_{{.RustName}} params: {:?}", &item);
@@ -90,9 +90,9 @@ pub async fn update_{{.RustName}}(State(state): State<Arc<AppState>>, Json(item)
 }
 
 /**
- *更新{{.Comment}}状态
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *更新{{table_info.table_comment}}状态
+ *author：{{author}}
+ *date：{{create_time}}
  */
 pub async fn update_{{.RustName}}_status(State(state): State<Arc<AppState>>, Json(item): Json<Update{{.JavaName}}StatusReq>) -> impl IntoResponse {
     log::info!("update_{{.RustName}}_status params: {:?}", &item);
@@ -105,9 +105,9 @@ pub async fn update_{{.RustName}}_status(State(state): State<Arc<AppState>>, Jso
 }
 
 /**
- *查询{{.Comment}}详情
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *查询{{table_info.table_comment}}详情
+ *author：{{author}}
+ *date：{{create_time}}
  */
 pub async fn query_{{.RustName}}_detail(State(state): State<Arc<AppState>>, Json(item): Json<Query{{.JavaName}}DetailReq>) -> impl IntoResponse {
     log::info!("query_{{.RustName}}_detail params: {:?}", &item);
@@ -144,9 +144,9 @@ pub async fn query_{{.RustName}}_detail(State(state): State<Arc<AppState>>, Json
 
 
 /**
- *查询{{.Comment}}列表
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *查询{{table_info.table_comment}}列表
+ *author：{{author}}
+ *date：{{create_time}}
  */
 pub async fn query_{{.RustName}}_list(State(state): State<Arc<AppState>>, Json(item): Json<Query{{.JavaName}}ListReq>) -> impl IntoResponse {
     log::info!("query_{{.RustName}}_list params: {:?}", &item);

@@ -53,7 +53,7 @@ impl DbUtil {
             }
         }
 
-        println!("table_list: {:?}", table_list);
+        // println!("table_list: {:?}", table_list);
 
         let mut tables = vec![];
 
@@ -61,11 +61,13 @@ impl DbUtil {
             let name = x.table_name.replace(t_prefix, "").clone();
             let class_name = ToUpperCamelCase::to_upper_camel_case(name.as_str());
             let object_name = ToLowerCamelCase::to_lower_camel_case(name.as_str());
+            let original_class_name = ToUpperCamelCase::to_upper_camel_case(x.table_name.as_str());
             let mut info = TableInfo {
                 table_name: x.table_name.clone(),
                 table_comment: x.table_comment,
                 class_name,
                 object_name,
+                original_class_name,
                 columns: vec![],
                 all_column_str: "".to_string(),
             };
@@ -74,7 +76,7 @@ impl DbUtil {
             info.all_column_str = info.get_all_column();
             tables.push(info);
 
-            println!("tables: {:?}", tables);
+            // println!("tables: {:?}", tables);
         }
 
         tables

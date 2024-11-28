@@ -58,20 +58,23 @@ impl TypeMapping {
     pub fn rust_type(db_type: &str) -> String {
         let mut map = HashMap::new();
 
-        map.insert("int", String::from("number"));
-        map.insert("tinyint", String::from("number"));
-        map.insert("smallint", String::from("number"));
-        map.insert("integer", String::from("number"));
-        map.insert("double", String::from("number"));
-        map.insert("boolean", String::from("boolean"));
-        map.insert("decimal", String::from("number"));
-        map.insert("bigint", String::from("number"));
-        map.insert("varchar", String::from("string"));
-        map.insert("char", String::from("string"));
-        map.insert("date", String::from("string"));
-        map.insert("datetime", String::from("string"));
-        map.insert("timestamp", String::from("string"));
-        map.insert("time", String::from("string"));
+        map.insert("char", String::from("String"));
+        map.insert("varchar", String::from("String"));
+        map.insert("text", String::from("String"));
+        map.insert("tinyint", String::from("i8"));
+        map.insert("tinyint unsigned", String::from("u8"));
+        map.insert("smallint", String::from("i16"));
+        map.insert("smallint unsigned", String::from("u16"));
+        map.insert("int", String::from("i32"));
+        map.insert("int unsigned", String::from("u32"));
+        map.insert("bigint", String::from("i64"));
+        map.insert("bigint unsigned", String::from("u64"));
+        map.insert("datetime", String::from("DateTime"));
+        map.insert("timestamp", String::from("DateTime"));
+        map.insert("float", String::from("f32"));
+        map.insert("double", String::from("f64"));
+        map.insert("decimal", String::from("Decimal"));
+        map.insert("boolean", String::from("bool"));
 
         match map.get(db_type) {
             Some(v) => { v.to_string() }

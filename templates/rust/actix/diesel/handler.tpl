@@ -12,9 +12,9 @@ use crate::vo::*;
 use crate::vo::{{.RustName}}_vo::{*};
 
 /**
- *添加{{.Comment}}
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *添加{{table_info.table_comment}}
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[post("/add_{{.RustName}}")]
 pub async fn add_{{.RustName}}(req: web::Json<Add{{.JavaName}}Req>) -> Result<impl Responder> {
@@ -53,9 +53,9 @@ pub async fn add_{{.RustName}}(req: web::Json<Add{{.JavaName}}Req>) -> Result<im
 }
 
 /**
- *删除{{.Comment}}
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *删除{{table_info.table_comment}}
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[post("/delete_{{.RustName}}")]
 pub async fn delete_{{.RustName}}(item: web::Json<Delete{{.JavaName}}Req>) -> Result<impl Responder> {
@@ -74,9 +74,9 @@ pub async fn delete_{{.RustName}}(item: web::Json<Delete{{.JavaName}}Req>) -> Re
 }
 
 /**
- *更新{{.Comment}}
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *更新{{table_info.table_comment}}
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[post("/update_{{.RustName}}")]
 pub async fn update_{{.RustName}}(req: web::Json<Update{{.JavaName}}Req>) -> Result<impl Responder> {
@@ -115,9 +115,9 @@ pub async fn update_{{.RustName}}(req: web::Json<Update{{.JavaName}}Req>) -> Res
 }
 
 /**
- *更新{{.Comment}}状态
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *更新{{table_info.table_comment}}状态
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[post("/update_{{.RustName}}_status")]
 pub async fn update_{{.RustName}}_status(item: web::Json<Update{{.JavaName}}StatusReq>) -> Result<impl Responder> {
@@ -137,9 +137,9 @@ pub async fn update_{{.RustName}}_status(item: web::Json<Update{{.JavaName}}Stat
 }
 
 /**
- *查询{{.Comment}}详情
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *查询{{table_info.table_comment}}详情
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[post("/query_{{.RustName}}_detail")]
 pub async fn query_{{.RustName}}_detail(item: web::Json<Query{{.JavaName}}DetailReq>) -> Result<impl Responder> {
@@ -175,9 +175,9 @@ pub async fn query_{{.RustName}}_detail(item: web::Json<Query{{.JavaName}}Detail
 }
 
 /**
- *查询{{.Comment}}列表
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *查询{{table_info.table_comment}}列表
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[post("/query_{{.RustName}}_list")]
 pub async fn query_{{.RustName}}_list(item: web::Json<Query{{.JavaName}}ListReq>) -> Result<impl Responder> {

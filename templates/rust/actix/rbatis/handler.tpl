@@ -9,9 +9,9 @@ use crate::vo::*;
 use crate::vo::{{.RustName}}_vo::{*};
 
 /**
- *添加{{.Comment}}
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *添加{{table_info.table_comment}}
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[post("/add{{.JavaName}}")]
 pub async fn add_{{.RustName}}(item: web::Json<Add{{.JavaName}}Req>, data: web::Data<AppState>) -> Result<impl Responder> {
@@ -44,9 +44,9 @@ pub async fn add_{{.RustName}}(item: web::Json<Add{{.JavaName}}Req>, data: web::
 }
 
 /**
- *删除{{.Comment}}
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *删除{{table_info.table_comment}}
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[post("/delete{{.JavaName}}")]
 pub async fn delete_{{.RustName}}(item: web::Json<Delete{{.JavaName}}Req>, data: web::Data<AppState>) -> Result<impl Responder> {
@@ -59,9 +59,9 @@ pub async fn delete_{{.RustName}}(item: web::Json<Delete{{.JavaName}}Req>, data:
 }
 
 /**
- *更新{{.Comment}}
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *更新{{table_info.table_comment}}
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[post("/update{{.JavaName}}")]
 pub async fn update_{{.RustName}}(item: web::Json<Update{{.JavaName}}Req>, data: web::Data<AppState>) -> Result<impl Responder> {
@@ -93,9 +93,9 @@ pub async fn update_{{.RustName}}(item: web::Json<Update{{.JavaName}}Req>, data:
 }
 
 /**
- *更新{{.Comment}}状态
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *更新{{table_info.table_comment}}状态
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[post("/update{{.JavaName}}Status")]
 pub async fn update_{{.RustName}}_status(item: web::Json<Update{{.JavaName}}StatusReq>, data: web::Data<AppState>) -> Result<impl Responder> {
@@ -110,9 +110,9 @@ pub async fn update_{{.RustName}}_status(item: web::Json<Update{{.JavaName}}Stat
 }
 
 /**
- *查询{{.Comment}}详情
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *查询{{table_info.table_comment}}详情
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[post("/query{{.JavaName}}Detail")]
 pub async fn query_{{.RustName}}_detail(item: web::Json<Query{{.JavaName}}DetailReq>, data: web::Data<AppState>) -> Result<impl Responder> {
@@ -149,9 +149,9 @@ pub async fn query_{{.RustName}}_detail(item: web::Json<Query{{.JavaName}}Detail
 }
 
 /**
- *查询{{.Comment}}列表
- *author：{{.Author}}
- *date：{{.CreateTime}}
+ *查询{{table_info.table_comment}}列表
+ *author：{{author}}
+ *date：{{create_time}}
  */
 #[post("/query{{.JavaName}}List")]
 pub async fn query_{{.RustName}}_list(item: web::Json<Query{{.JavaName}}ListReq>, data: web::Data<AppState>) -> Result<impl Responder> {
