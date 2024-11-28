@@ -6,10 +6,10 @@ use sea_orm::{ColumnTrait, EntityTrait, NotSet, PaginatorTrait, QueryFilter, Que
 use sea_orm::ActiveValue::Set;
 use crate::{AppState};
 
-use crate::model::{ {{.OriginalName}} };
-use crate::model::prelude::{ {{.UpperOriginalName}} };
+use crate::model::{ {{table_info.table_name}} };
+use crate::model::prelude::{ {{table_info.original_class_name}} };
 use crate::vo::*;
-use crate::vo::{{.RustName}}_vo::*;
+use crate::vo::{{table_info.table_name}}_vo::*;
 use crate::vo::{err_result_msg, ok_result_msg, ok_result_page};
 
 /**
@@ -17,29 +17,27 @@ use crate::vo::{err_result_msg, ok_result_msg, ok_result_page};
  *author：{{author}}
  *date：{{create_time}}
  */
-pub async fn add_{{.RustName}}(State(state): State<Arc<AppState>>, Json(item): Json<Add{{.JavaName}}Req>) -> impl IntoResponse {
-    log::info!("add_{{.RustName}} params: {:?}", &item);
+pub async fn add_{{table_info.table_name}}(State(state): State<Arc<AppState>>, Json(item): Json<Add{{table_info.class_name}}Req>) -> impl IntoResponse {
+    log::info!("add_{{table_info.table_name}} params: {:?}", &item);
     let conn = &state.conn;
 
-    let {{.RustName}} = {{.OriginalName}}::ActiveModel {
-    {{- range .TableColumn}}
-        {{- if eq .ColumnKey `PRI`}}
-        {{.RustName}}: NotSet
-        {{- else if isContain .JavaName "createTime"}}
-        {{.RustName}}: NotSet
-        {{- else if isContain .JavaName "createBy"}}
-        {{.RustName}}: Set(String::from(""))
-        {{- else if isContain .JavaName "updateBy"}}
-        {{.RustName}}: NotSet
-        {{- else if isContain .JavaName "updateTime"}}
-        {{.RustName}}: NotSet
-        {{- else}}
-        {{.RustName}}: Set(item.{{.RustName}})
-        {{- end}},//{{.ColumnComment}}
-    {{- end}}
+    let {{table_info.table_name}} = {{table_info.table_name}}::ActiveModel {
+    {%- for column in table_info.columns %}
+        {%- if column.column_key =="PRI"  %}
+        {{column.rust_name}}: NotSet
+        {%- elif column.rust_name is containing("create_time") %}
+        {{column.rust_name}}: NotSet
+        {%- elif column.rust_name is containing("create_by") %}
+        {{column.rust_name}}: Set(String::from(""))
+        {%- elif column.rust_name is containing("update") %}
+        {{column.rust_name}}: NotSet
+        {%- else %}
+        {{column.rust_name}}: Set(item.{{column.rust_name}})
+        {%- endif %}, //{{column.column_comment}}
+    {%- endfor %}
     };
 
-    {{.UpperOriginalName}}::insert({{.RustName}}).exec(conn).await.unwrap();
+    {{table_info.original_class_name}}::insert({{table_info.table_name}}).exec(conn).await.unwrap();
 
     Json(ok_result_msg("添加{{table_info.table_comment}}成功!"))
 }
@@ -49,11 +47,11 @@ pub async fn add_{{.RustName}}(State(state): State<Arc<AppState>>, Json(item): J
  *author：{{author}}
  *date：{{create_time}}
  */
-pub async fn delete_{{.RustName}}(State(state): State<Arc<AppState>>, Json(item): Json<Delete{{.JavaName}}Req>) -> impl IntoResponse {
-    log::info!("delete_{{.RustName}} params: {:?}", &item);
+pub async fn delete_{{table_info.table_name}}(State(state): State<Arc<AppState>>, Json(item): Json<Delete{{table_info.class_name}}Req>) -> impl IntoResponse {
+    log::info!("delete_{{table_info.table_name}} params: {:?}", &item);
     let conn = &state.conn;
 
-   {{.UpperOriginalName}}::delete_many().filter({{.UpperOriginalName}}::Column::Id.is_in(item.ids)).exec(conn).await.unwrap();
+   {{table_info.original_class_name}}::delete_many().filter({{table_info.original_class_name}}::Column::Id.is_in(item.ids)).exec(conn).await.unwrap();
 
     Json(ok_result_msg("删除{{table_info.table_comment}}成功!"))
 }
@@ -63,33 +61,31 @@ pub async fn delete_{{.RustName}}(State(state): State<Arc<AppState>>, Json(item)
  *author：{{author}}
  *date：{{create_time}}
  */
-pub async fn update_{{.RustName}}(State(state): State<Arc<AppState>>, Json(item): Json<Update{{.JavaName}}Req>) -> impl IntoResponse {
-    log::info!("update_{{.RustName}} params: {:?}", &item);
+pub async fn update_{{table_info.table_name}}(State(state): State<Arc<AppState>>, Json(item): Json<Update{{table_info.class_name}}Req>) -> impl IntoResponse {
+    log::info!("update_{{table_info.table_name}} params: {:?}", &item);
     let conn = &state.conn;
 
-    if {{.UpperOriginalName}}::find_by_id(item.id.clone()).one(conn).await.unwrap_or_default().is_none() {
+    if {{table_info.original_class_name}}::find_by_id(item.id.clone()).one(conn).await.unwrap_or_default().is_none() {
         return Json(err_result_msg("{{table_info.table_comment}}不存在,不能更新!"))
     }
 
-    let {{.RustName}} = {{.OriginalName}}::ActiveModel {
-    {{- range .TableColumn}}
-        {{- if eq .ColumnKey `PRI`}}
-        {{.RustName}}: Set(item.{{.RustName}})
-        {{- else if isContain .JavaName "createTime"}}
-        {{.RustName}}: NotSet
-        {{- else if isContain .JavaName "createBy"}}
-        {{.RustName}}: NotSet
-        {{- else if isContain .JavaName "updateBy"}}
-        {{.RustName}}: Set(String::from(""))
-        {{- else if isContain .JavaName "updateTime"}}
-        {{.RustName}}: NotSet
-        {{- else}}
-        {{.RustName}}: Set(item.{{.RustName}})
-        {{- end}},//{{.ColumnComment}}
-    {{- end}}
+    let {{table_info.table_name}} = {{table_info.table_name}}::ActiveModel {
+    {%- for column in table_info.columns %}
+        {%- if column.column_key =="PRI"  %}
+        {{column.rust_name}}: Set(item.{{column.rust_name}})
+        {%- elif column.rust_name is containing("create") %}
+        {{column.rust_name}}: NotSet
+        {%- elif column.rust_name is containing("update_by") %}
+        {{column.rust_name}}: Set(String::from(""))
+        {%- elif column.rust_name is containing("update_time") %}
+        {{column.rust_name}}: NotSet
+        {%- else %}
+        {{column.rust_name}}: Set(item.{{column.rust_name}})
+        {%- endif %}, //{{column.column_comment}}
+    {%- endfor %}
     };
 
-    {{.UpperOriginalName}}::update({{.RustName}}).exec(conn).await.unwrap();
+    {{table_info.original_class_name}}::update({{table_info.table_name}}).exec(conn).await.unwrap();
     Json(ok_result_msg("更新{{table_info.table_comment}}成功!"))
 }
 
@@ -98,13 +94,13 @@ pub async fn update_{{.RustName}}(State(state): State<Arc<AppState>>, Json(item)
  *author：{{author}}
  *date：{{create_time}}
  */
-pub async fn update_{{.RustName}}_status(State(state): State<Arc<AppState>>, Json(item): Json<Update{{.JavaName}}StatusReq>) -> impl IntoResponse {
-    log::info!("update_{{.RustName}}_status params: {:?}", &item);
+pub async fn update_{{table_info.table_name}}_status(State(state): State<Arc<AppState>>, Json(item): Json<Update{{table_info.class_name}}StatusReq>) -> impl IntoResponse {
+    log::info!("update_{{table_info.table_name}}_status params: {:?}", &item);
     //let conn = &state.conn;
 
-    //{{.UpperOriginalName}}::update_many()
-    //    .col_expr({{.UpperOriginalName}}::Column::Status, Expr::value(item.status))
-    //    .filter({{.UpperOriginalName}}::Column::Id.is_in(item.ids))
+    //{{table_info.original_class_name}}::update_many()
+    //    .col_expr({{table_info.original_class_name}}::Column::Status, Expr::value(item.status))
+    //    .filter({{table_info.original_class_name}}::Column::Id.is_in(item.ids))
     //    .exec(&conn)
     //    .await.unwrap();
     Json(ok_result_msg("更新{{table_info.table_comment}}状态成功!"))
@@ -115,31 +111,31 @@ pub async fn update_{{.RustName}}_status(State(state): State<Arc<AppState>>, Jso
  *author：{{author}}
  *date：{{create_time}}
  */
-pub async fn query_{{.RustName}}_detail(State(state): State<Arc<AppState>>, Json(item): Json<Query{{.JavaName}}DetailReq>) -> impl IntoResponse {
-    log::info!("query_{{.RustName}}_detail params: {:?}", &item);
+pub async fn query_{{table_info.table_name}}_detail(State(state): State<Arc<AppState>>, Json(item): Json<Query{{table_info.class_name}}DetailReq>) -> impl IntoResponse {
+    log::info!("query_{{table_info.table_name}}_detail params: {:?}", &item);
     let conn = &state.conn;
 
-    let result = {{.UpperOriginalName}}::find_by_id(item.id.clone()).one(conn).await.unwrap_or_default();
+    let result = {{table_info.original_class_name}}::find_by_id(item.id.clone()).one(conn).await.unwrap_or_default();
 
     match result {
         Ok(d) => {
             let x = d.unwrap();
 
-            let {{.RustName}} = Query{{.JavaName}}DetailResp {
-            {{- range .TableColumn}}
-            {{- if eq .ColumnKey `PRI`}}
-                {{.RustName}}: x.{{.RustName}}.unwrap()
-            {{- else if eq .IsNullable `YES` }}
-                {{.RustName}}: x.{{.RustName}}.unwrap_or_default()
-            {{- else if eq .RustType `DateTime`}}
-                {{.RustName}}: x.{{.RustName}}.unwrap().0.to_string()
-            {{- else}}
-                {{.RustName}}: x.{{.RustName}}
-            {{- end}},
-            {{- end}}
+            let {{table_info.table_name}} = Query{{table_info.class_name}}DetailResp {
+               {%- for column in table_info.columns %}
+                {%- if column.column_key =="PRI"  %}
+                {{column.rust_name}}: x.{{column.rust_name}}.unwrap()
+                {%- elif column.is_nullable =="YES" %}
+                {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default()
+                {%- elif column.rust_type =="DateTime" %}
+                {{column.rust_name}}: x.{{column.rust_name}}.unwrap().0.to_string()
+                {%- else %}
+                {{column.rust_name}}: x.{{column.rust_name}}
+                {%- endif %}, //{{column.column_comment}}
+              {%- endfor %}
             };
 
-            Json(ok_result_data({{.RustName}}))
+            Json(ok_result_data({{table_info.table_name}}))
         }
         Err(err) => {
             Json(err_result_msg(err.to_string()))
@@ -154,45 +150,44 @@ pub async fn query_{{.RustName}}_detail(State(state): State<Arc<AppState>>, Json
  *author：{{author}}
  *date：{{create_time}}
  */
-pub async fn query_{{.RustName}}_list(State(state): State<Arc<AppState>>, Json(item): Json<Query{{.JavaName}}ListReq>) -> impl IntoResponse {
-    log::info!("query_{{.RustName}}_list params: {:?}", &item);
+pub async fn query_{{table_info.table_name}}_list(State(state): State<Arc<AppState>>, Json(item): Json<Query{{table_info.class_name}}ListReq>) -> impl IntoResponse {
+    log::info!("query_{{table_info.table_name}}_list params: {:?}", &item);
     let conn = &state.conn;
 
-    {{- $lowerJavaName :=.UpperOriginalName}}
-    let paginator = {{.UpperOriginalName}}::find()
-        {{- range .TableColumn}}
-        {{- if isContain .JavaName "create"}}
-        {{- else if isContain .JavaName "update"}}
-        {{- else if isContain .JavaName "remark"}}
-        {{- else if isContain .JavaName "sort"}}
-        {{- else if eq .ColumnKey "PRI"}}
-        {{- else}}
-        //.apply_if(item.{{.RustName}}.clone(), |query, v| { query.filter( {{$lowerJavaName}}::Column::{{.RustName}}.eq(v))})
-        {{- end}}
-        {{- end}}
+    let paginator = {{table_info.original_class_name}}::find()
+        {%- for column in table_info.columns %}
+        {%- if column.column_key =="PRI"  %}
+        {%- elif column.rust_name is containing("create") %}
+        {%- elif column.rust_name is containing("update") %}
+        {%- elif column.rust_name is containing("remark") %}
+        {%- elif column.rust_name is containing("sort") %}
+        {%- else %}
+        //.apply_if(item.{{column.rust_name}}.clone(), |query, v| { query.filter( {{table_info.class_name}}::Column::{{column.rust_name}}.eq(v))})
+        {%- endif %}
+      {%- endfor %}
         .paginate(conn, item.page_size.clone());
 
     let total = paginator.num_items().await.unwrap_or_default();
 
-    let mut {{.RustName}}_list_data: Vec<{{.JavaName}}ListDataResp> = Vec::new();
+    let mut {{table_info.table_name}}_list_data: Vec<{{table_info.class_name}}ListDataResp> = Vec::new();
 
     for x in paginator.fetch_page(item.page_no.clone() - 1).await.unwrap_or_default() {
-        {{.RustName}}_list_data.push({{.JavaName}}ListDataResp {
-        {{- range .TableColumn}}
-        {{- if eq .ColumnKey `PRI`}}
-            {{.RustName}}: x.{{.RustName}}.unwrap()
-        {{- else if eq .IsNullable `YES` }}
-            {{.RustName}}: x.{{.RustName}}.unwrap_or_default()
-        {{- else if eq .RustType `DateTime`}}
-            {{.RustName}}: x.{{.RustName}}.unwrap().0.to_string()
-        {{- else}}
-            {{.RustName}}: x.{{.RustName}}
-        {{- end}},
-        {{- end}}
+        {{table_info.table_name}}_list_data.push({{table_info.class_name}}ListDataResp {
+            {%- for column in table_info.columns %}
+            {%- if column.column_key =="PRI"  %}
+            {{column.rust_name}}: x.{{column.rust_name}}.unwrap()
+            {%- elif column.is_nullable =="YES" %}
+            {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default()
+            {%- elif column.rust_type =="DateTime" %}
+            {{column.rust_name}}: x.{{column.rust_name}}.unwrap().0.to_string()
+            {%- else %}
+            {{column.rust_name}}: x.{{column.rust_name}}
+            {%- endif %}, //{{column.column_comment}}
+          {%- endfor %}
         })
     }
 
-    Json(ok_result_page({{.RustName}}_list_data, total))
+    Json(ok_result_page({{table_info.table_name}}_list_data, total))
 
 }
 
