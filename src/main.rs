@@ -7,6 +7,7 @@ use crate::util::db_util::DbUtil;
 use crate::util::generate_util::{generate, generate_common};
 use rust_embed::Embed;
 use tera::Tera;
+use crate::service::rust::rocket::Rocket;
 use crate::service::rust::salvo::Salvo;
 use crate::service::web::angular::ng_zorro_antd::NgZorroAntd;
 
@@ -34,7 +35,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     for x in table_info_list {
         //generate(&mut tera, x);
         // NgZorroAntd::generate(&mut tera, x)
-        Salvo::generate(&mut tera, x);
+        Rocket::generate(&mut tera, x);
     }
 
     Ok(())
