@@ -7,47 +7,54 @@ use serde::{Deserialize, Serialize};
 /**
 添加{{table_info.table_comment}}请求参数
 */
-#[derive(Debug, Deserialize)]
-pub struct Add{{.JavaName}}Req {
-{{- range .TableColumn}}
-{{- if isContain .JavaName "create"}}
-{{- else if isContain .JavaName "update"}}
-{{- else if eq .ColumnKey "PRI"}}
-{{- else}}
-    #[serde(rename = "{{.JavaName}}")]
-    {{if eq .IsNullable `YES` }}pub {{.RustName}}: Option<{{.RustType}}>{{else}}pub {{.RustName}}: {{.RustType}}{{end}}, //{{.ColumnComment}}
-{{- end}}
-{{- end}}
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Add{{table_info.class_name}}Req {
+{%- for column in table_info.columns %}
+  {%- if column.column_key =="PRI"  %}
+  {%- elif column.rust_name is containing("create") %}
+  {%- elif column.rust_name is containing("update") %}
+  {%- else %}
+    {%- if column.is_nullable == "YES"  %}
+    pub {{column.rust_name}}: Option<{{column.rust_type}}>,//{{column.column_comment}}
+    {%- else %}
+    pub {{column.rust_name}}: {{column.rust_type}},//{{column.column_comment}}
+    {%- endif %}
+  {%- endif %}
+{%- endfor %}
+
 }
 
 /**
 删除{{table_info.table_comment}}请求参数
 */
-#[derive(Debug, Deserialize)]
-pub struct Delete{{.JavaName}}Req {
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Delete{{table_info.class_name}}Req {
     pub ids: Vec<i64>,
 }
 
 /**
 更新{{table_info.table_comment}}请求参数
 */
-#[derive(Debug, Deserialize)]
-pub struct Update{{.JavaName}}Req {
-{{- range .TableColumn}}
-{{- if isContain .JavaName "create"}}
-{{- else if isContain .JavaName "update"}}
-{{- else}}
-    #[serde(rename = "{{.JavaName}}")]
-    {{if eq .IsNullable `YES` }}pub {{.RustName}}: Option<{{.RustType}}>{{else}}pub {{.RustName}}: {{.RustType}}{{end}}, //{{.ColumnComment}}
-{{- end}}
-{{- end}}
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Update{{table_info.class_name}}Req {
+{%- for column in table_info.columns %}
+  {%- if column.rust_name is containing("create") %}
+  {%- elif column.rust_name is containing("update") %}
+  {%- else %}
+    {%- if column.is_nullable == "YES"  %}
+    pub {{column.rust_name}}: Option<{{column.rust_type}}>,//{{column.column_comment}}
+    {%- else %}
+    pub {{column.rust_name}}: {{column.rust_type}},//{{column.column_comment}}
+    {%- endif %}
+  {%- endif %}
+{%- endfor %}
 }
 
 /**
 更新{{table_info.table_comment}}状态请求参数
 */
-#[derive(Debug, Deserialize)]
-pub struct Update{{.JavaName}}StatusReq {
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Update{{table_info.class_name}}StatusReq {
     pub ids: Vec<i64>,
     pub status: i8,
 }
@@ -55,8 +62,8 @@ pub struct Update{{.JavaName}}StatusReq {
 /**
 查询{{table_info.table_comment}}详情请求参数
 */
-#[derive(Debug, Deserialize)]
-pub struct Query{{.JavaName}}DetailReq {
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Query{{table_info.class_name}}DetailReq {
     pub id: i64,
 }
 
@@ -64,43 +71,50 @@ pub struct Query{{.JavaName}}DetailReq {
 查询{{table_info.table_comment}}详情响应参数
 */
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Query{{.JavaName}}DetailResp {
-{{- range .TableColumn}}
-    #[serde(rename = "{{.JavaName}}")]
-    pub {{.RustName}}: {{if eq .RustType "DateTime" }}String{{else}}{{.RustType}}{{end}}, //{{.ColumnComment}}
-{{- end}}
+pub struct Query{{table_info.class_name}}DetailResp {
+{%- for column in table_info.columns %}
+  {%- if column.rust_type =="DateTime"  %}
+   pub {{column.rust_name}}: String, //{{column.column_comment}}
+  {%- else %}
+   pub {{column.rust_name}}: {{column.rust_type}}, //{{column.column_comment}}
+  {%- endif %}
+{%- endfor %}
+
 }
 
 /**
 查询{{table_info.table_comment}}列表请求参数
 */
-#[derive(Debug, Deserialize)]
-pub struct Query{{.JavaName}}ListReq {
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Query{{table_info.class_name}}ListReq {
     #[serde(rename = "current")]
     pub page_no: u64,
     #[serde(rename = "pageSize")]
     pub page_size: u64,
-{{- range .TableColumn}}
-{{- if isContain .JavaName "create"}}
-{{- else if isContain .JavaName "update"}}
-{{- else if isContain .JavaName "remark"}}
-{{- else if isContain .JavaName "sort"}}
-{{- else if eq .ColumnKey "PRI"}}
-{{- else}}
-    #[serde(rename = "{{.JavaName}}")]
-    pub {{.RustName}}: Option<{{.RustType}}>, //{{.ColumnComment}}
-{{- end}}
-{{- end}}
+    {%- for column in table_info.columns %}
+    {%- if column.column_key =="PRI"  %}
+    {%- elif column.rust_name is containing("create") %}
+    {%- elif column.rust_name is containing("update") %}
+    {%- elif column.rust_name is containing("remark") %}
+    {%- elif column.rust_name is containing("Sort") %}
+    {%- elif column.rust_name is containing("sort") %}
+    {%- else %}
+    pub {{column.rust_name}}: Option<{{column.rust_type}}>,//{{column.column_comment}}
+    {%- endif %}
+  {%- endfor %}
+
 }
 
 /**
 查询{{table_info.table_comment}}列表响应参数
 */
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Query{{.JavaName}}ListDataResp {
-{{- range .TableColumn}}
-    #[serde(rename = "{{.JavaName}}")]
-    pub {{.RustName}}: {{if eq .RustType "DateTime" }}String{{else}}{{.RustType}}{{end}}, //{{.ColumnComment}}
-{{- end}}
+pub struct {{table_info.class_name}}ListDataResp {
+{%- for column in table_info.columns %}
+  {%- if column.rust_type =="DateTime"  %}
+   pub {{column.rust_name}}: String, //{{column.column_comment}}
+  {%- else %}
+   pub {{column.rust_name}}: {{column.rust_type}}, //{{column.column_comment}}
+  {%- endif %}
+{%- endfor %}
 }
-

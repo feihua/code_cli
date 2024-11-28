@@ -18,7 +18,14 @@ impl Salvo {
         context.insert("create_time", create_time.as_str());
         context.insert("package_name", package_name);
 
-        Self::create_sea_from_tpl(
+        // Self::create_sea_from_tpl(
+        //     &mut tera,
+        //     table_info.table_name.as_str(),
+        //     &mut context,
+        //     package_name,
+        // );
+
+        Self::create_diesel_from_tpl(
             &mut tera,
             table_info.table_name.as_str(),
             &mut context,
@@ -33,6 +40,27 @@ impl Salvo {
         package_name: &str,
     ) {
         let path = String::from("rust/salvo/sea/");
+        write_file(
+            tera.clone(),
+            &mut context,
+            format!("{}{}", path, "vo.tpl").as_str(),
+            format!("{}{}/vo/{}_vo.rs", path, package_name, table_name).as_str(),
+        );
+        write_file(
+            tera.clone(),
+            &mut context,
+            format!("{}{}", path, "handler.tpl").as_str(),
+            format!("{}{}/handler/{}_handler.rs", path, package_name, table_name).as_str(),
+        );
+    }
+
+    fn create_diesel_from_tpl(
+        tera: &mut Tera,
+        table_name: &str,
+        mut context: &mut Context,
+        package_name: &str,
+    ) {
+        let path = String::from("rust/salvo/diesel/");
         write_file(
             tera.clone(),
             &mut context,
