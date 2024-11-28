@@ -8,53 +8,52 @@
   </button>
   <form *nzSpaceItem nz-form [nzLayout]="'inline'" [formGroup]="searchForm" (ngSubmit)="submitSearchForm()"
         style="margin-left: 20px">
-    {{- range .TableColumn}}
-    {{- if isContain .JavaName "Sort"}}
-    {{- else if isContain .JavaName "create"}}
-    {{- else if isContain .JavaName "update"}}
-    {{- else if isContain .JavaName "id"}}
-    {{- else if isContain .JavaName "sort"}}
-    {{- else if isContain .JavaName "remark"}}
-    {{- else if isContain .JavaName "status"}}
+    {%- for column in table_info.columns %}
+    {%- if column.ts_name is containing("id")  %}
+    {%- elif column.ts_name is containing("Sort") %}
+    {%- elif column.ts_name is containing("sort") %}
+    {%- elif column.ts_name is containing("create") %}
+    {%- elif column.ts_name is containing("update") %}
+    {%- elif column.ts_name is containing("remark") %}
+    {%- elif column.ts_name is containing("Status") %}
     <nz-form-item>
-      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
+      <nz-form-label [nzSpan]="7" nzRequired>{{column.column_comment}}</nz-form-label>
       <nz-form-control [nzSpan]="12" nzHasFeedback>
-        <nz-select formControlName="{{.JavaName}}" style="width: 183px" nzPlaceHolder="请选择{{.ColumnComment}}">
+        <nz-select formControlName="{{column.ts_name}}" style="width: 183px" nzPlaceHolder="请选择{{column.column_comment}}">
           <nz-option nzValue="1" nzLabel="正常"></nz-option>
           <nz-option nzValue="0" nzLabel="禁用"></nz-option>
         </nz-select>
       </nz-form-control>
     </nz-form-item>
-    {{- else if isContain .JavaName "Status"}}
+    {%- elif column.ts_name is containing("status") %}
     <nz-form-item>
-      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
+      <nz-form-label [nzSpan]="7" nzRequired>{{column.column_comment}}</nz-form-label>
       <nz-form-control [nzSpan]="12" nzHasFeedback>
-        <nz-select formControlName="{{.JavaName}}" style="width: 183px" nzPlaceHolder="请选择{{.ColumnComment}}">
+        <nz-select formControlName="{{column.ts_name}}" style="width: 183px" nzPlaceHolder="请选择{{column.column_comment}}">
           <nz-option nzValue="1" nzLabel="正常"></nz-option>
           <nz-option nzValue="0" nzLabel="禁用"></nz-option>
         </nz-select>
       </nz-form-control>
     </nz-form-item>
-    {{- else if isContain .JavaName "Type"}}
+    {%- elif column.ts_name is containing("Type") %}
     <nz-form-item>
-      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
+      <nz-form-label [nzSpan]="7" nzRequired>{{column.column_comment}}</nz-form-label>
       <nz-form-control [nzSpan]="12" nzHasFeedback>
-        <nz-select formControlName="{{.JavaName}}" style="width: 183px" nzPlaceHolder="请选择{{.ColumnComment}}">
+        <nz-select formControlName="{{column.ts_name}}" style="width: 183px" nzPlaceHolder="请选择{{column.column_comment}}">
           <nz-option nzValue="1" nzLabel="正常"></nz-option>
           <nz-option nzValue="0" nzLabel="禁用"></nz-option>
         </nz-select>
       </nz-form-control>
     </nz-form-item>
-    {{- else if isContain .JavaName "remark"}}
-    {{- else}}
+    {%- else %}
     <nz-form-item>
-      <nz-form-label>{{.ColumnComment}}</nz-form-label>
+      <nz-form-label>{{column.column_comment}}</nz-form-label>
       <nz-form-control>
-        <input nz-input formControlName="{{.JavaName}}" placeholder="请输入{{.ColumnComment}}"/>
+        <input nz-input formControlName="{{column.ts_name}}" placeholder="请输入{{column.column_comment}}"/>
       </nz-form-control>
     </nz-form-item>
-    {{- end}}
-    {{- end}}
+    {%- endif %}
+    {%- endfor %}
     <nz-form-item>
       <nz-space nzSize="small">
         <nz-form-control *nzSpaceItem>
@@ -79,77 +78,74 @@
   [nzOkLoading]="isAddOkLoading"
 >
   <form nz-form [formGroup]="addForm" *nzModalContent>
-    {{- range .TableColumn}}
-    {{- if isContain .JavaName "create"}}
-    {{- else if isContain .JavaName "update"}}
-    {{- else if isContain .JavaName "id"}}
-    {{- else if isContain .JavaName "Sort"}}
+    {%- for column in table_info.columns %}
+    {%- if column.ts_name is containing("Status")  %}
     <nz-form-item>
-      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
+      <nz-form-label [nzSpan]="7" nzRequired>{{column.column_comment}}</nz-form-label>
       <nz-form-control [nzSpan]="12" nzHasFeedback>
-        <nz-input-number formControlName="{{.JavaName}}" [nzMin]="1" [nzStep]="1" style="width: 236px"  placeholder="请输入{{.ColumnComment}}"></nz-input-number>
-      </nz-form-control>
-    </nz-form-item>
-    {{- else if isContain .JavaName "sort"}}
-    <nz-form-item>
-      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
-      <nz-form-control [nzSpan]="12" nzHasFeedback>
-        <nz-input-number formControlName="{{.JavaName}}" [nzMin]="1" [nzStep]="1" style="width: 236px"  placeholder="请输入{{.ColumnComment}}"></nz-input-number>
-      </nz-form-control>
-    </nz-form-item>
-    {{- else if isContain .JavaName "status"}}
-    <nz-form-item>
-      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
-      <nz-form-control [nzSpan]="12" nzHasFeedback>
-        <nz-radio-group formControlName="{{.JavaName}}">
+        <nz-radio-group formControlName="{{column.ts_name}}">
           <label nz-radio [nzValue]=1>正常</label>
           <label nz-radio [nzValue]=0>禁用</label>
         </nz-radio-group>
       </nz-form-control>
     </nz-form-item>
-    {{- else if isContain .JavaName "Status"}}
+    {%- elif column.ts_name is containing("status") %}
     <nz-form-item>
-      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
+      <nz-form-label [nzSpan]="7" nzRequired>{{column.column_comment}}</nz-form-label>
       <nz-form-control [nzSpan]="12" nzHasFeedback>
-        <nz-radio-group formControlName="{{.JavaName}}" >
+        <nz-radio-group formControlName="{{column.ts_name}}">
           <label nz-radio [nzValue]=1>正常</label>
           <label nz-radio [nzValue]=0>禁用</label>
         </nz-radio-group>
       </nz-form-control>
     </nz-form-item>
-    {{- else if isContain .JavaName "Type"}}
+    {%- elif column.ts_name is containing("Sort") %}
     <nz-form-item>
-      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
+      <nz-form-label [nzSpan]="7" nzRequired>{{column.column_comment}}</nz-form-label>
       <nz-form-control [nzSpan]="12" nzHasFeedback>
-        <nz-radio-group formControlName="{{.JavaName}}">
+        <nz-input-number formControlName="{{column.ts_name}}" [nzMin]="1" [nzStep]="1" style="width: 236px"  placeholder="请输入{{column.column_comment}}"></nz-input-number>
+      </nz-form-control>
+    </nz-form-item>
+    {%- elif column.ts_name is containing("sort") %}
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>{{column.column_comment}}</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback>
+        <nz-input-number formControlName="{{column.ts_name}}" [nzMin]="1" [nzStep]="1" style="width: 236px"  placeholder="请输入{{column.column_comment}}"></nz-input-number>
+      </nz-form-control>
+    </nz-form-item>
+    {%- elif column.ts_name is containing("Type") %}
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>{{column.column_comment}}</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback>
+        <nz-radio-group formControlName="{{column.ts_name}}">
           <label nz-radio [nzValue]=1>正常</label>
           <label nz-radio [nzValue]=0>禁用</label>
         </nz-radio-group>
       </nz-form-control>
     </nz-form-item>
-    {{- else if isContain .JavaName "remark"}}
+    {%- elif column.ts_name is containing("remark") %}
     <nz-form-item>
-      <nz-form-label [nzSpan]="7">{{.ColumnComment}}</nz-form-label>
+      <nz-form-label [nzSpan]="7">{{column.column_comment}}</nz-form-label>
       <nz-form-control [nzSpan]="12" nzHasFeedback>
         <nz-textarea-count [nzMaxCharacterCount]="128">
-          <textarea formControlName="remark" nz-input rows="2" placeholder="请输入{{.ColumnComment}}"></textarea>
+          <textarea formControlName="remark" nz-input rows="2" placeholder="请输入{{column.column_comment}}"></textarea>
         </nz-textarea-count>
       </nz-form-control>
     </nz-form-item>
-    {{- else}}
+    {%- else %}
     <nz-form-item>
-      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
-      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="{{.JavaName}}ErrorTpl">
-        <input nz-input formControlName="{{.JavaName}}" placeholder="请输入{{.ColumnComment}}"/>
-        <ng-template #{{.JavaName}}ErrorTpl let-control>
+      <nz-form-label [nzSpan]="7" nzRequired>{{column.column_comment}}</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="{{column.ts_name}}ErrorTpl">
+        <input nz-input formControlName="{{column.ts_name}}" placeholder="请输入{{column.column_comment}}"/>
+        <ng-template #{{column.ts_name}}ErrorTpl let-control>
           @if (control.errors?.['required']) {
           Please input your username!
           }
         </ng-template>
       </nz-form-control>
     </nz-form-item>
-    {{- end}}
-    {{- end}}
+    {%- endif %}
+    {%- endfor %}
   </form>
 </nz-modal>
 
@@ -162,77 +158,74 @@
   [nzOkLoading]="isUpdateOkLoading"
 >
   <form nz-form [formGroup]="updateForm" *nzModalContent>
-    {{- range .TableColumn}}
-    {{- if isContain .JavaName "create"}}
-    {{- else if isContain .JavaName "update"}}
-    {{- else if isContain .JavaName "id"}}
-    {{- else if isContain .JavaName "Sort"}}
+    {%- for column in table_info.columns %}
+    {%- if column.ts_name is containing("Status")  %}
     <nz-form-item>
-      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
+      <nz-form-label [nzSpan]="7" nzRequired>{{column.column_comment}}</nz-form-label>
       <nz-form-control [nzSpan]="12" nzHasFeedback>
-        <nz-input-number formControlName="{{.JavaName}}" [nzMin]="1" [nzStep]="1" style="width: 236px"  placeholder="请输入{{.ColumnComment}}"></nz-input-number>
-      </nz-form-control>
-    </nz-form-item>
-    {{- else if isContain .JavaName "sort"}}
-    <nz-form-item>
-      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
-      <nz-form-control [nzSpan]="12" nzHasFeedback>
-        <nz-input-number formControlName="{{.JavaName}}" [nzMin]="1" [nzStep]="1" style="width: 236px"  placeholder="请输入{{.ColumnComment}}"></nz-input-number>
-      </nz-form-control>
-    </nz-form-item>
-    {{- else if isContain .JavaName "status"}}
-    <nz-form-item>
-      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
-      <nz-form-control [nzSpan]="12" nzHasFeedback>
-        <nz-radio-group formControlName="{{.JavaName}}">
+        <nz-radio-group formControlName="{{column.ts_name}}">
           <label nz-radio [nzValue]=1>正常</label>
           <label nz-radio [nzValue]=0>禁用</label>
         </nz-radio-group>
       </nz-form-control>
     </nz-form-item>
-    {{- else if isContain .JavaName "Status"}}
+    {%- elif column.ts_name is containing("status") %}
     <nz-form-item>
-      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
+      <nz-form-label [nzSpan]="7" nzRequired>{{column.column_comment}}</nz-form-label>
       <nz-form-control [nzSpan]="12" nzHasFeedback>
-        <nz-radio-group formControlName="{{.JavaName}}">
+        <nz-radio-group formControlName="{{column.ts_name}}">
           <label nz-radio [nzValue]=1>正常</label>
           <label nz-radio [nzValue]=0>禁用</label>
         </nz-radio-group>
       </nz-form-control>
     </nz-form-item>
-    {{- else if isContain .JavaName "Type"}}
+    {%- elif column.ts_name is containing("Sort") %}
     <nz-form-item>
-      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
+      <nz-form-label [nzSpan]="7" nzRequired>{{column.column_comment}}</nz-form-label>
       <nz-form-control [nzSpan]="12" nzHasFeedback>
-        <nz-radio-group formControlName="{{.JavaName}}">
+        <nz-input-number formControlName="{{column.ts_name}}" [nzMin]="1" [nzStep]="1" style="width: 236px"  placeholder="请输入{{column.column_comment}}"></nz-input-number>
+      </nz-form-control>
+    </nz-form-item>
+    {%- elif column.ts_name is containing("sort") %}
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>{{column.column_comment}}</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback>
+        <nz-input-number formControlName="{{column.ts_name}}" [nzMin]="1" [nzStep]="1" style="width: 236px"  placeholder="请输入{{column.column_comment}}"></nz-input-number>
+      </nz-form-control>
+    </nz-form-item>
+    {%- elif column.ts_name is containing("Type") %}
+    <nz-form-item>
+      <nz-form-label [nzSpan]="7" nzRequired>{{column.column_comment}}</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback>
+        <nz-radio-group formControlName="{{column.ts_name}}">
           <label nz-radio [nzValue]=1>正常</label>
           <label nz-radio [nzValue]=0>禁用</label>
         </nz-radio-group>
       </nz-form-control>
     </nz-form-item>
-    {{- else if isContain .JavaName "remark"}}
+    {%- elif column.ts_name is containing("remark") %}
     <nz-form-item>
-      <nz-form-label [nzSpan]="7">{{.ColumnComment}}</nz-form-label>
+      <nz-form-label [nzSpan]="7">{{column.column_comment}}</nz-form-label>
       <nz-form-control [nzSpan]="12" nzHasFeedback>
         <nz-textarea-count [nzMaxCharacterCount]="128">
-          <textarea formControlName="remark" nz-input rows="2" placeholder="请输入{{.ColumnComment}}"></textarea>
+          <textarea formControlName="remark" nz-input rows="2" placeholder="请输入{{column.column_comment}}"></textarea>
         </nz-textarea-count>
       </nz-form-control>
     </nz-form-item>
-    {{- else}}
+    {%- else %}
     <nz-form-item>
-      <nz-form-label [nzSpan]="7" nzRequired>{{.ColumnComment}}</nz-form-label>
-      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="{{.JavaName}}ErrorTpl">
-        <input nz-input formControlName="{{.JavaName}}" placeholder="请输入{{.ColumnComment}}"/>
-        <ng-template #{{.JavaName}}ErrorTpl let-control>
+      <nz-form-label [nzSpan]="7" nzRequired>{{column.column_comment}}</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="{{column.ts_name}}ErrorTpl">
+        <input nz-input formControlName="{{column.ts_name}}" placeholder="请输入{{column.column_comment}}"/>
+        <ng-template #{{column.ts_name}}ErrorTpl let-control>
           @if (control.errors?.['required']) {
           Please input your username!
           }
         </ng-template>
       </nz-form-control>
     </nz-form-item>
-    {{- end}}
-    {{- end}}
+    {%- endif %}
+    {%- endfor %}
   </form>
 </nz-modal>
 
@@ -245,9 +238,9 @@
   [nzFooter]="null"
 >
   <nz-descriptions *nzModalContent>
-    {{- range .TableColumn}}
-    <nz-descriptions-item nzTitle="{{.ColumnComment}}">{ { detailData.{{.JavaName}} } }</nz-descriptions-item>
-    {{- end}}
+    {%- for column in table_info.columns %}
+    <nz-descriptions-item nzTitle="{{column.column_comment}}">{ { detailData.{{column.ts_name}} } }</nz-descriptions-item>
+    {%- endfor %}
   </nz-descriptions>
 </nz-modal>
 
@@ -269,9 +262,9 @@
       nzLabel="Select all"
       (nzCheckedChange)="onAllChecked($event)"
     ></th>
-    {{- range .TableColumn}}
-    <th>{{.ColumnComment}}</th>
-    {{- end}}
+    {%- for column in table_info.columns %}
+    <th>{{column.column_comment}}</th>
+    {%- endfor %}
     <th>操作</th>
   </tr>
   </thead>
@@ -283,19 +276,19 @@
           [nzLabel]="data.id"
           (nzCheckedChange)="onItemChecked(data.id, $event)"
         ></td>
-        {{- range .TableColumn}}
-        {{- if isContain .JavaName "Status"}}
-        <td>
-          <nz-switch [ngModel]="data.{{.JavaName}}==1" [nzControl]="true" (click)="clickSwitch(data)"></nz-switch>
-        </td>
-        {{- else if isContain .JavaName "status"}}
-        <td>
-          <nz-switch [ngModel]="data.{{.JavaName}}==1" [nzControl]="true" (click)="clickSwitch(data)"></nz-switch>
-        </td>
-        {{- else}}
-        <td>{ {data.{{.JavaName}}} }</td>
-        {{- end}}
-        {{- end}}
+        {%- for column in table_info.columns %}
+          {%- if column.ts_name is containing("Status")  %}
+          <td>
+            <nz-switch [ngModel]="data.{{column.ts_name}}==1" [nzControl]="true" (click)="clickSwitch(data)"></nz-switch>
+          </td>
+          {%- elif column.ts_name is containing("status") %}
+          <td>
+            <nz-switch [ngModel]="data.{{column.ts_name}}==1" [nzControl]="true" (click)="clickSwitch(data)"></nz-switch>
+          </td>
+          {%- else %}
+          <td>{ {data.{{column.ts_name}}} }</td>
+          {%- endif %}
+        {%- endfor %}
         <td>
           <a nz-button nzType="link" (click)="showDetailModal(data)" style="padding: 0">
             <span nz-icon nzType="search" nzTheme="outline"></span>详情

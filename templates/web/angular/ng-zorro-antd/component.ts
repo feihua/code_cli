@@ -18,9 +18,9 @@ import {NzSpaceComponent, NzSpaceItemDirective} from "ng-zorro-antd/space";
 import {NzOptionComponent, NzSelectComponent} from "ng-zorro-antd/select";
 import {NzModalComponent, NzModalModule, NzModalService} from "ng-zorro-antd/modal";
 import {NzDescriptionsComponent, NzDescriptionsItemComponent} from "ng-zorro-antd/descriptions";
-import { {{.JavaName}}Service} from "./{{.LowerJavaName}}.service";
+import { {{table_info.class_name}}Service} from "./{{table_info.object_name}}.service";
 import {AsyncPipe, NgIf} from "@angular/common";
-import { {{.JavaName}}RecordRes} from "./data";
+import { {{table_info.class_name}}RecordRes} from "./data";
 import {NzInputNumberComponent} from "ng-zorro-antd/input-number";
 import {NzRadioComponent, NzRadioGroupComponent, NzRadioModule} from "ng-zorro-antd/radio";
 import {NzMessageService} from "ng-zorro-antd/message";
@@ -28,7 +28,7 @@ import {NzSwitchComponent} from "ng-zorro-antd/switch";
 
 
 @Component({
-  selector: 'app-{{.LowerJavaName}}',
+  selector: 'app-{{table_info.object_name}}',
   standalone: true,
   imports: [
     NzTableComponent,
@@ -62,21 +62,21 @@ import {NzSwitchComponent} from "ng-zorro-antd/switch";
     NzSwitchComponent,
     FormsModule
   ],
-  templateUrl: './{{.LowerJavaName}}.component.html',
-  styleUrl: '{{.LowerJavaName}}.component.css'
+  templateUrl: './component.html',
+  styleUrl: './component.css'
 })
-export class {{.JavaName}}Component implements OnInit {
+export class {{table_info.class_name}}Component implements OnInit {
   private fb = inject(NonNullableFormBuilder);
   private modal = inject(NzModalService);
-  private {{.LowerJavaName}}Service = inject({{.JavaName}}Service);
+  private {{table_info.object_name}}Service = inject({{table_info.class_name}}Service);
   private message = inject(NzMessageService);
 
   // 分页相关参数
   total = 1;
   pageSize = 10;
   pageIndex = 1;
-  listData!: {{.JavaName}}RecordRes[];
-  detailData!: {{.JavaName}}RecordRes;
+  listData!: {{table_info.class_name}}RecordRes[];
+  detailData!: {{table_info.class_name}}RecordRes;
 
   isAddVisible = false;
   isAddOkLoading = false;
@@ -87,36 +87,20 @@ export class {{.JavaName}}Component implements OnInit {
   isDetailVisible = false;
 
   searchForm: FormGroup<{
-  {{- range .TableColumn}}
-  {{- if isContain .JavaName "create"}}
-  {{- else if isContain .JavaName "update"}}
-  {{- else if isContain .JavaName "id"}}
-  {{- else if isContain .JavaName "sort"}}
-  {{- else if isContain .JavaName "Sort"}}
-  {{- else if isContain .JavaName "remark"}}
-  {{- else}}
-    {{.JavaName}}: FormControl<{{.TsType}}>,//{{.ColumnComment}}
-  {{- end}}
-  {{- end}}
+  {%- for column in table_info.columns %}
+  {{column.ts_name}}: FormControl<{{column.ts_type}}>, //{{column.column_comment}}
+  {%- endfor %}
   }> = this.fb.group({
-  {{- range .TableColumn}}
-  {{- if isContain .JavaName "create"}}
-  {{- else if isContain .JavaName "update"}}
-  {{- else if isContain .JavaName "id"}}
-  {{- else if isContain .JavaName "sort"}}
-  {{- else if isContain .JavaName "Sort"}}
-  {{- else if isContain .JavaName "remark"}}
-  {{- else}}
-    {{.JavaName}}: [{{if eq .TsType `string`}}''{{else}}0{{end}}],
-  {{- end}}
-  {{- end}}
+  {%- for column in table_info.columns %}
+  {{column.ts_name}}: '', //{{column.column_comment}}
+  {%- endfor %}
   });
 
   submitSearchForm(): void {
     console.log('submit', this.searchForm.value);
     this.pageIndex = 1;
     this.pageSize = 10;
-    this.query{{.JavaName}}List();
+    this.query{{table_info.class_name}}List();
 
   }
 
@@ -126,23 +110,13 @@ export class {{.JavaName}}Component implements OnInit {
 
   // 新增相关参数
   addForm: FormGroup<{
-  {{- range .TableColumn}}
-  {{- if isContain .JavaName "create"}}
-  {{- else if isContain .JavaName "update"}}
-  {{- else if isContain .JavaName "id"}}
-  {{- else}}
-    {{.JavaName}}: FormControl<{{.TsType}}>,//{{.ColumnComment}}
-  {{- end}}
-  {{- end}}
+  {%- for column in table_info.columns %}
+  {{column.ts_name}}: FormControl<{{column.ts_type}}>, //{{column.column_comment}}
+  {%- endfor %}
   }> = this.fb.group({
-  {{- range .TableColumn}}
-  {{- if isContain .JavaName "create"}}
-  {{- else if isContain .JavaName "update"}}
-  {{- else if isContain .JavaName "id"}}
-  {{- else}}
-    {{.JavaName}}: [{{if eq .TsType `string`}}''{{else}}0{{end}}, [Validators.required]],
-  {{- end}}
-  {{- end}}
+  {%- for column in table_info.columns %}
+  {{column.ts_name}}: '', //{{column.column_comment}}
+  {%- endfor %}
   });
 
   showAddModal(): void {
@@ -153,21 +127,16 @@ export class {{.JavaName}}Component implements OnInit {
     this.isAddOkLoading = true;
     console.log('handleAddOk submit', this.addForm.value);
     const addRecord = this.addForm.value
-    this.{{.LowerJavaName}}Service.add{{.JavaName}}({
-      {{- range .TableColumn}}
-      {{- if isContain .JavaName "create"}}
-      {{- else if isContain .JavaName "update"}}
-      {{- else if isContain .JavaName "id"}}
-      {{- else}}
-      {{.JavaName}}: addRecord.{{.JavaName}} as {{if eq .TsType `string`}}string{{else}}number{{end}},
-      {{- end}}
-      {{- end}}
+    this.{{table_info.object_name}}Service.add{{table_info.class_name}}({
+      {%- for column in table_info.columns %}
+      {{column.ts_name}}: addRecord.{{column.ts_name}}, //{{column.column_comment}}
+      {%- endfor %}
     }).subscribe(res => {
       this.message.create(res.code == 0 ? 'success' : 'error', res.message);
       this.isAddOkLoading = false;
       if (res.code == 0) {
         this.isAddVisible = false;
-        this.query{{.JavaName}}List();
+        this.query{{table_info.class_name}}List();
 
       }
     })
@@ -179,32 +148,25 @@ export class {{.JavaName}}Component implements OnInit {
   }
 
   updateForm: FormGroup<{
-  {{- range .TableColumn}}
-  {{- if isContain .JavaName "create"}}
-  {{- else if isContain .JavaName "update"}}
-  {{- else}}
-    {{.JavaName}}: FormControl<{{.TsType}}>,//{{.ColumnComment}}
-  {{- end}}
-  {{- end}}
+  {%- for column in table_info.columns %}
+  {{column.ts_name}}: FormControl<{{column.ts_type}}>, //{{column.column_comment}}
+  {%- endfor %}
   }> = this.fb.group({
-  {{- range .TableColumn}}
-  {{- if isContain .JavaName "create"}}
-  {{- else if isContain .JavaName "update"}}
-  {{- else}}
-    {{.JavaName}}: [{{if eq .TsType `string`}}''{{else}}0{{end}}, [Validators.required]],
-  {{- end}}
-  {{- end}}
+  {%- for column in table_info.columns %}
+  {{column.ts_name}}: '', //{{column.column_comment}}
+  {%- endfor %}
   });
 
 
-  showUpdateModal(record: {{.JavaName}}RecordRes): void {
+  showUpdateModal(record: {{table_info.class_name}}RecordRes): void {
     this.isUpdateVisible = true;
-    this.{{.LowerJavaName}}Service.query{{.JavaName}}Detail(record.id).subscribe(res => {
+    this.{{table_info.object_name}}Service.query{{table_info.class_name}}Detail(record.id).subscribe(res => {
       this.detailData = res.data
       const updateRecord = res.data
       this.updateForm = this.fb.group({
-        {{range .TableColumn}}    {{.JavaName}}: [updateRecord.{{.JavaName}}, [Validators.required]],
-        {{end}}
+        {%- for column in table_info.columns %}
+        {{column.ts_name}}: [updateRecord.{{column.ts_name}}, [Validators.required]],
+        {%- endfor %}
       })
     })
   }
@@ -213,20 +175,16 @@ export class {{.JavaName}}Component implements OnInit {
     this.isUpdateOkLoading = true;
     console.log('handleUpdateOk submit', this.updateForm.value);
     const updateRecord = this.updateForm.value
-    this.{{.LowerJavaName}}Service.update{{.JavaName}}({
-      {{- range .TableColumn}}
-      {{- if isContain .JavaName "create"}}
-      {{- else if isContain .JavaName "update"}}
-      {{- else}}
-      {{.JavaName}}: updateRecord.{{.JavaName}} as {{if eq .TsType `string`}}string{{else}}number{{end}},
-      {{- end}}
-      {{- end}}
+    this.{{table_info.object_name}}Service.update{{table_info.class_name}}({
+      {%- for column in table_info.columns %}
+      {{column.ts_name}}: updateRecord.{{column.ts_name}}, //{{column.column_comment}}
+      {%- endfor %}
     }).subscribe(res => {
       this.message.create(res.code == 0 ? 'success' : 'error', res.message);
       this.isUpdateOkLoading = false;
       if (res.code == 0) {
         this.isUpdateVisible = false;
-        this.query{{.JavaName}}List();
+        this.query{{table_info.class_name}}List();
       }
     })
   }
@@ -236,9 +194,9 @@ export class {{.JavaName}}Component implements OnInit {
     this.isUpdateVisible = false;
   }
 
-  showDetailModal(record: {{.JavaName}}RecordRes): void {
+  showDetailModal(record: {{table_info.class_name}}RecordRes): void {
     this.isDetailVisible = true;
-    this.{{.LowerJavaName}}Service.query{{.JavaName}}Detail(record.id).subscribe(res => {
+    this.{{table_info.object_name}}Service.query{{table_info.class_name}}Detail(record.id).subscribe(res => {
       this.detailData = res.data
     })
   }
@@ -255,12 +213,12 @@ export class {{.JavaName}}Component implements OnInit {
       nzOkType: 'primary',
       nzOkDanger: true,
       nzOnOk: () => {
-        this.{{.LowerJavaName}}Service.delete{{.JavaName}}({
+        this.{{table_info.object_name}}Service.delete{{table_info.class_name}}({
           ids: recordIds
         }).subscribe(res => {
           this.message.create(res.code == 0 ? 'success' : 'error', res.message);
           if (res.code == 0) {
-            this.query{{.JavaName}}List();
+            this.query{{table_info.class_name}}List();
           }
         })
       },
@@ -272,7 +230,7 @@ export class {{.JavaName}}Component implements OnInit {
   // 批量选择
   checked = false;
   indeterminate = false;
-  listOfCurrentPageData: readonly {{.JavaName}}RecordRes[] = [];
+  listOfCurrentPageData: readonly {{table_info.class_name}}RecordRes[] = [];
   setOfCheckedId = new Set<number>();
 
   updateCheckedSet(id: number, checked: boolean): void {
@@ -283,7 +241,7 @@ export class {{.JavaName}}Component implements OnInit {
     }
   }
 
-  onCurrentPageDataChange(listOfCurrentPageData: readonly {{.JavaName}}RecordRes[]): void {
+  onCurrentPageDataChange(listOfCurrentPageData: readonly {{table_info.class_name}}RecordRes[]): void {
     this.listOfCurrentPageData = listOfCurrentPageData;
     this.refreshCheckedStatus();
   }
@@ -313,48 +271,35 @@ export class {{.JavaName}}Component implements OnInit {
     const {pageSize, pageIndex} = params;
     this.pageIndex = pageIndex
     this.pageSize = pageSize
-    this.query{{.JavaName}}List();
+    this.query{{table_info.class_name}}List();
   }
 
-  clickSwitch(res: {{.JavaName}}RecordRes): void {
+  clickSwitch(res: {{table_info.class_name}}RecordRes): void {
     console.log('clickSwitch', res);
-    this.{{.LowerJavaName}}Service.update{{.JavaName}}Status({
+    this.{{table_info.object_name}}Service.update{{table_info.class_name}}Status({
       ids: [res.id],
       status: 0,
     }).subscribe(res => {
       this.message.create(res.code == 0 ? 'success' : 'error', res.message);
       if (res.code == 0) {
-        this.query{{.JavaName}}List();
+        this.query{{table_info.class_name}}List();
       }
     })
 
   }
 
 
-  private query{{.JavaName}}List() {
-    const { {{- range .TableColumn}}
-    {{- if isContain .JavaName "create"}}
-    {{- else if isContain .JavaName "update"}}
-    {{- else if isContain .JavaName "Sort"}}
-    {{- else if isContain .JavaName "sort"}}
-    {{- else if isContain .JavaName "remark"}}
-    {{- else if isContain .JavaName "id"}}
-    {{- else}}
-    {{.JavaName}},{{- end}}{{- end}} } = this.searchForm.value;
-    this.{{.LowerJavaName}}Service.query{{.JavaName}}List({
+  private query{{table_info.class_name}}List() {
+    const {  {%- for column in table_info.columns %}
+    {{column.ts_name}}, //{{column.column_comment}}
+    {%- endfor %}
+    } = this.searchForm.value;
+    this.{{table_info.object_name}}Service.query{{table_info.class_name}}List({
       current: this.pageIndex,
       pageSize: this.pageSize,
-      {{- range .TableColumn}}
-      {{- if isContain .JavaName "create"}}
-      {{- else if isContain .JavaName "update"}}
-      {{- else if isContain .JavaName "Sort"}}
-      {{- else if isContain .JavaName "sort"}}
-      {{- else if isContain .JavaName "remark"}}
-      {{- else if isContain .JavaName "id"}}
-      {{- else}}
-      {{.JavaName}},
-      {{- end}}
-      {{- end}}
+  {%- for column in table_info.columns %}
+  {{column.ts_name}},
+  {%- endfor %}
     }).subscribe(res => {
       this.listData = res.data
       this.total = res.total

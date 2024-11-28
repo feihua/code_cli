@@ -1,11 +1,13 @@
 pub mod model;
 pub mod util;
+mod service;
 
 use crate::model::db_info::DbInfo;
 use crate::util::db_util::DbUtil;
 use crate::util::generate_util::{generate, generate_common};
 use rust_embed::Embed;
 use tera::Tera;
+use crate::service::angular::Angular;
 
 #[derive(Embed)]
 #[folder = "templates/"]
@@ -29,7 +31,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let table_info_list = DbUtil::get_tables(info);
     for x in table_info_list {
-        generate(&mut tera, x);
+        //generate(&mut tera, x);
+        Angular::generate(&mut tera, x)
     }
 
     Ok(())

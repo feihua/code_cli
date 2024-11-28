@@ -1,12 +1,12 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {
-  Add{{.JavaName}}Param,
-  Delete{{.JavaName}}Param,
-  QueryList{{.JavaName}}Param,
-  Update{{.JavaName}}Param,
-  Update{{.JavaName}}StatusParam,
-  {{.JavaName}}RecordRes
+  Add{{table_info.class_name}}Param,
+  Delete{{table_info.class_name}}Param,
+  QueryList{{table_info.class_name}}Param,
+  Update{{table_info.class_name}}Param,
+  Update{{table_info.class_name}}StatusParam,
+  {{table_info.class_name}}RecordRes
 } from "./data";
 import {Observable} from "rxjs";
 import {IResponse} from "../../../app.component";
@@ -14,58 +14,58 @@ import {IResponse} from "../../../app.component";
 @Injectable({
   providedIn: 'root'
 })
-export class {{.JavaName}}Service {
+export class {{table_info.class_name}}Service {
   private http = inject(HttpClient);
 
   constructor() {
   }
 
   /**
-   * 添加{{.Comment}}
+   * 添加{{table_info.table_comment}}
    * @param param
    */
-  add{{.JavaName}}(param: Add{{.JavaName}}Param): Observable<IResponse<number>> {
-    return this.http.post<IResponse<number>>('/api/demo/{{.LowerJavaName}}/add{{.JavaName}}', param);
+  add{{table_info.class_name}}(param: Add{{table_info.class_name}}Param): Observable<IResponse<number>> {
+    return this.http.post<IResponse<number>>('/api/demo/{{table_info.object_name}}/add{{table_info.class_name}}', param);
   }
 
   /**
-   * 删除{{.Comment}}
+   * 删除{{table_info.table_comment}}
    * @param param
    */
-  delete{{.JavaName}}(param: Delete{{.JavaName}}Param): Observable<IResponse<number>> {
-    return this.http.get<IResponse<number>>('/api/demo/{{.LowerJavaName}}/delete{{.JavaName}}?ids=[' + param.ids + ']');
+  delete{{table_info.class_name}}(param: Delete{{table_info.class_name}}Param): Observable<IResponse<number>> {
+    return this.http.get<IResponse<number>>('/api/demo/{{table_info.object_name}}/delete{{table_info.class_name}}?ids=[' + param.ids + ']');
   }
 
   /**
-   * 更新{{.Comment}}
+   * 更新{{table_info.table_comment}}
    * @param param
    */
-  update{{.JavaName}}(param: Update{{.JavaName}}Param): Observable<IResponse<number>> {
-    return this.http.post<IResponse<number>>('/api/demo/{{.LowerJavaName}}/update{{.JavaName}}', param);
+  update{{table_info.class_name}}(param: Update{{table_info.class_name}}Param): Observable<IResponse<number>> {
+    return this.http.post<IResponse<number>>('/api/demo/{{table_info.object_name}}/update{{table_info.class_name}}', param);
   }
 
   /**
-   * 更新{{.Comment}}状态
+   * 更新{{table_info.table_comment}}状态
    * @param param
    */
-  update{{.JavaName}}Status(param: Update{{.JavaName}}StatusParam): Observable<IResponse<number>> {
-    return this.http.post<IResponse<number>>('/api/demo/{{.LowerJavaName}}/update{{.JavaName}}Status', param);
+  update{{table_info.class_name}}Status(param: Update{{table_info.class_name}}StatusParam): Observable<IResponse<number>> {
+    return this.http.post<IResponse<number>>('/api/demo/{{table_info.object_name}}/update{{table_info.class_name}}Status', param);
   }
 
   /**
-   * 查询{{.Comment}}详情
+   * 查询{{table_info.table_comment}}详情
    * @param id
    */
-  query{{.JavaName}}Detail(id: number): Observable<IResponse<{{.JavaName}}RecordRes>> {
-    return this.http.get<IResponse<{{.JavaName}}RecordRes>>('/api/demo/{{.LowerJavaName}}/query{{.JavaName}}Detail?id=' + id, {});
+  query{{table_info.class_name}}Detail(id: number): Observable<IResponse<{{table_info.class_name}}RecordRes>> {
+    return this.http.get<IResponse<{{table_info.class_name}}RecordRes>>('/api/demo/{{table_info.object_name}}/query{{table_info.class_name}}Detail?id=' + id, {});
   }
 
   /**
-   * 查询{{.Comment}}列表
+   * 查询{{table_info.table_comment}}列表
    * @param param
    */
-  query{{.JavaName}}List(param: QueryList{{.JavaName}}Param): Observable<IResponse<{{.JavaName}}RecordRes[]>> {
-    return this.http.get<IResponse<{{.JavaName}}RecordRes[]>>('/api/demo/{{.LowerJavaName}}/query{{.JavaName}}List', {params: {...param}});
+  query{{table_info.class_name}}List(param: QueryList{{table_info.class_name}}Param): Observable<IResponse<{{table_info.class_name}}RecordRes[]>> {
+    return this.http.get<IResponse<{{table_info.class_name}}RecordRes[]>>('/api/demo/{{table_info.object_name}}/query{{table_info.class_name}}List', {params: {...param}});
   }
 
 }
