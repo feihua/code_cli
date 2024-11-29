@@ -10,7 +10,7 @@ pub struct Gozero {
 impl Gozero {
 
     pub fn generate(mut tera: &mut Tera, table_info: TableInfo) {
-        let package_name = "com.example.springboottpl";
+        let package_name = "test";
         let author = "刘飞华";
         let fmt = "%Y/%m/%d %H:%M:%S";
         let create_time = Local::now().format(fmt).to_string();

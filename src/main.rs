@@ -1,12 +1,8 @@
 pub mod model;
-pub mod util;
 mod service;
+pub mod util;
 
 use crate::model::db_info::DbInfo;
-use crate::util::db_util::DbUtil;
-use crate::util::generate_util::{generate, generate_common};
-use rust_embed::Embed;
-use tera::Tera;
 use crate::service::go::hertz::Hertz;
 use crate::service::go::zero::Gozero;
 use crate::service::rust::actix::Actix;
@@ -15,6 +11,10 @@ use crate::service::rust::ntex::Ntex;
 use crate::service::rust::rocket::Rocket;
 use crate::service::rust::salvo::Salvo;
 use crate::service::web::angular::ng_zorro_antd::NgZorroAntd;
+use crate::util::db_util::DbUtil;
+use rust_embed::Embed;
+use tera::Tera;
+use crate::service::java::mybatis::Mybatis;
 
 #[derive(Embed)]
 #[folder = "templates/"]
@@ -34,19 +34,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     info.table_name_str = String::from("sys_user,sys_role_menu"); //待生成的表
     info.t_prefix = String::from("sys_"); //生成时，待去掉的表前缀
 
-    generate_common(&mut tera);
 
     let table_info_list = DbUtil::get_tables(info);
     for x in table_info_list {
-        //generate(&mut tera, x);
-        // NgZorroAntd::generate(&mut tera, x)
-        // Salvo::generate(&mut tera, x);
-        // Rocket::generate(&mut tera, x);
-        // Ntex::generate(&mut tera, x);
-        // Axum::generate(&mut tera, x);
-        // Actix::generate(&mut tera, x);
-        // Hertz::generate(&mut tera, x);
-        Gozero::generate(&mut tera, x);
+        Mybatis::generate(&mut tera, x.clone());
+        // NgZorroAntd::generate(&mut tera, x.clone());
+        // Salvo::generate(&mut tera, x.clone());
+        // Rocket::generate(&mut tera, x.clone());
+        // Ntex::generate(&mut tera, x.clone());
+        // Axum::generate(&mut tera, x.clone());
+        // Actix::generate(&mut tera, x.clone());
+        // Hertz::generate(&mut tera, x.clone());
+        // Gozero::generate(&mut tera, x);
     }
 
     Ok(())
