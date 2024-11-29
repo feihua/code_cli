@@ -1,110 +1,141 @@
 syntax = "proto3";
 
-package main;
+package {{table_info.table_name}};
 
-option go_package = "./proto";
+option go_package = "{{table_info.table_name}}";
 
-// 添加{{.Comment}}
-message Add{{.JavaName}}Req {
-{{- range .TableColumn}}
-{{- if isContain .JavaName "createTime"}}
-{{- else if isContain .JavaName "update"}}
-{{- else}}
-  {{.ProtoType}} {{.GoName}} = {{.Sort}}; //{{.ColumnComment}}
-{{- end}}
-{{- end}}
+import "api.proto";
+
+// 添加{{table_info.table_comment}}请求参数
+message Add{{table_info.class_name}}Req {
+
+{%- for column in table_info.columns %}
+{%- if column.column_key =="PRI"  %}
+{%- elif column.proto_name is containing("create") %}
+{%- elif column.proto_name is containing("update") %}
+{%- else %}
+  {{column.proto_type}} {{column.proto_name}} = {{loop.index}}[(api.body) = "{{column.java_name}}"]; //{{column.column_comment}}
+{%- endif %}
+{%- endfor %}
+
+}
+message Add{{table_info.class_name}}Resp {
+  string msg = 1;
+  api.Code code = 2;
 }
 
-message Add{{.JavaName}}Resp {
-  string pong = 1;
+// 删除{{table_info.table_comment}}请求参数
+message Delete{{table_info.class_name}}Req {
+  repeated int64 ids = 1[(api.body) = "ids"];
 }
 
-// 删除{{.Comment}}
-message Delete{{.JavaName}}Req {
-  repeated int64 ids = 1;
+message Delete{{table_info.class_name}}Resp {
+  string msg = 1;
+  api.Code code = 2;
 }
 
-message Delete{{.JavaName}}Resp {
-  string pong = 1;
+// 更新{{table_info.table_comment}}请求参数
+message Update{{table_info.class_name}}Req {
+{%- for column in table_info.columns %}
+{%- if column.proto_name is containing("create") %}
+{%- elif column.proto_name is containing("update") %}
+{%- else %}
+  {{column.proto_type}} {{column.proto_name}} = {{loop.index}}[(api.body) = "{{column.java_name}}"]; //{{column.column_comment}}
+{%- endif %}
+{%- endfor %}
 }
 
-// 更新{{.Comment}}
-message Update{{.JavaName}}Req {
-{{- range .TableColumn}}
-{{- if isContain .JavaName "create"}}
-{{- else if isContain .JavaName "updateTime"}}
-{{- else}}
-  {{.ProtoType}} {{.GoName}} = {{.Sort}}; //{{.ColumnComment}}
-{{- end}}
-{{- end}}
+message Update{{table_info.class_name}}Resp {
+  string msg = 1;
+  api.Code code = 2;
 }
 
-message Update{{.JavaName}}Resp {
-  string pong = 1;
+// 更新{{table_info.table_comment}}状态请求参数
+message Update{{table_info.class_name}}StatusReq {
+{%- for column in table_info.columns %}
+{%- if column.column_key =="PRI"  %}
+  repeated {{column.proto_type}} {{column.proto_name}} = {{loop.index}}[(api.body) = "{{column.java_name}}"]; //{{column.column_comment}}
+{%- elif column.proto_name is containing("status") %}
+  {{column.proto_type}} {{column.proto_name}} = {{loop.index}}[(api.body) = "{{column.java_name}}"]; //{{column.column_comment}}
+{%- else %}
+{%- endif %}
+{%- endfor %}
+
 }
 
-// 更新{{.Comment}}状态
-message Update{{.JavaName}}StatusReq {
-{{- range .TableColumn}}
-{{- if eq .ColumnKey "PRI"}}
-  repeated {{.ProtoType}} {{.GoName}}s = {{.Sort}}; //{{.ColumnComment}}
-{{- else if isContain .JavaName "status"}}
-  {{.ProtoType}} {{.GoName}} = {{.Sort}}; //{{.ColumnComment}}
-{{- else if isContain .JavaName "Status"}}
-  {{.ProtoType}} {{.GoName}} = {{.Sort}}; //{{.ColumnComment}}
-{{- else if isContain .JavaName "updateBy"}}
-  {{.ProtoType}} {{.GoName}} = {{.Sort}}; //{{.ColumnComment}}
-{{- else}}
-{{- end}}
-
-{{- end}}
+message Update{{table_info.class_name}}StatusResp {
+  string msg = 1;
+  api.Code code = 2;
 }
 
-message Update{{.JavaName}}StatusResp {
-  string pong = 1;
+// 查询{{table_info.table_comment}}详情请求参数
+message Query{{table_info.class_name}}DetailReq {
+{%- for column in table_info.columns %}
+{%- if column.column_key =="PRI"  %}
+  {{column.proto_type}} {{column.proto_name}} = {{loop.index}}[(api.body) = "{{column.java_name}}"]; //{{column.column_comment}}
+{%- endif %}
+{%- endfor %}
+
 }
 
-// 查询{{.Comment}}详情
-message Query{{.JavaName}}DetailReq {
-    int64 id = 1;
+message Query{{table_info.class_name}}DetailResp {
+  string msg = 1;
+  api.Code code = 2;
+  int64 Total = 3;
+  Query{{table_info.class_name}}DetailData data = 4;
 }
 
-message Query{{.JavaName}}DetailResp {
-{{range .TableColumn}}  {{.ProtoType}} {{.GoName}} = {{.Sort}}; //{{.ColumnComment}}
-{{end}}
+message Query{{table_info.class_name}}DetailData {
+{%- for column in table_info.columns %}
+  {{column.proto_type}} {{column.proto_name}} = {{loop.index}}; //{{column.column_comment}}
+{%- endfor %}
 }
 
-// 分页查询{{.Comment}}列表
-message Query{{.JavaName}}ListReq {
-{{- range .ListColumn}}
-  {{.ProtoType}} {{.GoName}} = {{.Sort}}; //{{.ColumnComment}}
-{{- end}}
+// 分页查询{{table_info.table_comment}}列表请求参数
+message Query{{table_info.class_name}}ListReq {
+{%- for column in table_info.columns %}
+{%- if column.column_key =="PRI"  %}
+{%- elif column.proto_name is containing("create") %}
+{%- elif column.proto_name is containing("update") %}
+{%- elif column.proto_name is containing("sort") %}
+{%- elif column.proto_name is containing("remark") %}
+{%- else %}
+  {{column.proto_type}} {{column.proto_name}} = {{loop.index}}[(api.body) = "{{column.java_name}}"]; //{{column.column_comment}}
+{%- endif %}
+{%- endfor %}
+
+  int64 page_num = 1[(api.body) = "pageNo"]; //第几页
+  int64 page_size = 2[(api.body) = "pageSize"]; //每页的数量
 }
 
-message {{.JavaName}}ListData {
-{{range .TableColumn}}  {{.ProtoType}} {{.GoName}} = {{.Sort}}; //{{.ColumnComment}}
-{{end}}
+
+message Query{{table_info.class_name}}ListResp {
+  string msg = 1;
+  api.Code code = 2;
+  int64 Total = 3;
+  repeated Query{{table_info.class_name}}ListData data = 4;
 }
 
-message Query{{.JavaName}}ListResp {
-  int64 total = 1;
-  repeated  {{.JavaName}}ListData list = 2;
+message Query{{table_info.class_name}}ListData {
+{%- for column in table_info.columns %}
+  {{column.proto_type}} {{column.proto_name}} = {{loop.index}}; //{{column.column_comment}}
+{%- endfor %}
 }
 
-// {{.Comment}}
-service {{.JavaName}}Service {
-  // 添加{{.Comment}}
-  rpc Add{{.JavaName}}(Add{{.JavaName}}Req) returns (Add{{.JavaName}}Resp){}
-  // 删除{{.Comment}}
-  rpc Delete{{.JavaName}}(Delete{{.JavaName}}Req) returns (Delete{{.JavaName}}Resp){}
-  // 更新{{.Comment}}
-  rpc Update{{.JavaName}}(Update{{.JavaName}}Req) returns (Update{{.JavaName}}Resp ){}
-  // 更新{{.Comment}}状态
-  rpc Update{{.JavaName}}Status(Update{{.JavaName}}StatusReq) returns (Update{{.JavaName}}StatusResp ){}
-  // 查询{{.Comment}}详情
-   rpc Query{{.JavaName}}Detail(Query{{.JavaName}}DetailReq) returns (Query{{.JavaName}}DetailResp){}
-  // 查询{{.Comment}}列表
-  rpc Query{{.JavaName}}List(Query{{.JavaName}}ListReq) returns (Query{{.JavaName}}ListResp){}
+// {{table_info.table_comment}}服务
+service {{table_info.class_name}}Handler {
 
+  // 添加{{table_info.table_comment}}
+  rpc Add{{table_info.class_name}}(Add{{table_info.class_name}}Req) returns(Add{{table_info.class_name}}Resp) {}
+  // 删除{{table_info.table_comment}}
+  rpc Delete{{table_info.class_name}}(Delete{{table_info.class_name}}Req) returns(Delete{{table_info.class_name}}Resp) {}
+  // 更新{{table_info.table_comment}}
+  rpc Update{{table_info.class_name}}(Update{{table_info.class_name}}Req) returns(Update{{table_info.class_name}}Resp) {}
+  // 更新{{table_info.table_comment}}状态
+  rpc Update{{table_info.class_name}}Status(Update{{table_info.class_name}}StatusReq) returns(Update{{table_info.class_name}}StatusResp) {}
+  // 查询{{table_info.table_comment}}详情
+  rpc Query{{table_info.class_name}}Detail(Query{{table_info.class_name}}DetailReq) returns(Query{{table_info.class_name}}DetailResp) {}
+  // 分页查询{{table_info.table_comment}}列表
+  rpc Query{{table_info.class_name}}List(Query{{table_info.class_name}}ListReq) returns(Query{{table_info.class_name}}ListResp) {}
 
 }

@@ -8,6 +8,7 @@ use crate::util::generate_util::{generate, generate_common};
 use rust_embed::Embed;
 use tera::Tera;
 use crate::service::go::hertz::Hertz;
+use crate::service::go::zero::Gozero;
 use crate::service::rust::actix::Actix;
 use crate::service::rust::axum::Axum;
 use crate::service::rust::ntex::Ntex;
@@ -44,7 +45,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         // Ntex::generate(&mut tera, x);
         // Axum::generate(&mut tera, x);
         // Actix::generate(&mut tera, x);
-        Hertz::generate(&mut tera, x);
+        // Hertz::generate(&mut tera, x);
+        Gozero::generate(&mut tera, x);
     }
 
     Ok(())
