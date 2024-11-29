@@ -38,11 +38,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     for x in table_info_list {
         //generate(&mut tera, x);
         // NgZorroAntd::generate(&mut tera, x)
-        Salvo::generate(&mut tera, x);
+        // Salvo::generate(&mut tera, x);
         // Rocket::generate(&mut tera, x);
         // Ntex::generate(&mut tera, x);
         // Axum::generate(&mut tera, x);
-        // Actix::generate(&mut tera, x);
+        Actix::generate(&mut tera, x);
     }
 
     Ok(())
