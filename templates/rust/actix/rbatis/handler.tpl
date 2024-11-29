@@ -4,41 +4,41 @@ use rbatis::plugin::page::PageRequest;
 use rbs::to_value;
 use crate::AppState;
 
-use crate::model::{{.RustName}}::{ {{.JavaName}} };
+use crate::model::{{table_info.table_name}}::{ {{table_info.class_name}} };
 use crate::vo::*;
-use crate::vo::{{.RustName}}_vo::{*};
+use crate::vo::{{table_info.table_name}}_vo::*;
 
 /**
  *添加{{table_info.table_comment}}
  *author：{{author}}
  *date：{{create_time}}
  */
-#[post("/add{{.JavaName}}")]
-pub async fn add_{{.RustName}}(item: web::Json<Add{{.JavaName}}Req>, data: web::Data<AppState>) -> Result<impl Responder> {
-    log::info!("add_{{.RustName}} params: {:?}", &item);
+#[post("/add{{table_info.class_name}}")]
+pub async fn add_{{table_info.table_name}}(item: web::Json<Add{{table_info.class_name}}Req>, data: web::Data<AppState>) -> Result<impl Responder> {
+    log::info!("add_{{table_info.table_name}} params: {:?}", &item);
     let mut rb = &data.batis;
 
     let req = item.0;
 
-    let {{.RustName}} = {{.JavaName}} {
-    {{- range .TableColumn}}
-        {{- if eq .ColumnKey `PRI`}}
-        {{.RustName}}: None
-        {{- else if isContain .JavaName "createTime"}}
-        {{.RustName}}: None
-        {{- else if isContain .JavaName "createBy"}}
-        {{.RustName}}: String::from("")
-        {{- else if isContain .JavaName "updateBy"}}
-        {{.RustName}}: String::from("")
-        {{- else if isContain .JavaName "updateTime"}}
-        {{.RustName}}: None
-        {{- else}}
-        {{.RustName}}: req.{{.RustName}}
-        {{- end}},//{{.ColumnComment}}
-    {{- end}}
+    let {{table_info.table_name}} = {{table_info.class_name}} {
+    {%- for column in table_info.columns %}
+        {%- if column.column_key =="PRI"  %}
+        {{column.rust_name}}: None
+        {%- elif column.rust_name is containing("create_time") %}
+        {{column.rust_name}}: None
+        {%- elif column.rust_name is containing("create_by") %}
+        {{column.rust_name}}: String::from("")
+        {%- elif column.rust_name is containing("update_time") %}
+        {{column.rust_name}}: None
+        {%- elif column.rust_name is containing("update_by") %}
+        {{column.rust_name}}: String::from("")
+        {%- else %}
+        {{column.rust_name}}: req.{{column.rust_name}}
+        {%- endif %}, //{{column.column_comment}}
+    {%- endfor %}
     };
 
-    let result = {{.JavaName}}::insert(&mut rb, &{{.RustName}}).await;
+    let result = {{table_info.class_name}}::insert(&mut rb, &{{table_info.table_name}}).await;
 
     Ok(web::Json(handle_result(result)))
 }
@@ -48,12 +48,12 @@ pub async fn add_{{.RustName}}(item: web::Json<Add{{.JavaName}}Req>, data: web::
  *author：{{author}}
  *date：{{create_time}}
  */
-#[post("/delete{{.JavaName}}")]
-pub async fn delete_{{.RustName}}(item: web::Json<Delete{{.JavaName}}Req>, data: web::Data<AppState>) -> Result<impl Responder> {
-    log::info!("delete_{{.RustName}} params: {:?}", &item);
+#[post("/delete{{table_info.class_name}}")]
+pub async fn delete_{{table_info.table_name}}(item: web::Json<Delete{{table_info.class_name}}Req>, data: web::Data<AppState>) -> Result<impl Responder> {
+    log::info!("delete_{{table_info.table_name}} params: {:?}", &item);
     let mut rb = &data.batis;
 
-    let result = {{.JavaName}}::delete_in_column(&mut rb, "id", &item.ids).await;
+    let result = {{table_info.class_name}}::delete_in_column(&mut rb, "id", &item.ids).await;
 
     Ok(web::Json(handle_result(result)))
 }
@@ -63,31 +63,32 @@ pub async fn delete_{{.RustName}}(item: web::Json<Delete{{.JavaName}}Req>, data:
  *author：{{author}}
  *date：{{create_time}}
  */
-#[post("/update{{.JavaName}}")]
-pub async fn update_{{.RustName}}(item: web::Json<Update{{.JavaName}}Req>, data: web::Data<AppState>) -> Result<impl Responder> {
-    log::info!("update_{{.RustName}} params: {:?}", &item);
+#[post("/update{{table_info.class_name}}")]
+pub async fn update_{{table_info.table_name}}(item: web::Json<Update{{table_info.class_name}}Req>, data: web::Data<AppState>) -> Result<impl Responder> {
+    log::info!("update_{{table_info.table_name}} params: {:?}", &item);
     let mut rb = &data.batis;
     let req = item.0;
 
-    let {{.RustName}} = {{.JavaName}} {
-    {{- range .TableColumn}}
-        {{- if eq .ColumnKey `PRI`}}
-        {{.RustName}}: Some(item.{{.RustName}})
-        {{- else if isContain .JavaName "createTime"}}
-        {{.RustName}}: None
-        {{- else if isContain .JavaName "createBy"}}
-        {{.RustName}}: String::from("")
-        {{- else if isContain .JavaName "updateBy"}}
-        {{.RustName}}: String::from("")
-        {{- else if isContain .JavaName "updateTime"}}
-        {{.RustName}}: None
-        {{- else}}
-        {{.RustName}}: req.{{.RustName}}
-        {{- end}},//{{.ColumnComment}}
-    {{- end}}
+    let {{table_info.table_name}} = {{table_info.class_name}} {
+    {%- for column in table_info.columns %}
+        {%- if column.column_key =="PRI"  %}
+        {{column.rust_name}}: Some(req.{{column.rust_name}})
+        {%- elif column.rust_name is containing("create_time") %}
+        {{column.rust_name}}: None
+        {%- elif column.rust_name is containing("create_by") %}
+        {{column.rust_name}}: String::from("")
+        {%- elif column.rust_name is containing("update_time") %}
+        {{column.rust_name}}: None
+        {%- elif column.rust_name is containing("update_by") %}
+        {{column.rust_name}}: String::from("")
+        {%- else %}
+        {{column.rust_name}}: req.{{column.rust_name}}
+        {%- endif %}, //{{column.column_comment}}
+    {%- endfor %}
+
     };
 
-    let result = {{.JavaName}}::update_by_column(&mut rb, &{{.RustName}}, "id").await;
+    let result = {{table_info.class_name}}::update_by_column(&mut rb, &{{table_info.table_name}}, "id").await;
 
     Ok(web::Json(handle_result(result)))
 }
@@ -97,14 +98,14 @@ pub async fn update_{{.RustName}}(item: web::Json<Update{{.JavaName}}Req>, data:
  *author：{{author}}
  *date：{{create_time}}
  */
-#[post("/update{{.JavaName}}Status")]
-pub async fn update_{{.RustName}}_status(item: web::Json<Update{{.JavaName}}StatusReq>, data: web::Data<AppState>) -> Result<impl Responder> {
-    log::info!("update_{{.RustName}}_status params: {:?}", &item);
+#[post("/update{{table_info.class_name}}Status")]
+pub async fn update_{{table_info.table_name}}_status(item: web::Json<Update{{table_info.class_name}}StatusReq>, data: web::Data<AppState>) -> Result<impl Responder> {
+    log::info!("update_{{table_info.table_name}}_status params: {:?}", &item);
     let mut rb = &data.batis;
     let req = item.0;
 
    let param = vec![to_value!(1), to_value!(1)];
-   let result = rb.exec("update {{.OriginalName}} set status = ? where id in ?", param).await;
+   let result = rb.exec("update {{table_info.table_name}} set status = ? where id in ?", param).await;
 
     Ok(web::Json(handle_result(result)))
 }
@@ -114,32 +115,32 @@ pub async fn update_{{.RustName}}_status(item: web::Json<Update{{.JavaName}}Stat
  *author：{{author}}
  *date：{{create_time}}
  */
-#[post("/query{{.JavaName}}Detail")]
-pub async fn query_{{.RustName}}_detail(item: web::Json<Query{{.JavaName}}DetailReq>, data: web::Data<AppState>) -> Result<impl Responder> {
-    log::info!("query_{{.RustName}}_detail params: {:?}", &item);
+#[post("/query{{table_info.class_name}}Detail")]
+pub async fn query_{{table_info.table_name}}_detail(item: web::Json<Query{{table_info.class_name}}DetailReq>, data: web::Data<AppState>) -> Result<impl Responder> {
+    log::info!("query_{{table_info.table_name}}_detail params: {:?}", &item);
     let mut rb = &data.batis;
 
-    let result = {{.JavaName}}::select_by_id(&mut rb, &item.id).await;
+    let result = {{table_info.class_name}}::select_by_id(&mut rb, &item.id).await;
 
     match result {
         Ok(d) => {
             let x = d.unwrap();
             
-            let {{.RustName}} = Query{{.JavaName}}DetailResp {
-            {{- range .TableColumn}}
-            {{- if eq .ColumnKey `PRI`}}
-                {{.RustName}}: x.{{.RustName}}.unwrap()
-            {{- else if eq .IsNullable `YES` }}
-                {{.RustName}}: x.{{.RustName}}.unwrap_or_default()
-            {{- else if eq .RustType `DateTime`}}
-                {{.RustName}}: x.{{.RustName}}.unwrap().0.to_string()
-            {{- else}}
-                {{.RustName}}: x.{{.RustName}}
-            {{- end}},
-            {{- end}}
+            let {{table_info.table_name}} = Query{{table_info.class_name}}DetailResp {
+            {%- for column in table_info.columns %}
+                {%- if column.column_key =="PRI"  %}
+                {{column.rust_name}}: x.{{column.rust_name}}.unwrap()
+                {%- elif column.is_nullable == "YES"  %}
+                {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default()
+                {%- elif column.rust_type == "DateTime"  %}
+                {{column.rust_name}}: x.{{column.rust_name}}.0.to_string()
+                {%- else %}
+                {{column.rust_name}}: {{column.rust_name}}
+                {%- endif %}, //{{column.column_comment}}
+            {%- endfor %}
             };
 
-            Ok(web::Json(ok_result_data({{.RustName}})))
+            Ok(web::Json(ok_result_data({{table_info.table_name}})))
         }
         Err(err) => {
             Ok(web::Json(ok_result_code(1, err.to_string())))
@@ -153,40 +154,40 @@ pub async fn query_{{.RustName}}_detail(item: web::Json<Query{{.JavaName}}Detail
  *author：{{author}}
  *date：{{create_time}}
  */
-#[post("/query{{.JavaName}}List")]
-pub async fn query_{{.RustName}}_list(item: web::Json<Query{{.JavaName}}ListReq>, data: web::Data<AppState>) -> Result<impl Responder> {
-    log::info!("query_{{.RustName}}_list params: {:?}", &item);
+#[post("/query{{table_info.class_name}}List")]
+pub async fn query_{{table_info.table_name}}_list(item: web::Json<Query{{table_info.class_name}}ListReq>, data: web::Data<AppState>) -> Result<impl Responder> {
+    log::info!("query_{{table_info.table_name}}_list params: {:?}", &item);
     let mut rb = &data.batis;
 
     let page=&PageRequest::new(item.page_no.clone(), item.page_size.clone());
-    let result = {{.JavaName}}::select_page(&mut rb, page).await;
+    let result = {{table_info.class_name}}::select_page(&mut rb, page).await;
 
-    let mut {{.RustName}}_list_data: Vec<{{.JavaName}}ListDataResp> = Vec::new();
+    let mut {{table_info.table_name}}_list_data: Vec<{{table_info.class_name}}ListDataResp> = Vec::new();
 
     match result {
         Ok(d) => {
             let total = d.total;
 
             for x in d.records {
-                {{.RustName}}_list_data.push({{.JavaName}}ListDataResp {
-                {{- range .TableColumn}}
-                {{- if eq .ColumnKey `PRI`}}
-                    {{.RustName}}: x.{{.RustName}}.unwrap()
-                {{- else if eq .IsNullable `YES` }}
-                    {{.RustName}}: x.{{.RustName}}.unwrap_or_default()
-                {{- else if eq .RustType `DateTime`}}
-                    {{.RustName}}: x.{{.RustName}}.unwrap().0.to_string()
-                {{- else}}
-                    {{.RustName}}: x.{{.RustName}}
-                {{- end}},
-                {{- end}}
+                let {{table_info.table_name}} = Query{{table_info.class_name}}ListDataResp {
+                {%- for column in table_info.columns %}
+                    {%- if column.column_key =="PRI"  %}
+                    {{column.rust_name}}: x.{{column.rust_name}}.unwrap()
+                    {%- elif column.is_nullable == "YES"  %}
+                    {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default()
+                    {%- elif column.rust_type == "DateTime"  %}
+                    {{column.rust_name}}: x.{{column.rust_name}}.0.to_string()
+                    {%- else %}
+                    {{column.rust_name}}: {{column.rust_name}}
+                    {%- endif %}, //{{column.column_comment}}
+                {%- endfor %}
                 })
             }
 
-            Ok(web::Json(ok_result_page({{.RustName}}_list_data, total)))
+            Ok(web::Json(ok_result_page({{table_info.table_name}}_list_data, total)))
         }
         Err(err) => {
-            Ok(web::Json(err_result_page({{.RustName}}_list_data, err.to_string())))
+            Ok(web::Json(err_result_page({{table_info.table_name}}_list_data, err.to_string())))
         }
     }
 

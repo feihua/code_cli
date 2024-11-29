@@ -35,7 +35,7 @@ impl Axum {
         //     package_name,
         // );
 
-        Self::create_diesel_from_tpl(
+        Self::create_rbatis_from_tpl(
             &mut tera,
             table_info.table_name.as_str(),
             &mut context,
@@ -99,6 +99,12 @@ impl Axum {
             &mut context,
             format!("{}{}", path, "vo.tpl").as_str(),
             format!("{}{}/vo/{}_vo.rs", path, package_name, table_name).as_str(),
+        );
+        write_file(
+            tera.clone(),
+            &mut context,
+            format!("{}{}", path, "model.tpl").as_str(),
+            format!("{}{}/model/{}_model.rs", path, package_name, table_name).as_str(),
         );
         write_file(
             tera.clone(),

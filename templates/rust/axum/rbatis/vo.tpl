@@ -29,7 +29,7 @@ pub struct Add{{table_info.class_name}}Req {
 */
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Delete{{table_info.class_name}}Req {
-    pub ids: Vec<i32>,
+    pub ids: Vec<i64>,
 }
 
 /**
@@ -55,8 +55,8 @@ pub struct Update{{table_info.class_name}}Req {
 */
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Update{{table_info.class_name}}StatusReq {
-    pub ids: Vec<i32>,
-    pub status: i32,
+    pub ids: Vec<i64>,
+    pub status: i8,
 }
 
 /**
@@ -64,7 +64,7 @@ pub struct Update{{table_info.class_name}}StatusReq {
 */
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Query{{table_info.class_name}}DetailReq {
-    pub id: i32,
+    pub id: i64,
 }
 
 /**

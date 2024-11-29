@@ -11,18 +11,18 @@ use serde::{Deserialize, Serialize};
  *date：{{create_time}}
  */
 #[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct {{.JavaName}} {
-{{- range .TableColumn}}
-{{- if eq .IsNullable `YES` }}
-    pub {{.RustName}}: Option<{{.RustType}}>
-{{- else if eq .RustType `DateTime`}}
-    pub {{.RustName}}: Option<{{.RustType}}>
-{{- else if eq .ColumnKey `PRI`}}
-    pub {{.RustName}}: Option<{{.RustType}}>
-{{- else}}
-    pub {{.RustName}}: {{.RustType}}
-{{- end}},//{{.ColumnComment}}
-{{- end}}
+pub struct {{table_info.class_name}} {
+{%- for column in table_info.columns %}
+    {%- if column.column_key =="PRI"  %}
+    pub {{column.rust_name}}: Option<{{column.rust_type}}>
+    {%- elif column.is_nullable == "YES"  %}
+    pub {{column.rust_name}}: Option<{{column.rust_type}}>
+    {%- elif column.rust_type == "DateTime"  %}
+    pub {{column.rust_name}}: Option<{{column.rust_type}}>
+    {%- else %}
+    pub {{column.rust_name}}: {{column.rust_type}}
+    {%- endif %}, //{{column.column_comment}}
+{%- endfor %}
 }
 
 /**
@@ -30,33 +30,33 @@ pub struct {{.JavaName}} {
  *author：{{author}}
  *date：{{create_time}}
  */
-rbatis::crud!({{.JavaName}} {},"{{.OriginalName}}");
+rbatis::crud!({{table_info.class_name}} {},"{{table_info.table_name}}");
 
 /**
  *根据id查询{{table_info.table_comment}}
  *author：{{author}}
  *date：{{create_time}}
  */
-impl_select!({{.JavaName}}{select_by_id(id:&i32) -> Option => "`where id = #{id} limit 1`"}, "{{.OriginalName}}");
+impl_select!({{table_info.class_name}}{select_by_id(id:&i32) -> Option => "`where id = #{id} limit 1`"}, "{{table_info.table_name}}");
 
 /**
  *分页查询{{table_info.table_comment}}
  *author：{{author}}
  *date：{{create_time}}
  */
-impl_select_page!({{.JavaName}}{select_page() =>"
+impl_select_page!({{table_info.class_name}}{select_page() =>"
      if !sql.contains('count'):
        order by create_time desc"
-},"{{.OriginalName}}");
+},"{{table_info.table_name}}");
 
 /**
  *根据条件分页查询{{table_info.table_comment}}
  *author：{{author}}
  *date：{{create_time}}
  */
-impl_select_page!({{.JavaName}}{select_page_by_name(name:&str) =>"
+impl_select_page!({{table_info.class_name}}{select_page_by_name(name:&str) =>"
      if name != null && name != '':
        where real_name != #{name}
      if name == '':
        where real_name != ''"
-},"{{.OriginalName}}");
+},"{{table_info.table_name}}");

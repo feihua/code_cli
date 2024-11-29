@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 /**
 添加{{table_info.table_comment}}请求参数
 */
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 #[serde(crate = "rocket::serde")]
 pub struct Add{{table_info.class_name}}Req {
 {%- for column in table_info.columns %}
@@ -28,16 +28,16 @@ pub struct Add{{table_info.class_name}}Req {
 /**
 删除{{table_info.table_comment}}请求参数
 */
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 #[serde(crate = "rocket::serde")]
 pub struct Delete{{table_info.class_name}}Req {
-    pub ids: Vec<i32>,
+    pub ids: Vec<i64>,
 }
 
 /**
 更新{{table_info.table_comment}}请求参数
 */
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 #[serde(crate = "rocket::serde")]
 pub struct Update{{table_info.class_name}}Req {
 {%- for column in table_info.columns %}
@@ -56,20 +56,20 @@ pub struct Update{{table_info.class_name}}Req {
 /**
 更新{{table_info.table_comment}}状态请求参数
 */
-#[derive(Debug, Deserialize)]
 #[serde(crate = "rocket::serde")]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Update{{table_info.class_name}}StatusReq {
-    pub ids: Vec<i32>,
-    pub status: i32,
+    pub ids: Vec<i64>,
+    pub status: i8,
 }
 
 /**
 查询{{table_info.table_comment}}详情请求参数
 */
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 #[serde(crate = "rocket::serde")]
 pub struct Query{{table_info.class_name}}DetailReq {
-    pub id: i32,
+    pub id: i64,
 }
 
 /**
@@ -91,7 +91,7 @@ pub struct Query{{table_info.class_name}}DetailResp {
 /**
 查询{{table_info.table_comment}}列表请求参数
 */
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 #[serde(crate = "rocket::serde")]
 pub struct Query{{table_info.class_name}}ListReq {
     #[serde(rename = "current")]
