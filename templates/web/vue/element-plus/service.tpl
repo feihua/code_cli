@@ -1,63 +1,63 @@
 import type {IResponse} from "@/api/ajax";
-import type {Add{{.JavaName}}Param, Update{{.JavaName}}Param, List{{.JavaName}}Param} from "./data";
+import type {Add{{table_info.class_name}}Param, Update{{table_info.class_name}}Param, List{{table_info.class_name}}Param} from "./data";
 import {axiosInstance} from "@/api/ajax";
 import { ElMessage } from 'element-plus'
 
 /**
- * @description: 添加{{.Comment}}
- * @params {params} Add{{.JavaName}}Param
+ * @description: 添加{{table_info.table_comment}}
+ * @params {params} Add{{table_info.class_name}}Param
  * @return {Promise}
  */
-export const add{{.JavaName}} = async (params: Add{{.JavaName}}Param): Promise<IResponse> => {
-  return axiosInstance.post('/api/demo/{{.LowerJavaName}}/add{{.JavaName}}', params).then(res => res.data);
+export const add{{table_info.class_name}} = async (params: Add{{table_info.class_name}}Param): Promise<IResponse> => {
+  return axiosInstance.post('/api/demo/{{table_info.object_name}}/add{{table_info.class_name}}', params).then(res => res.data);
 };
 
 /**
- * @description: 删除{{.Comment}}
+ * @description: 删除{{table_info.table_comment}}
  * @params {ids} number[]
  * @return {Promise}
  */
-export const remove{{.JavaName}} = async (ids: number[]): Promise<IResponse> => {
-  return axiosInstance.get('/api/demo/{{.LowerJavaName}}/delete{{.JavaName}}?ids=[' + ids + "]").then(res => res.data);
+export const remove{{table_info.class_name}} = async (ids: number[]): Promise<IResponse> => {
+  return axiosInstance.get('/api/demo/{{table_info.object_name}}/delete{{table_info.class_name}}?ids=[' + ids + "]").then(res => res.data);
 };
 
 
 /**
- * @description: 更新{{.Comment}}
- * @params {params} Update{{.JavaName}}Param
+ * @description: 更新{{table_info.table_comment}}
+ * @params {params} Update{{table_info.class_name}}Param
  * @return {Promise}
  */
-export const update{{.JavaName}} = async (params: Update{{.JavaName}}Param): Promise<IResponse> => {
-  return axiosInstance.post('/api/demo/{{.LowerJavaName}}/update{{.JavaName}}', params).then(res => res.data);
+export const update{{table_info.class_name}} = async (params: Update{{table_info.class_name}}Param): Promise<IResponse> => {
+  return axiosInstance.post('/api/demo/{{table_info.object_name}}/update{{table_info.class_name}}', params).then(res => res.data);
 };
 
 /**
- * @description: 批量更新{{.Comment}}状态
+ * @description: 批量更新{{table_info.table_comment}}状态
  @params {ids} number[]
- @params { {{.LowerJavaName}}Status} number
+ @params { {{table_info.object_name}}Status} number
  * @return {Promise}
  */
-export const update{{.JavaName}}Status = async (params: { ids: number[], {{.LowerJavaName}}Status: number }): Promise<IResponse> => {
-  return axiosInstance.post('/api/demo/{{.LowerJavaName}}/update{{.JavaName}}Status', params).then(res => res.data);
+export const update{{table_info.class_name}}Status = async (params: { ids: number[], {{table_info.object_name}}Status: number }): Promise<IResponse> => {
+  return axiosInstance.post('/api/demo/{{table_info.object_name}}/update{{table_info.class_name}}Status', params).then(res => res.data);
 };
 
 /**
- * @description: 查询{{.Comment}}详情
+ * @description: 查询{{table_info.table_comment}}详情
  * @params {id} number
  * @return {Promise}
  */
-export const query{{.JavaName}}Detail = async (id: number): Promise<IResponse> => {
-  return axiosInstance.get('/api/demo/{{.LowerJavaName}}/query{{.JavaName}}Detail?id=' + id).then(res => res.data);
+export const query{{table_info.class_name}}Detail = async (id: number): Promise<IResponse> => {
+  return axiosInstance.get('/api/demo/{{table_info.object_name}}/query{{table_info.class_name}}Detail?id=' + id).then(res => res.data);
 };
 
 
 /**
- * @description: 分页查询{{.Comment}}列表
- * @params {params} List{{.JavaName}}Param
+ * @description: 分页查询{{table_info.table_comment}}列表
+ * @params {params} List{{table_info.class_name}}Param
  * @return {Promise}
  */
-export const query{{.JavaName}}List = async(params: List{{.JavaName}}Param): Promise<IResponse> => {
-  return axiosInstance.get('/api/demo/{{.LowerJavaName}}/query{{.JavaName}}List', {params}).then(res => res.data);
+export const query{{table_info.class_name}}List = async(params: List{{table_info.class_name}}Param): Promise<IResponse> => {
+  return axiosInstance.get('/api/demo/{{table_info.object_name}}/query{{table_info.class_name}}List', {params}).then(res => res.data);
 };
 
 
