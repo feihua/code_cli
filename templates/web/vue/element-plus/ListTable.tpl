@@ -4,7 +4,7 @@
   <el-table-column type="selection" width="55" />
 
   {%- for column in table_info.columns %}
-    {% if column.rust_name is containing("Status") %}
+    {% if column.ts_name is containing("Status") %}
     <el-table-column label="{{column.column_comment}}" prop="{{column.ts_name}}" >
       <template #default="scope">
             <el-tag
@@ -17,7 +17,7 @@
             >
       </template>
     </el-table-column>
-    {% elif column.rust_name is containing("status") %}
+    {% elif column.ts_name is containing("status") %}
     <el-table-column label="{{column.column_comment}}" prop="{{column.ts_name}}" >
       <template #default="scope">
             <el-tag
@@ -30,7 +30,7 @@
             >
       </template>
     </el-table-column>
-    {% elif column.rust_name is containing("Type") %}
+    {% elif column.ts_name is containing("Type") %}
     <el-table-column label="{{column.column_comment}}" prop="{{column.ts_name}}" >
       <template #default="scope">
             <el-tag

@@ -15,72 +15,78 @@
         width="480px"
         style="padding-top: 15px"
     >
-      <a-form ref="formRef" :model="formState" name="form_in_modal" :label-col="{ span: 7 }"
-              :wrapper-col="{ span: 13 }">
-        {{range .TableColumn}}
-        {{- if isContain .JavaName "create"}}
-        {{- else if isContain .JavaName "update"}}
-        {{- else if isContain .JavaName "id"}}
-        {{- else if isContain .JavaName "Sort"}}
+      <a-form ref="formRef" :model="formState" name="form_in_modal" :label-col="{ span: 7 }" :wrapper-col="{ span: 13 }">
+      {%- for column in table_info.columns %}
+        {% if column.column_key =="PRI"  %}
+        {% elif column.ts_name is containing("create") %}
+        {% elif column.ts_name is containing("update") %}
+        {% elif column.ts_name is containing("remark") %}
         <a-form-item
-            name="{{.JavaName}}"
-            label="{{.ColumnComment}}"
-            :rules="[{ required: true, message: '请输入{{.ColumnComment}}' }]"
+            name="{{column.ts_name}}"
+            label="{{column.column_comment}}"
+            :rules="[{ required: true, message: '请输入{{column.column_comment}}' }]"
         >
-            <a-input-number v-model:value="formState.{{.JavaName}}" style="width: 234px" placeholder="请选择{{.ColumnComment}}"/>
-        </a-form-item>
-        {{- else if isContain .JavaName "sort"}}
-        <a-form-item
-            name="{{.JavaName}}"
-            label="{{.ColumnComment}}"
-            :rules="[{ required: true, message: '请输入{{.ColumnComment}}' }]"
-        >
-            <a-input-number v-model:value="formState.{{.JavaName}}" style="width: 234px" placeholder="请选择{{.ColumnComment}}"/>
-        </a-form-item>
-        {{- else if isContain .JavaName "status"}}
-            <a-radio-group v-model:value="formState.{{.JavaName}}" placeholder="请选择{{.ColumnComment}}">
-                <a-radio :value="1">是</a-radio>
-                <a-radio :value="0">否</a-radio>
-            </a-radio-group>
-        </a-form-item>
-        {{- else if isContain .JavaName "Status"}}
-        <a-form-item
-            name="{{.JavaName}}"
-            label="{{.ColumnComment}}"
-            :rules="[{ required: true, message: '请输入{{.ColumnComment}}' }]"
-        >
-            <a-radio-group v-model:value="formState.{{.JavaName}}" placeholder="请选择{{.ColumnComment}}">
-                <a-radio :value="1">是</a-radio>
-                <a-radio :value="0">否</a-radio>
-            </a-radio-group>
-        </a-form-item>
-        {{- else if isContain .JavaName "Type"}}
-        <a-form-item
-            name="{{.JavaName}}"
-            label="{{.ColumnComment}}"
-            :rules="[{ required: true, message: '请输入{{.ColumnComment}}' }]"
-        >
-            <a-radio-group v-model:value="formState.{{.JavaName}}" placeholder="请选择{{.ColumnComment}}">
-                <a-radio :value="1">正常</a-radio>
-                <a-radio :value="0">禁用</a-radio>
-            </a-radio-group>
-        </a-form-item>
-        {{- else if isContain .JavaName "remark"}}
-        <a-form-item
-            name="{{.JavaName}}"
-            label="{{.ColumnComment}}"
-            :rules="[{ required: true, message: '请输入{{.ColumnComment}}' }]"
-        >
-            <a-textarea v-model:value="formState.{{.JavaName}}" allow-clear placeholder="请选择{{.ColumnComment}}"/>
+            <a-textarea v-model:value="formState.{{column.ts_name}}" allow-clear placeholder="请选择{{column.column_comment}}"/>
        </a-form-item>
-        {{- else}}
+        {% elif column.ts_name is containing("Status") %}
         <a-form-item
-            name="{{.JavaName}}"
-            label="{{.ColumnComment}}"
-            :rules="[{ required: true, message: '请输入{{.ColumnComment}}' }]"
+            name="{{column.ts_name}}"
+            label="{{column.column_comment}}"
+            :rules="[{ required: true, message: '请输入{{column.column_comment}}' }]"
         >
-            <a-input v-model:value="formState.{{.JavaName}}" placeholder="请选择{{.ColumnComment}}"/>
-        </a-form-item>{{- end}}{{- end}}
+            <a-radio-group v-model:value="formState.{{column.ts_name}}" placeholder="请选择{{column.column_comment}}">
+                <a-radio :value="1">是</a-radio>
+                <a-radio :value="0">否</a-radio>
+            </a-radio-group>
+        </a-form-item>
+        {% elif column.ts_name is containing("status") %}
+        <a-form-item
+            name="{{column.ts_name}}"
+            label="{{column.column_comment}}"
+            :rules="[{ required: true, message: '请输入{{column.column_comment}}' }]"
+        >
+            <a-radio-group v-model:value="formState.{{column.ts_name}}" placeholder="请选择{{column.column_comment}}">
+                <a-radio :value="1">是</a-radio>
+                <a-radio :value="0">否</a-radio>
+            </a-radio-group>
+        </a-form-item>
+        {% elif column.ts_name is containing("Sort") %}
+        <a-form-item
+            name="{{column.ts_name}}"
+            label="{{column.column_comment}}"
+            :rules="[{ required: true, message: '请输入{{column.column_comment}}' }]"
+        >
+            <a-input-number v-model:value="formState.{{column.ts_name}}" style="width: 234px" placeholder="请选择{{column.column_comment}}"/>
+        </a-form-item>
+        {% elif column.ts_name is containing("sort") %}
+        <a-form-item
+            name="{{column.ts_name}}"
+            label="{{column.column_comment}}"
+            :rules="[{ required: true, message: '请输入{{column.column_comment}}' }]"
+        >
+            <a-input-number v-model:value="formState.{{column.ts_name}}" style="width: 234px" placeholder="请选择{{column.column_comment}}"/>
+        </a-form-item>
+        {% elif column.ts_name is containing("Type") %}
+        <a-form-item
+            name="{{column.ts_name}}"
+            label="{{column.column_comment}}"
+            :rules="[{ required: true, message: '请输入{{column.column_comment}}' }]"
+        >
+            <a-radio-group v-model:value="formState.{{column.ts_name}}" placeholder="请选择{{column.column_comment}}">
+                <a-radio :value="1">是</a-radio>
+                <a-radio :value="0">否</a-radio>
+            </a-radio-group>
+        </a-form-item>
+        {% else %}
+        <a-form-item
+            name="{{column.ts_name}}"
+            label="{{column.column_comment}}"
+            :rules="[{ required: true, message: '请输入{{column.column_comment}}' }]"
+        >
+            <a-input v-model:value="formState.{{column.ts_name}}" placeholder="请选择{{column.column_comment}}"/>
+        </a-form-item>
+        {% endif %}
+      {%- endfor %}
 
       </a-form>
     </a-modal>
@@ -91,36 +97,40 @@ import {reactive, ref} from 'vue';
 import {type FormInstance, message} from 'ant-design-vue';
 
 import {PlusOutlined} from "@ant-design/icons-vue"
-import {use{{.JavaName}}Store} from "../store/{{.LowerJavaName}}Store";
-import type {Add{{.JavaName}}Param} from "../data";
-import {add{{.JavaName}}} from "../service";
+import {use{{table_info.class_name}}Store} from "../store/{{table_info.object_name}}Store";
+import type {Add{{table_info.class_name}}Param} from "../data";
+import {add{{table_info.class_name}}} from "../service";
 
-const store = use{{.JavaName}}Store()
+const store = use{{table_info.class_name}}Store()
 
-const {query{{.JavaName}}List} = store
+const {query{{table_info.class_name}}List} = store
 
 
 const formRef = ref<FormInstance>();
 const visible = ref(false);
-const formState = reactive<Add{{.JavaName}}Param>({
-  {{- range .TableColumn}}
-  {{- if isContain .JavaName "create"}}
-  {{- else if isContain .JavaName "update"}}
-  {{- else if isContain .JavaName "id"}}
-  {{- else}}
-  {{if eq .TsType "string"}}{{.JavaName}}: '',{{else}}{{.JavaName}}: 0,{{end}}
-  {{- end}}
-  {{- end}}
+const formState = reactive<Add{{table_info.class_name}}Param>({
+{%- for column in table_info.columns %}
+  {% if column.column_key =="PRI"  %}
+  {% elif column.ts_name is containing("create") %}
+  {% elif column.ts_name is containing("update") %}
+  {% else %}
+    {% if column.ts_type == "string"  %}
+    {{column.ts_name}}: '',
+    {% else %}
+    {{column.ts_name}}: 0,
+    {% endif %}
+  {% endif %}
+{%- endfor %}
 
 });
 
 const onOk = () => {
   formRef.value?.validateFields()
       .then(async () => {
-        const res = await add{{.JavaName}}(formState);
+        const res = await add{{table_info.class_name}}(formState);
         if (res.code == 0) {
           message.success(res.message);
-          query{{.JavaName}}List({current:1, pageSize: 10});
+          query{{table_info.class_name}}List({current:1, pageSize: 10});
           visible.value = false;
           formRef.value?.resetFields();
         } else {

@@ -3,11 +3,11 @@
     <AddModal />
     <SearchForm style="margin-left: 20px" />
   </ASpace>
-  <a-table :columns="columns" :data-source="{{.LowerJavaName}}List" :pagination="listParam" @change="handlePageChange"
+  <a-table :columns="columns" :data-source="{{table_info.object_name}}List" :pagination="listParam" @change="handlePageChange"
            table-layout="fixed">
     <template #bodyCell="{ column, record }">
-      <template v-if="column.key === '{{.LowerJavaName}}Name'">
-        <a-button type="link" @click="handleDetail(record)">{ { record.{{.LowerJavaName}}Name } }</a-button>
+      <template v-if="column.key === '{{table_info.object_name}}Name'">
+        <a-button type="link" @click="handleDetail(record)">{ { record.{{table_info.object_name}}Name } }</a-button>
       </template>
       <template v-if="column.key === 'status'">
         <a-switch :checked="record.status===1" size="small"
@@ -45,29 +45,29 @@
 <script lang="ts" setup>
 import {DeleteOutlined, EditOutlined, ExclamationCircleOutlined} from '@ant-design/icons-vue';
 import AddModal from "./components/AddModal.vue";
-import {use{{.JavaName}}Store} from "./store/{{.LowerJavaName}}Store";
-import type { {{.JavaName}}RecordVo} from "./data";
+import {use{{table_info.class_name}}Store} from "./store/{{table_info.object_name}}Store";
+import type { {{table_info.class_name}}RecordVo} from "./data";
 import {createVNode, onMounted, ref} from "vue";
 import {storeToRefs} from "pinia";
 import UpdateModal from "./components/UpdateModal.vue";
 import DetailModal from "./components/DetailModal.vue";
 import {message, Modal} from "ant-design-vue";
-import {remove{{.JavaName}}, update{{.JavaName}}Status} from "./service";
+import {remove{{table_info.class_name}}, update{{table_info.class_name}}Status} from "./service";
 import SearchForm from "./components/SearchForm.vue";
 
 const updateChildrenRef = ref()
 const detailChildrenRef = ref()
 
-const store = use{{.JavaName}}Store()
-const {listParam, {{.LowerJavaName}}List,} = storeToRefs(store)
-const {query{{.JavaName}}List} = store
+const store = use{{table_info.class_name}}Store()
+const {listParam, {{table_info.object_name}}List,} = storeToRefs(store)
+const {query{{table_info.class_name}}List} = store
 
 const columns = [
 {{- range .TableColumn}}
     {
-        title: '{{.ColumnComment}}',
-        dataIndex: '{{.JavaName}}',
-        key: '{{.JavaName}}',
+        title: '{{column.column_comment}}',
+        dataIndex: '{{table_info.class_name}}',
+        key: '{{table_info.class_name}}',
     },
 {{- end}}
     {
@@ -76,15 +76,15 @@ const columns = [
     },
 ];
 
-const handleDetail = (record: {{.JavaName}}RecordVo) => {
+const handleDetail = (record: {{table_info.class_name}}RecordVo) => {
   detailChildrenRef.value.handleVisible(record.id, true)
 }
 
-const handleEdit = (record: {{.JavaName}}RecordVo) => {
+const handleEdit = (record: {{table_info.class_name}}RecordVo) => {
   updateChildrenRef.value.handleVisible(record.id, true)
 }
 
-const handleDelete = (record: {{.JavaName}}RecordVo) => {
+const handleDelete = (record: {{table_info.class_name}}RecordVo) => {
   Modal.confirm({
     cancelText: "取消",
     okText: "确定",
@@ -92,10 +92,10 @@ const handleDelete = (record: {{.JavaName}}RecordVo) => {
     title: '确定删除?',
     icon: createVNode(ExclamationCircleOutlined),
     async onOk() {
-      const res = await remove{{.JavaName}}({ids:[record.id]});
+      const res = await remove{{table_info.class_name}}({ids:[record.id]});
       if (res.code == 0) {
         message.success(res.message);
-        query{{.JavaName}}List(listParam.value);
+        query{{table_info.class_name}}List(listParam.value);
       } else {
         message.error(res.message);
       }
@@ -107,21 +107,21 @@ const handleDelete = (record: {{.JavaName}}RecordVo) => {
 
 
 const handlePageChange = (obj: any) => {
-  query{{.JavaName}}List({...obj})
+  query{{table_info.class_name}}List({...obj})
 }
 
-const handleSwitchChange = async (checked: boolean, event: Event, record: {{.JavaName}}RecordVo) => {
-  const res = await update{{.JavaName}}Status({ids: [record.id], status: checked ? 1 : 0});
+const handleSwitchChange = async (checked: boolean, event: Event, record: {{table_info.class_name}}RecordVo) => {
+  const res = await update{{table_info.class_name}}Status({ids: [record.id], status: checked ? 1 : 0});
   if (res.code == 0) {
     message.success(res.message);
-    query{{.JavaName}}List(listParam.value);
+    query{{table_info.class_name}}List(listParam.value);
   } else {
     message.error(res.message);
   }
 }
 
 onMounted(() => {
-  query{{.JavaName}}List({current: 1, pageSize: 10});
+  query{{table_info.class_name}}List({current: 1, pageSize: 10});
 })
 
 </script>
