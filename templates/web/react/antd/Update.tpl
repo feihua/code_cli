@@ -1,11 +1,11 @@
 import React, {useEffect} from 'react';
 import {Form, Input, InputNumber, Modal, Radio} from 'antd';
-import { {{.JavaName}}Vo} from "../data";
-import {query{{.JavaName}}Detail} from "../service";
+import { {{table_info.class_name}}Vo} from "../data";
+import {query{{table_info.class_name}}Detail} from "../service";
 
 interface UpdateModalProps {
     open: boolean;
-    onCreate: (values: {{.JavaName}}Vo) => void;
+    onCreate: (values: {{table_info.class_name}}Vo) => void;
     onCancel: () => void;
     id: number;
 }
@@ -16,7 +16,7 @@ const UpdateModal: React.FC<UpdateModalProps> = ({open, onCreate, onCancel, id})
 
     useEffect(() => {
         if (open) {
-          query{{.JavaName}}Detail(id).then((res) => {
+          query{{table_info.class_name}}Detail(id).then((res) => {
             form.setFieldsValue(res.data);
           });
         }
@@ -36,43 +36,50 @@ const UpdateModal: React.FC<UpdateModalProps> = ({open, onCreate, onCancel, id})
     const renderContent = () => {
         return (
           <>
+          <FormItem
+            name="id"
+            label="主键"
+            hidden
+          >
+            <Input id="update-id"/>
+          </FormItem>
+          {%- for column in table_info.columns %}
             <FormItem
-              name="id"
-              label="主键"
-              hidden
+              name="{{column.ts_name}}"
+              label="{{column.column_comment}}"
+              rules={[{required: true, message: '请输入{{column_comment.column_comment}!'}]}
             >
-              <Input id="update-id"/>
-            </FormItem>
-
-            {{range .TableColumn}}
-            <FormItem
-              name="{{.JavaName}}"
-              label="{{.ColumnComment}}"
-              rules={[{required: true, message: '请输入{{.ColumnComment}}!'}]}
-            >{{if isContain .JavaName "Sort"}}
+            {% if column.column_key =="PRI"  %}
+            {% elif column.ts_name is containing("create") %}
+            {% elif column.ts_name is containing("update") %}
+            {% elif column.ts_name is containing("Status") %}
+                <Radio.Group>
+                  <Radio value={0}>禁用</Radio>
+                  <Radio value={1}>正常</Radio>
+                </Radio.Group>
+            {% elif column.ts_name is containing("status") %}
+                <Radio.Group>
+                  <Radio value={0}>禁用</Radio>
+                  <Radio value={1}>正常</Radio>
+                </Radio.Group>
+            {% elif column.ts_name is containing("Sort") %}
                 <InputNumber style={ {width: 255} }/>
-            {{else if isContain .JavaName "sort"}}
+            {% elif column.ts_name is containing("sort") %}
                 <InputNumber style={ {width: 255} }/>
-            {{else if isContain .JavaName "status"}}
-                  <Radio.Group>
-                    <Radio value={0}>禁用</Radio>
-                    <Radio value={1}>正常</Radio>
-                  </Radio.Group>
-            {{else if isContain .JavaName "Status"}}
-                  <Radio.Group>
-                    <Radio value={0}>禁用</Radio>
-                    <Radio value={1}>正常</Radio>
-                  </Radio.Group>
-           {{else if isContain .JavaName "Type"}}
-                    <Radio.Group>
-                      <Radio value={0}>禁用</Radio>
-                      <Radio value={1}>正常</Radio>
-                    </Radio.Group>
-             {{else if isContain .JavaName "remark"}}
+            {% elif column.ts_name is containing("Type") %}
+                <Radio.Group>
+                  <Radio value={0}>禁用</Radio>
+                  <Radio value={1}>正常</Radio>
+                </Radio.Group>
+            {%- elif column is containing("remark") %}
                 <Input.TextArea rows={2} placeholder={'请输入备注'}/>
-             {{else}}
-                <Input id="create-{{.JavaName}}" placeholder={'请输入{{.ColumnComment}}!'}/>
-             {{end}}</FormItem>{{end}}
+            {% else %}
+                <Input id="update-{{column.ts_name}}" placeholder={'请输入{{column.column_comment}!'}/>
+            {% endif %}
+            </FormItem>
+          {%- endfor %}
+
+
           </>
         );
     };

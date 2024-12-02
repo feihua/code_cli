@@ -1,10 +1,10 @@
 import React from 'react';
 import {SearchOutlined} from '@ant-design/icons';
 import {Button, Form, FormProps, Input, Select, Space} from 'antd';
-import { {{.JavaName}}Vo} from "../data";
+import { {{table_info.class_name}}Vo} from "../data";
 
 interface CreateFormProps {
-    search: (values: {{.JavaName}}Vo) => void;
+    search: (values: {{table_info.class_name}}Vo) => void;
     reSet: () => void;
 }
 
@@ -13,7 +13,7 @@ const AdvancedSearchForm: React.FC<CreateFormProps> = ({search, reSet}) => {
     const [form] = Form.useForm();
 
 
-    const onFinish: FormProps<{{.JavaName}}Vo>['onFinish'] = (values) => {
+    const onFinish: FormProps<{{table_info.class_name}}Vo>['onFinish'] = (values) => {
         search(values);
     };
 
@@ -25,34 +25,39 @@ const AdvancedSearchForm: React.FC<CreateFormProps> = ({search, reSet}) => {
     const searchForm = () => {
         return (
             <>
-                {{range .TableColumn}}
+              {%- for column in table_info.columns %}
                 <FormItem
-                  name="{{.JavaName}}"
-                  label="{{.ColumnComment}}"
-                >{{if isContain .JavaName "Sort"}}
-                    <InputNumber style={ {width: 255} }/>
-                {{else if isContain .JavaName "sort"}}
-                    <InputNumber style={ {width: 255} }/>
-                {{else if isContain .JavaName "status"}}
+                  name="{{column.ts_name}}"
+                  label="{{column.column_comment}}"
+                  rules={[{required: true, message: '请输入{{column_comment.column_comment}!'}]}
+                >
+                {% if column.column_key =="PRI"  %}
+                {% elif column.ts_name is containing("create") %}
+                {% elif column.ts_name is containing("update") %}
+                {% elif column.ts_name is containing("sort") %}
+                {% elif column.ts_name is containing("Sort") %}
+                {% elif column.ts_name is containing("remark") %}
+                {% elif column.ts_name is containing("Status") %}
                     <Select style={ {width: 200}}>
                         <Select.Option value="1">正常</Select.Option>
                         <Select.Option value="0">禁用</Select.Option>
                     </Select>
-                {{else if isContain .JavaName "Status"}}
-                   <Select style={ {width: 200}}>
-                      <Select.Option value="1">正常</Select.Option>
-                      <Select.Option value="0">禁用</Select.Option>
-                   </Select>
-               {{else if isContain .JavaName "Type"}}
+                {% elif column.ts_name is containing("status") %}
                     <Select style={ {width: 200}}>
                         <Select.Option value="1">正常</Select.Option>
                         <Select.Option value="0">禁用</Select.Option>
                     </Select>
-                 {{else if isContain .JavaName "remark"}}
-                    <Input.TextArea rows={2} placeholder={'请输入备注'}/>
-                 {{else}}
-                    <Input id="search-{{.JavaName}}" placeholder={'请输入{{.ColumnComment}}!'}/>
-                 {{end}}</FormItem>{{end}}
+                {% elif column.ts_name is containing("Type") %}
+                    <Select style={ {width: 200}}>
+                        <Select.Option value="1">正常</Select.Option>
+                        <Select.Option value="0">禁用</Select.Option>
+                    </Select>
+                {% else %}
+                    <Input id="search-{{column.ts_name}}" placeholder={'请输入{{column.column_comment}!'}/>
+                {% endif %}
+                </FormItem>
+              {%- endfor %}
+
                 <FormItem>
                     <Space>
                         <Button type="primary" htmlType="submit" icon={<SearchOutlined/>} style={ {width: 120}}>

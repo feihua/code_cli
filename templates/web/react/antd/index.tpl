@@ -3,106 +3,110 @@ import type {MenuProps} from 'antd';
 import {Button, Divider, message, Modal, Space, Table, Switch, Dropdown} from 'antd';
 import type {ColumnsType} from 'antd/es/table';
 import {DeleteOutlined, EditOutlined, PlusOutlined, SettingOutlined, ExclamationCircleOutlined, DownOutlined} from '@ant-design/icons';
-import { {{.JavaName}}Vo} from './data';
+import { {{table_info.class_name}}Vo} from './data';
 import AddModal from "./components/AddModal";
 import UpdateModal from "./components/UpdateModal";
 import AdvancedSearchForm from "./components/SearchForm";
 import DetailModal from "./components/DetailModal";
-import {add{{.JavaName}}, handleResp, remove{{.JavaName}}, update{{.JavaName}}, query{{.JavaName}}List, update{{.JavaName}}Status} from "./service";
+import {add{{table_info.class_name}}, handleResp, remove{{table_info.class_name}}, update{{table_info.class_name}}, query{{table_info.class_name}}List, update{{table_info.class_name}}Status} from "./service";
 
 
-const {{.JavaName}}: React.FC = () => {
+const {{table_info.class_name}}: React.FC = () => {
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
     const [isShowAddModal, setShowAddModal] = useState<boolean>(false);
     const [isShowEditModal, setShowEditModal] = useState<boolean>(false);
     const [isShowDetailModal, setShowDetailModal] = useState<boolean>(false);
-    const [{{.LowerJavaName}}ListData, set{{.JavaName}}ListData] = useState<{{.JavaName}}Vo[]>([]);
-    const [current{{.JavaName}}, setCurrent{{.JavaName}}] = useState<{{.JavaName}}Vo>({
+    const [{{table_info.object_name}}ListData, set{{table_info.class_name}}ListData] = useState<{{table_info.class_name}}Vo[]>([]);
+    const [current{{table_info.class_name}}, setCurrent{{table_info.class_name}}] = useState<{{table_info.class_name}}Vo>({
       {{- range .TableColumn}}
-        {{.JavaName}}: {{if eq .TsType `string`}}''{{else}}0{{end}},
+        {{table_info.class_name}}: {{if eq .TsType `string`}}''{{else}}0{{end}},
       {{- end}}
     });
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(10);
     const [total, setTotal] = useState<number>(10);
 
-    const columns: ColumnsType<{{.JavaName}}Vo> = [
-        {{range .TableColumn}}{{if isContain .JavaName "Name"}}
+    const columns: ColumnsType<{{table_info.class_name}}Vo> = [
+
+    {%- for column in table_info.columns %}
+      {% if column.ts_name is containing("Name") %}
         {
-          title: '{{.ColumnComment}}',
-          dataIndex: '{{.JavaName}}',
+          title: '{{column.column_comment}}',
+          dataIndex: '{{column.ts_name}}',
           render: (text: string) => <a>{text}</a>,
         },
-        {{else if isContain .JavaName "name"}}
+      {% elif column.ts_name is containing("name") %}
         {
-          title: '{{.ColumnComment}}',
-          dataIndex: '{{.JavaName}}',
+          title: '{{column.column_comment}}',
+          dataIndex: '{{column.ts_name}}',
           render: (text: string) => <a>{text}</a>,
         },
-        {{else if isContain .JavaName "Type"}}
+      {% elif column.ts_name is containing("Status") %}
         {
-          title: '{{.ColumnComment}}',
-          dataIndex: '{{.JavaName}}',
-          render: (_, { {{.JavaName}} }) => (
-              <>
-                  { {{.JavaName}} === 0 ? '禁用' : '启用'}
-              </>
-          ),
-        },
-        {{else if isContain .JavaName "status"}}
-        {
-          title: '{{.ColumnComment}}',
-          dataIndex: '{{.JavaName}}',
+          title: '{{column.column_comment}}',
+          dataIndex: '{{column.ts_name}}',
           render: (dom, entity) => {
             return (
-              <Switch checked={entity.{{.JavaName}} == 1} onChange={(flag) => {
+              <Switch checked={entity.{{column.ts_name}} == 1} onChange={(flag) => {
                 showStatusConfirm( [entity.id], flag ? 1 : 0)
               }}/>
             );
         },
         },
-        {{else if isContain .JavaName "Status"}}
+      {% elif column.ts_name is containing("status") %}
         {
-          title: '{{.ColumnComment}}',
-          dataIndex: '{{.JavaName}}',
-
-         render: (dom, entity) => {
-          return (
-            <Switch checked={entity.{{.JavaName}} == 1} onChange={(flag) => {
-              showStatusConfirm( [entity.id], flag ? 1 : 0)
-            }}/>
-          );
+          title: '{{column.column_comment}}',
+          dataIndex: '{{column.ts_name}}',
+          render: (dom, entity) => {
+            return (
+              <Switch checked={entity.{{column.ts_name}} == 1} onChange={(flag) => {
+                showStatusConfirm( [entity.id], flag ? 1 : 0)
+              }}/>
+            );
         },
-        },{{else}}
-        {
-          title: '{{.ColumnComment}}',
-          dataIndex: '{{.JavaName}}',
-        },{{end}}{{end}}
-
-        {
-            title: '操作',
-            key: 'action',
-            width:280,
-            render: (_, record) => (
-                <div>
-                    <Button type="link" size={'small'} icon={<EditOutlined/>} onClick={() => showDetailModal(record)}>详情</Button>
-                    <Button type="link" size={'small'} icon={<EditOutlined/>} onClick={() => showEditModal(record)}>编辑</Button>
-                    <Button type="link" size={'small'} danger icon={<DeleteOutlined/>}
-                            onClick={() => showDeleteConfirm(record)}>删除</Button>
-                    <Dropdown menu={ {items} }>
-                                <a onMouseEnter={(e) => {
-                                  setCurrent{{.JavaName}}(record)
-                                  return e.preventDefault()
-                                } }>
-                                  <Space>
-                                    更多
-                                    <DownOutlined/>
-                                  </Space>
-                                </a>
-                    </Dropdown>
-                </div>
-            ),
         },
+      {% elif column.ts_name is containing("Type") %}
+        {
+          title: '{{column.column_comment}}',
+          dataIndex: '{{column.ts_name}}',
+          render: (_, { {{column.ts_name}} }) => (
+              <>
+                  { {{column.ts_name}} === 0 ? '禁用' : '启用'}
+              </>
+          ),
+        },
+      {% else %}
+        {
+          title: '{{column.column_comment}}',
+          dataIndex: '{{column.ts_name}}',
+        },
+      {% endif %}
+    {%- endfor %}
+
+    {
+        title: '操作',
+        key: 'action',
+        width:280,
+        render: (_, record) => (
+            <div>
+                <Button type="link" size={'small'} icon={<EditOutlined/>} onClick={() => showDetailModal(record)}>详情</Button>
+                <Button type="link" size={'small'} icon={<EditOutlined/>} onClick={() => showEditModal(record)}>编辑</Button>
+                <Button type="link" size={'small'} danger icon={<DeleteOutlined/>}
+                        onClick={() => showDeleteConfirm(record)}>删除</Button>
+                <Dropdown menu={ {items} }>
+                            <a onMouseEnter={(e) => {
+                              setCurrent{{table_info.class_name}}(record)
+                              return e.preventDefault()
+                            } }>
+                              <Space>
+                                更多
+                                <DownOutlined/>
+                              </Space>
+                            </a>
+                </Dropdown>
+            </div>
+        ),
+    },
     ];
 
    const items: MenuProps['items'] = [
@@ -113,7 +117,7 @@ const {{.JavaName}}: React.FC = () => {
             //handleMoreModalVisible(true);
           }}
         >
-          分配角色
+          更多
         </a>
       ),
       icon: <PlusOutlined/>,
@@ -140,7 +144,7 @@ const {{.JavaName}}: React.FC = () => {
         return true;
       }
       try {
-        await update{{.JavaName}}Status({ ids, {{.LowerJavaName}}Status: status});
+        await update{{table_info.class_name}}Status({ ids, {{table_info.object_name}}Status: status});
         hide();
         message.success('更新状态成功');
         return true;
@@ -154,12 +158,12 @@ const {{.JavaName}}: React.FC = () => {
         setShowAddModal(true);
     };
 
-    const handleAddOk = async (param: {{.JavaName}}Vo) => {
-        if (handleResp(await add{{.JavaName}}(param))) {
+    const handleAddOk = async (param: {{table_info.class_name}}Vo) => {
+        if (handleResp(await add{{table_info.class_name}}(param))) {
             setShowAddModal(false);
-            const res = await query{{.JavaName}}List({current: currentPage, pageSize})
+            const res = await query{{table_info.class_name}}List({current: currentPage, pageSize})
             setTotal(res.total)
-            res.code === 0 ? set{{.JavaName}}ListData(res.data) : message.error(res.message);
+            res.code === 0 ? set{{table_info.class_name}}ListData(res.data) : message.error(res.message);
         }
     }
 
@@ -168,19 +172,19 @@ const {{.JavaName}}: React.FC = () => {
     };
 
 
-    const showEditModal = (param: {{.JavaName}}Vo) => {
-        setCurrent{{.JavaName}}(param)
+    const showEditModal = (param: {{table_info.class_name}}Vo) => {
+        setCurrent{{table_info.class_name}}(param)
         setShowEditModal(true);
     };
 
-    const handleEditOk = async (param: {{.JavaName}}Vo) => {
-        if (handleResp(await update{{.JavaName}}(param))) {
+    const handleEditOk = async (param: {{table_info.class_name}}Vo) => {
+        if (handleResp(await update{{table_info.class_name}}(param))) {
             setShowEditModal(false);
-            const res = await query{{.JavaName}}List({
+            const res = await query{{table_info.class_name}}List({
                 current: currentPage, pageSize,
             })
             setTotal(res.total)
-            res.code === 0 ? set{{.JavaName}}ListData(res.data) : message.error(res.message);
+            res.code === 0 ? set{{table_info.class_name}}ListData(res.data) : message.error(res.message);
         }
     };
 
@@ -188,8 +192,8 @@ const {{.JavaName}}: React.FC = () => {
         setShowEditModal(false);
     };
 
-    const showDetailModal = (param: {{.JavaName}}Vo) => {
-        setCurrent{{.JavaName}}(param)
+    const showDetailModal = (param: {{table_info.class_name}}Vo) => {
+        setCurrent{{table_info.class_name}}(param)
         setShowDetailModal(true);
     };
 
@@ -199,7 +203,7 @@ const {{.JavaName}}: React.FC = () => {
     };
 
     //删除单条数据
-    const showDeleteConfirm = (param: {{.JavaName}}Vo) => {
+    const showDeleteConfirm = (param: {{table_info.class_name}}Vo) => {
         Modal.confirm({
             content: `确定删除${param.id}吗?`,
             async onOk() {
@@ -213,32 +217,32 @@ const {{.JavaName}}: React.FC = () => {
 
     //批量删除
     const handleRemove = async (ids: number[]) => {
-        if (handleResp(await remove{{.JavaName}}(ids))) {
-            const res = await query{{.JavaName}}List({current: currentPage, pageSize})
+        if (handleResp(await remove{{table_info.class_name}}(ids))) {
+            const res = await query{{table_info.class_name}}List({current: currentPage, pageSize})
             setTotal(res.total)
-            res.code === 0 ? set{{.JavaName}}ListData(res.data) : message.error(res.message);
+            res.code === 0 ? set{{table_info.class_name}}ListData(res.data) : message.error(res.message);
         }
 
     };
 
-    const handleSearchOk = async (param: {{.JavaName}}Vo) => {
-        const res = await query{{.JavaName}}List({current: currentPage, ...param, pageSize})
+    const handleSearchOk = async (param: {{table_info.class_name}}Vo) => {
+        const res = await query{{table_info.class_name}}List({current: currentPage, ...param, pageSize})
         setTotal(res.total)
-        res.code === 0 ? set{{.JavaName}}ListData(res.data) : message.error(res.message);
+        res.code === 0 ? set{{table_info.class_name}}ListData(res.data) : message.error(res.message);
     };
 
     const handleResetOk = async () => {
-        const res = await query{{.JavaName}}List({current: currentPage, pageSize})
+        const res = await query{{table_info.class_name}}List({current: currentPage, pageSize})
         setTotal(res.total)
-        res.code === 0 ? set{{.JavaName}}ListData(res.data) : message.error(res.message);
+        res.code === 0 ? set{{table_info.class_name}}ListData(res.data) : message.error(res.message);
     };
 
     useEffect(() => {
-        query{{.JavaName}}List({
+        query{{table_info.class_name}}List({
             current: currentPage, pageSize
         }).then(res => {
             setTotal(res.total)
-            res.code === 0 ? set{{.JavaName}}ListData(res.data) : message.error(res.message);
+            res.code === 0 ? set{{table_info.class_name}}ListData(res.data) : message.error(res.message);
         });
     }, []);
 
@@ -258,9 +262,9 @@ const {{.JavaName}}: React.FC = () => {
             console.log('onChange', page, pageSize)
             setCurrentPage(page)
             setPageSize(pageSize)
-            const res = await query{{.JavaName}}List({current: page, pageSize})
+            const res = await query{{table_info.class_name}}List({current: page, pageSize})
             setTotal(res.total)
-            res.code === 0 ? set{{.JavaName}}ListData(res.data) : message.error(res.message);
+            res.code === 0 ? set{{table_info.class_name}}ListData(res.data) : message.error(res.message);
 
         }, //改变页码的函数
         onShowSizeChange: (current: number, size: number) => {
@@ -287,15 +291,15 @@ const {{.JavaName}}: React.FC = () => {
                 }}
                 size={"middle"}
                 columns={columns}
-                dataSource={ {{.LowerJavaName}}ListData}
+                dataSource={ {{table_info.object_name}}ListData}
                 rowKey={'id'}
                 pagination={paginationProps}
                 // tableLayout={"fixed"}
             />
 
             <AddModal onCancel={handleAddCancel} onCreate={handleAddOk} open={isShowAddModal}></AddModal>
-            <UpdateModal onCancel={handleEditCancel} onCreate={handleEditOk} open={isShowEditModal} id={current{{.JavaName}}.id}></UpdateModal>
-            <DetailModal onCancel={handleDetailCancel}  open={isShowDetailModal} id={current{{.JavaName}}.id}></DetailModal>
+            <UpdateModal onCancel={handleEditCancel} onCreate={handleEditOk} open={isShowEditModal} id={current{{table_info.class_name}}.id}></UpdateModal>
+            <DetailModal onCancel={handleDetailCancel}  open={isShowDetailModal} id={current{{table_info.class_name}}.id}></DetailModal>
 
             {selectedRowKeys.length > 0 &&
                 <div>
@@ -315,4 +319,4 @@ const {{.JavaName}}: React.FC = () => {
     );
 };
 
-export default {{.JavaName}};
+export default {{table_info.class_name}};

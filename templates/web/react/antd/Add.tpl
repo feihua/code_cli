@@ -1,10 +1,10 @@
 import React from 'react';
 import {Form, Input, InputNumber, message, Modal, Radio} from 'antd';
-import { {{.JavaName}}Vo} from "../data";
+import { {{table_info.class_name}}Vo} from "../data";
 
 interface AddModalProps {
     open: boolean;
-    onCreate: (values: {{.JavaName}}Vo) => void;
+    onCreate: (values: {{table_info.class_name}}Vo) => void;
     onCancel: () => void;
 }
 
@@ -27,35 +27,42 @@ const AddModal: React.FC<AddModalProps> = ({open, onCreate, onCancel}) => {
     const renderContent = () => {
         return (
           <>
-            {{range .TableColumn}}
+          {%- for column in table_info.columns %}
             <FormItem
-              name="{{.JavaName}}"
-              label="{{.ColumnComment}}"
-              rules={[{required: true, message: '请输入{{.ColumnComment}}!'}]}
-            >{{if isContain .JavaName "Sort"}}
+              name="{{column.ts_name}}"
+              label="{{column.column_comment}}"
+              rules={[{required: true, message: '请输入{{column_comment.column_comment}!'}]}
+            >
+            {% if column.column_key =="PRI"  %}
+            {% elif column.ts_name is containing("create") %}
+            {% elif column.ts_name is containing("update") %}
+            {% elif column.ts_name is containing("Status") %}
+                <Radio.Group>
+                  <Radio value={0}>禁用</Radio>
+                  <Radio value={1}>正常</Radio>
+                </Radio.Group>
+            {% elif column.ts_name is containing("status") %}
+                <Radio.Group>
+                  <Radio value={0}>禁用</Radio>
+                  <Radio value={1}>正常</Radio>
+                </Radio.Group>
+            {% elif column.ts_name is containing("Sort") %}
                 <InputNumber style={ {width: 255} }/>
-            {{else if isContain .JavaName "sort"}}
+            {% elif column.ts_name is containing("sort") %}
                 <InputNumber style={ {width: 255} }/>
-            {{else if isContain .JavaName "status"}}
-                  <Radio.Group>
-                    <Radio value={0}>禁用</Radio>
-                    <Radio value={1}>正常</Radio>
-                  </Radio.Group>
-            {{else if isContain .JavaName "Status"}}
-                  <Radio.Group>
-                    <Radio value={0}>禁用</Radio>
-                    <Radio value={1}>正常</Radio>
-                  </Radio.Group>
-           {{else if isContain .JavaName "Type"}}
-                    <Radio.Group>
-                      <Radio value={0}>禁用</Radio>
-                      <Radio value={1}>正常</Radio>
-                    </Radio.Group>
-             {{else if isContain .JavaName "remark"}}
+            {% elif column.ts_name is containing("Type") %}
+                <Radio.Group>
+                  <Radio value={0}>禁用</Radio>
+                  <Radio value={1}>正常</Radio>
+                </Radio.Group>
+            {%- elif column is containing("remark") %}
                 <Input.TextArea rows={2} placeholder={'请输入备注'}/>
-             {{else}}
-                <Input id="create-{{.JavaName}}" placeholder={'请输入{{.ColumnComment}}!'}/>
-             {{end}}</FormItem>{{end}}
+            {% else %}
+                <Input id="create-{{column.ts_name}}" placeholder={'请输入{{column.column_comment}!'}/>
+            {% endif %}
+            </FormItem>
+          {%- endfor %}
+
           </>
         );
     };
