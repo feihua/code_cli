@@ -117,7 +117,7 @@ const {{table_info.class_name}}: React.FC = () => {
             //handleMoreModalVisible(true);
           }}
         >
-          更多
+          更多操作
         </a>
       ),
       icon: <PlusOutlined/>,

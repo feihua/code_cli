@@ -3,78 +3,81 @@ import type { MenuProps } from 'antd';
 import { Button, Divider, Dropdown, message, Modal, Space, Switch, Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { DeleteOutlined, DownOutlined, EditOutlined, ExclamationCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { {{.JavaName}}Vo } from './data';
+import { {{table_info.class_name}}Vo } from './data';
 import AddModal from './components/AddModal';
 import UpdateModal from './components/UpdateModal';
 import AdvancedSearchForm from './components/SearchForm';
 import DetailModal from './components/DetailModal';
-import { remove{{.JavaName}}, update{{.JavaName}}Status } from './service';
-import use{{.JavaName}}Store from './store/{{.LowerJavaName}}Store.ts';
+import { remove{{table_info.class_name}}, update{{table_info.class_name}}Status } from './service';
+import use{{table_info.class_name}}Store from './store/{{table_info.object_name}}Store.ts';
 
-const {{.JavaName}}: React.FC = () => {
-  const { query{{.JavaName}}List, {{.LowerJavaName}}List, listParam, total } = use{{.JavaName}}Store();
+const {{table_info.class_name}}: React.FC = () => {
+  const { query{{table_info.class_name}}List, {{table_info.object_name}}List, listParam, total } = use{{table_info.class_name}}Store();
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   const [isShowEditModal, setShowEditModal] = useState<boolean>(false);
   const [isShowDetailModal, setShowDetailModal] = useState<boolean>(false);
-  const [current{{.JavaName}}, setCurrent{{.JavaName}}] = useState<{{.JavaName}}Vo>({
-  {{range .TableColumn}}{{.JavaName}}: {{if eq .TsType `string`}}''{{else}}0{{end}},
+  const [current{{table_info.class_name}}, setCurrent{{table_info.class_name}}] = useState<{{table_info.class_name}}Vo>({
+  {{range .TableColumn}}{{table_info.class_name}}: {{if eq .TsType `string`}}''{{else}}0{{end}},
   {{end}}
 
   });
 
-  const columns: ColumnsType<{{.JavaName}}Vo> = [
-        {{- range .TableColumn}}{{- if isContain .JavaName "Name"}}
+  const columns: ColumnsType<{{table_info.class_name}}Vo> = [
+    {%- for column in table_info.columns %}
+      {% if column.ts_name is containing("Name") %}
         {
-          title: '{{.ColumnComment}}',
-          dataIndex: '{{.JavaName}}',
+          title: '{{column.column_comment}}',
+          dataIndex: '{{column.ts_name}}',
           render: (text: string) => <a>{text}</a>,
         },
-        {{- else if isContain .JavaName "name"}}
+      {% elif column.ts_name is containing("name") %}
         {
-          title: '{{.ColumnComment}}',
-          dataIndex: '{{.JavaName}}',
+          title: '{{column.column_comment}}',
+          dataIndex: '{{column.ts_name}}',
           render: (text: string) => <a>{text}</a>,
         },
-        {{- else if isContain .JavaName "Type"}}
+      {% elif column.ts_name is containing("Status") %}
         {
-          title: '{{.ColumnComment}}',
-          dataIndex: '{{.JavaName}}',
-          render: (_, { {{.JavaName}} }) => (
-              <>
-                  { {{.JavaName}} === 0 ? '禁用' : '启用'}
-              </>
-          ),
-        },
-        {{- else if isContain .JavaName "status"}}
-        {
-          title: '{{.ColumnComment}}',
-          dataIndex: '{{.JavaName}}',
+          title: '{{column.column_comment}}',
+          dataIndex: '{{column.ts_name}}',
           render: (dom, entity) => {
             return (
-              <Switch checked={entity.{{.JavaName}} == 1} onChange={(flag) => {
+              <Switch checked={entity.{{column.ts_name}} == 1} onChange={(flag) => {
                 showStatusConfirm( [entity.id], flag ? 1 : 0)
               }}/>
             );
         },
         },
-        {{- else if isContain .JavaName "Status"}}
+      {% elif column.ts_name is containing("status") %}
         {
-          title: '{{.ColumnComment}}',
-          dataIndex: '{{.JavaName}}',
-
-         render: (dom, entity) => {
-          return (
-            <Switch checked={entity.{{.JavaName}} == 1} onChange={(flag) => {
-              showStatusConfirm( [entity.id], flag ? 1 : 0)
-            }}/>
-          );
+          title: '{{column.column_comment}}',
+          dataIndex: '{{column.ts_name}}',
+          render: (dom, entity) => {
+            return (
+              <Switch checked={entity.{{column.ts_name}} == 1} onChange={(flag) => {
+                showStatusConfirm( [entity.id], flag ? 1 : 0)
+              }}/>
+            );
         },
-        },{{- else}}
+        },
+      {% elif column.ts_name is containing("Type") %}
         {
-          title: '{{.ColumnComment}}',
-          dataIndex: '{{.JavaName}}',
-        },{{- end}}{{- end}}
+          title: '{{column.column_comment}}',
+          dataIndex: '{{column.ts_name}}',
+          render: (_, { {{column.ts_name}} }) => (
+              <>
+                  { {{column.ts_name}} === 0 ? '禁用' : '启用'}
+              </>
+          ),
+        },
+      {% else %}
+        {
+          title: '{{column.column_comment}}',
+          dataIndex: '{{column.ts_name}}',
+        },
+      {% endif %}
+    {%- endfor %}
 
     {
       title: '操作',
@@ -94,7 +97,7 @@ const {{.JavaName}}: React.FC = () => {
           <Dropdown menu={ { items } }>
             <a
               onMouseEnter={(e) => {
-                setCurrent{{.JavaName}}(record);
+                setCurrent{{table_info.class_name}}(record);
                 return e.preventDefault();
               } }>
               <Space>
@@ -141,10 +144,10 @@ const {{.JavaName}}: React.FC = () => {
       return true;
     }
     try {
-      await update{{.JavaName}}Status({ ids, {{.LowerJavaName}}Status: status });
+      await update{{table_info.class_name}}Status({ ids, {{table_info.object_name}}Status: status });
       hide();
       message.success('更新状态成功');
-      query{{.JavaName}}List(listParam);
+      query{{table_info.class_name}}List(listParam);
       return true;
     } catch (error) {
       hide();
@@ -152,18 +155,18 @@ const {{.JavaName}}: React.FC = () => {
     }
   };
 
-  const showEditModal = (param: {{.JavaName}}Vo) => {
-    setCurrent{{.JavaName}}(param);
+  const showEditModal = (param: {{table_info.class_name}}Vo) => {
+    setCurrent{{table_info.class_name}}(param);
     setShowEditModal(true);
   };
 
-  const showDetailModal = (param: {{.JavaName}}Vo) => {
-    setCurrent{{.JavaName}}(param);
+  const showDetailModal = (param: {{table_info.class_name}}Vo) => {
+    setCurrent{{table_info.class_name}}(param);
     setShowDetailModal(true);
   };
 
   //删除单条数据
-  const showDeleteConfirm = (param: {{.JavaName}}Vo) => {
+  const showDeleteConfirm = (param: {{table_info.class_name}}Vo) => {
     Modal.confirm({
       content: `确定删除${param.id}吗?`,
       async onOk() {
@@ -177,17 +180,17 @@ const {{.JavaName}}: React.FC = () => {
 
   //批量删除
   const handleRemove = async (ids: number[]) => {
-    const res = await remove{{.JavaName}}(ids);
+    const res = await remove{{table_info.class_name}}(ids);
     if (res.code == 0) {
       message.info(res.message);
-      query{{.JavaName}}List(listParam);
+      query{{table_info.class_name}}List(listParam);
     } else {
       message.error(res.message);
     }
   };
 
   useEffect(() => {
-    query{{.JavaName}}List({
+    query{{table_info.class_name}}List({
       current: 1,
       pageSize: 10,
     });
@@ -203,7 +206,7 @@ const {{.JavaName}}: React.FC = () => {
     showTotal: (total: number) => <span>总共{total}条</span>,
     total: total,
     onChange: (current: number, pageSize: number) => {
-      query{{.JavaName}}List({ current, pageSize });
+      query{{table_info.class_name}}List({ current, pageSize });
     }, //改变页码的函数
     onShowSizeChange: (current: number, size: number) => {
       console.log('onShowSizeChange', current, size);
@@ -241,16 +244,16 @@ const {{.JavaName}}: React.FC = () => {
         } }
         size={'middle'}
         columns={columns}
-        dataSource={ {{.LowerJavaName}}List}
+        dataSource={ {{table_info.object_name}}List}
         rowKey={'id'}
         pagination={paginationProps}
         // tableLayout={"fixed"}
       />
 
-      <UpdateModal onCancel={() => setShowEditModal(false)} open={isShowEditModal} id={current{{.JavaName}}.id}></UpdateModal>
-      <DetailModal onCancel={() => setShowDetailModal(false)} open={isShowDetailModal} id={current{{.JavaName}}.id}></DetailModal>
+      <UpdateModal onCancel={() => setShowEditModal(false)} open={isShowEditModal} id={current{{table_info.class_name}}.id}></UpdateModal>
+      <DetailModal onCancel={() => setShowDetailModal(false)} open={isShowDetailModal} id={current{{table_info.class_name}}.id}></DetailModal>
     </div>
   );
 };
 
-export default {{.JavaName}};
+export default {{table_info.class_name}};

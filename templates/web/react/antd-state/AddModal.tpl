@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
 import { Button, Form, Input, message, Modal, Radio } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { add{{.JavaName}} } from '../service.ts';
-import use{{.JavaName}}Store from '../store/{{.LowerJavaName}}Store.ts';
+import { add{{table_info.class_name}} } from '../service.ts';
+import use{{table_info.class_name}}Store from '../store/{{table_info.object_name}}Store.ts';
 
 const AddModal: React.FC = () => {
   const [form] = Form.useForm();
   const FormItem = Form.Item;
   const [open, setOpen] = useState<boolean>(false);
-  const { query{{.JavaName}}List } = use{{.JavaName}}Store();
+  const { query{{table_info.class_name}}List } = use{{table_info.class_name}}Store();
 
   const handleOk = () => {
     form
       .validateFields()
       .then(async (values) => {
-        const res = await add{{.JavaName}}(values);
+        const res = await add{{table_info.class_name}}(values);
         if (res.code == 0) {
           message.info(res.message);
-          query{{.JavaName}}List({ current: 1, pageSize: 10 });
+          query{{table_info.class_name}}List({ current: 1, pageSize: 10 });
           form.resetFields();
           setOpen(false);
         } else {
@@ -32,75 +32,42 @@ const AddModal: React.FC = () => {
     const renderContent = () => {
         return (
           <>
-            {{- range .TableColumn}}
-            {{- if isContain .JavaName "create"}}
-            {{- else if isContain .JavaName "update"}}
-            {{- else if isContain .JavaName "id"}}
-            {{- else if isContain .JavaName "Sort"}}
-            <FormItem
-              name="{{.JavaName}}"
-              label="{{.ColumnComment}}"
-              rules={[{required: true, message: '请输入{{.ColumnComment}}!'}]}
-            >
-                <InputNumber style={ {width: 255} }/>
-             </FormItem>
-            {{- else if isContain .JavaName "sort"}}
-            <FormItem
-              name="{{.JavaName}}"
-              label="{{.ColumnComment}}"
-              rules={[{required: true, message: '请输入{{.ColumnComment}}!'}]}
-            >
-                <InputNumber style={ {width: 255} }/>
-             </FormItem>
-            {{- else if isContain .JavaName "status"}}
-            <FormItem
-              name="{{.JavaName}}"
-              label="{{.ColumnComment}}"
-              rules={[{required: true, message: '请输入{{.ColumnComment}}!'}]}
-            >
+            {%- for column in table_info.columns %}
+              <FormItem
+                name="{{column.ts_name}}"
+                label="{{column.column_comment}}"
+                rules={[{required: true, message: '请输入{{column_comment.column_comment}!'}]}
+              >
+              {% if column.column_key =="PRI"  %}
+              {% elif column.ts_name is containing("create") %}
+              {% elif column.ts_name is containing("update") %}
+              {% elif column.ts_name is containing("Status") %}
                   <Radio.Group>
                     <Radio value={0}>禁用</Radio>
                     <Radio value={1}>正常</Radio>
                   </Radio.Group>
-             </FormItem>
-            {{- else if isContain .JavaName "Status"}}
-            <FormItem
-              name="{{.JavaName}}"
-              label="{{.ColumnComment}}"
-              rules={[{required: true, message: '请输入{{.ColumnComment}}!'}]}
-            >
+              {% elif column.ts_name is containing("status") %}
                   <Radio.Group>
                     <Radio value={0}>禁用</Radio>
                     <Radio value={1}>正常</Radio>
                   </Radio.Group>
-             </FormItem>
-           {{- else if isContain .JavaName "Type"}}
-            <FormItem
-              name="{{.JavaName}}"
-              label="{{.ColumnComment}}"
-              rules={[{required: true, message: '请输入{{.ColumnComment}}!'}]}
-            >
-                    <Radio.Group>
-                      <Radio value={0}>禁用</Radio>
-                      <Radio value={1}>正常</Radio>
-                    </Radio.Group>
-             </FormItem>
-             {{- else if isContain .JavaName "remark"}}
-            <FormItem
-              name="{{.JavaName}}"
-              label="{{.ColumnComment}}"
-              rules={[{required: true, message: '请输入{{.ColumnComment}}!'}]}
-            >
-                <Input.TextArea rows={2} placeholder={'请输入备注'}/>
-             </FormItem>
-             {{- else}}
-            <FormItem
-              name="{{.JavaName}}"
-              label="{{.ColumnComment}}"
-              rules={[{required: true, message: '请输入{{.ColumnComment}}!'}]}
-            >
-                <Input id="create-{{.JavaName}}" placeholder={'请输入{{.ColumnComment}}!'}/>
-             </FormItem>{{- end}}{{- end}}
+              {% elif column.ts_name is containing("Sort") %}
+                  <InputNumber style={ {width: 255} }/>
+              {% elif column.ts_name is containing("sort") %}
+                  <InputNumber style={ {width: 255} }/>
+              {% elif column.ts_name is containing("Type") %}
+                  <Radio.Group>
+                    <Radio value={0}>禁用</Radio>
+                    <Radio value={1}>正常</Radio>
+                  </Radio.Group>
+              {%- elif column is containing("remark") %}
+                  <Input.TextArea rows={2} placeholder={'请输入备注'}/>
+              {% else %}
+                  <Input id="create-{{column.ts_name}}" placeholder={'请输入{{column.column_comment}!'}/>
+              {% endif %}
+              </FormItem>
+            {%- endfor %}
+
           </>
         );
     };

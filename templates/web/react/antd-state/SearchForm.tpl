@@ -1,76 +1,58 @@
 import React from 'react';
 import { SearchOutlined } from '@ant-design/icons';
 import { Button, Form, FormProps, Input, Select, Space } from 'antd';
-import { List{{.JavaName}}Param } from '../data';
-import use{{.JavaName}}Store from '../store/{{.LowerJavaName}}Store.ts';
+import { List{{table_info.class_name}}Param } from '../data';
+import use{{table_info.class_name}}Store from '../store/{{table_info.object_name}}Store.ts';
 
 const AdvancedSearchForm: React.FC = () => {
   const FormItem = Form.Item;
   const [form] = Form.useForm();
-  const { query{{.JavaName}}List } = use{{.JavaName}}Store();
-  const onFinish: FormProps<List{{.JavaName}}Param>['onFinish'] = (values) => {
-    query{{.JavaName}}List({ ...values, current: 1, pageSize: 10 });
+  const { query{{table_info.class_name}}List } = use{{table_info.class_name}}Store();
+  const onFinish: FormProps<List{{table_info.class_name}}Param>['onFinish'] = (values) => {
+    query{{table_info.class_name}}List({ ...values, current: 1, pageSize: 10 });
   };
 
   const onReset = () => {
     form.resetFields();
-    query{{.JavaName}}List({ current: 1, pageSize: 10 });
+    query{{table_info.class_name}}List({ current: 1, pageSize: 10 });
   };
 
   const searchForm = () => {
       return (
           <>
-              {{range .TableColumn}}
-              {{- if isContain .JavaName "create"}}
-              {{- else if isContain .JavaName "update"}}
-              {{- else if isContain .JavaName "id"}}
-              {{- else if isContain .JavaName "remark"}}
-              {{- else if isContain .JavaName "Sort"}}
-              {{- else if isContain .JavaName "sort"}}
-              {{- else if isContain .JavaName "status"}}
-              <FormItem
-                name="{{.JavaName}}"
-                label="{{.ColumnComment}}"
-              >
-                  <Select style={ {width: 200}}>
-                      <Select.Option value="1">正常</Select.Option>
-                      <Select.Option value="0">禁用</Select.Option>
-                  </Select>
-               </FormItem>
-              {{- else if isContain .JavaName "Status"}}
-              <FormItem
-                name="{{.JavaName}}"
-                label="{{.ColumnComment}}"
-              >
-                 <Select style={ {width: 200}}>
-                    <Select.Option value="1">正常</Select.Option>
-                    <Select.Option value="0">禁用</Select.Option>
-                 </Select>
-               </FormItem>
-             {{- else if isContain .JavaName "Type"}}
-              <FormItem
-                name="{{.JavaName}}"
-                label="{{.ColumnComment}}"
-              >
-                  <Select style={ {width: 200}}>
-                      <Select.Option value="1">正常</Select.Option>
-                      <Select.Option value="0">禁用</Select.Option>
-                  </Select>
-               </FormItem>
-               {{- else if isContain .JavaName "remark"}}
-              <FormItem
-                name="{{.JavaName}}"
-                label="{{.ColumnComment}}"
-              >
-                  <Input.TextArea rows={2} placeholder={'请输入备注'}/>
-               </FormItem>
-               {{- else}}
-              <FormItem
-                name="{{.JavaName}}"
-                label="{{.ColumnComment}}"
-              >
-                  <Input id="search-{{.JavaName}}" placeholder={'请输入{{.ColumnComment}}!'}/>
-               </FormItem>{{- end}}{{- end}}
+              {%- for column in table_info.columns %}
+                <FormItem
+                  name="{{column.ts_name}}"
+                  label="{{column.column_comment}}"
+                  rules={[{required: true, message: '请输入{{column_comment.column_comment}!'}]}
+                >
+                {% if column.column_key =="PRI"  %}
+                {% elif column.ts_name is containing("create") %}
+                {% elif column.ts_name is containing("update") %}
+                {% elif column.ts_name is containing("sort") %}
+                {% elif column.ts_name is containing("Sort") %}
+                {% elif column.ts_name is containing("remark") %}
+                {% elif column.ts_name is containing("Status") %}
+                    <Select style={ {width: 200}}>
+                        <Select.Option value="1">正常</Select.Option>
+                        <Select.Option value="0">禁用</Select.Option>
+                    </Select>
+                {% elif column.ts_name is containing("status") %}
+                    <Select style={ {width: 200}}>
+                        <Select.Option value="1">正常</Select.Option>
+                        <Select.Option value="0">禁用</Select.Option>
+                    </Select>
+                {% elif column.ts_name is containing("Type") %}
+                    <Select style={ {width: 200}}>
+                        <Select.Option value="1">正常</Select.Option>
+                        <Select.Option value="0">禁用</Select.Option>
+                    </Select>
+                {% else %}
+                    <Input id="search-{{column.ts_name}}" placeholder={'请输入{{column.column_comment}!'}/>
+                {% endif %}
+                </FormItem>
+              {%- endfor %}
+
               <FormItem>
                   <Space>
                       <Button type="primary" htmlType="submit" icon={<SearchOutlined/>} style={ {width: 120}}>
