@@ -1,51 +1,63 @@
 export interface Add{{.JavaName}}Param {
-{{- range .TableColumn}}
-{{- if isContain .JavaName "create"}}
-{{- else if isContain .JavaName "update"}}
-{{- else if isContain .JavaName "id"}}
-{{- else}}
-  {{.JavaName}}: {{.TsType}}; //{{.ColumnComment}}
-{{- end}}
-{{- end}}
-}
+{%- for column in table_info.columns %}
+  {% if column.column_key =="PRI"  %}
+  {% elif column.ts_name is containing("create") %}
+  {% elif column.ts_name is containing("update") %}
+  {% else %}
+  {{column.ts_name}}: {{column.ts_type}}; //{{column.column_comment}}
+  {% endif %}
+{%- endfor %}
 
-export interface Delete{{.JavaName}}Param {
-    ids: number[];
 }
 
 export interface Update{{.JavaName}}Param {
-{{- range .TableColumn}}
-{{- if isContain .JavaName "create"}}
-{{- else if isContain .JavaName "update"}}
-{{- else}}
-  {{.JavaName}}: {{.TsType}}; //{{.ColumnComment}}
-{{- end}}
-{{- end}}
+{%- for column in table_info.columns %}
+  {% if column.ts_name is containing("create") %}
+  {% elif column.ts_name is containing("update") %}
+  {% else %}
+  {{column.ts_name}}: {{column.ts_type}}; //{{column.column_comment}}
+  {% endif %}
+{%- endfor %}
 }
 
-export interface Update{{.JavaName}}StatusParam {
-    ids: number[]; //编号
-    status?: number; //状态(0：禁用，1：启用)
+export interface Search{{.JavaName}}Param {
+{%- for column in table_info.columns %}
+  {% if column.column_key =="PRI"  %}
+  {% elif column.ts_name is containing("create") %}
+  {% elif column.ts_name is containing("update") %}
+  {% elif column.ts_name is containing("sort") %}
+  {% elif column.ts_name is containing("Sort") %}
+  {% elif column.ts_name is containing("remark") %}
+  {% else %}
+  {{column.ts_name}}?: {{column.ts_type}}; //{{column.column_comment}}
+  {% endif %}
+{%- endfor %}
+
 }
 
 export interface List{{.JavaName}}Param {
-    current?: number;
-    pageSize?: number;
-    total?: number;
-{{- range .TableColumn}}
-{{- if isContain .JavaName "create"}}
-{{- else if isContain .JavaName "update"}}
-{{- else if isContain .JavaName "Sort"}}
-{{- else if isContain .JavaName "sort"}}
-{{- else if isContain .JavaName "remark"}}
-{{- else if isContain .JavaName "id"}}
-{{- else}}
-  {{.JavaName}}?: {{.TsType}}; //{{.ColumnComment}}
-{{- end}}
-{{- end}}
+   current?: number;
+   pageSize?: number;
+{%- for column in table_info.columns %}
+  {% if column.column_key =="PRI"  %}
+  {% elif column.ts_name is containing("create") %}
+  {% elif column.ts_name is containing("update") %}
+  {% elif column.ts_name is containing("sort") %}
+  {% elif column.ts_name is containing("Sort") %}
+  {% elif column.ts_name is containing("remark") %}
+  {% else %}
+  {{column.ts_name}}?: {{column.ts_type}}; //{{column.column_comment}}
+  {% endif %}
+{%- endfor %}
+
+
 }
 
 export interface {{.JavaName}}RecordVo {
-{{range .TableColumn}}  {{.JavaName}}: {{.TsType}}; //{{.ColumnComment}}
+{%- for column in table_info.columns %}
+  {{column.ts_name}}?: {{column.ts_type}}; //{{column.column_comment}}
+{%- endfor %}
+
+{{range .TableColumn}}    {{.JavaName}}: {{.TsType}}; //{{.ColumnComment}}
 {{end}}
 }

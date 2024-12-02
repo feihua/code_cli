@@ -2,20 +2,23 @@
 export interface {{.JavaName}}ListParam {
   current: number;
   pageSize?: number;
-{{- range .TableColumn}}
-{{- if isContain .JavaName "create"}}
-{{- else if isContain .JavaName "update"}}
-{{- else if isContain .JavaName "Sort"}}
-{{- else if isContain .JavaName "sort"}}
-{{- else if isContain .JavaName "remark"}}
-{{- else if isContain .JavaName "id"}}
-{{- else}}
-  {{.JavaName}}?: {{.TsType}}; //{{.ColumnComment}}
-{{- end}}
-{{- end}}
+{%- for column in table_info.columns %}
+  {% if column.column_key =="PRI"  %}
+  {% elif column.ts_name is containing("create") %}
+  {% elif column.ts_name is containing("update") %}
+  {% elif column.ts_name is containing("sort") %}
+  {% elif column.ts_name is containing("Sort") %}
+  {% elif column.ts_name is containing("remark") %}
+  {% else %}
+  {{column.ts_name}}?: {{column.ts_type}}; //{{column.column_comment}}
+  {% endif %}
+{%- endfor %}
+
 }
 
 export interface {{.JavaName}}Vo {
-{{range .TableColumn}}  {{.JavaName}}: {{.TsType}}; //{{.ColumnComment}}
-{{end}}
+{%- for column in table_info.columns %}
+  {{column.ts_name}}: {{column.ts_type}}; //{{column.column_comment}}
+{%- endfor %}
+
 }

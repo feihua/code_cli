@@ -1,6 +1,9 @@
 export interface {{.JavaName}}ListItem {
-{{range .TableColumn}}    {{.JavaName}}: {{.TsType}}; //{{.ColumnComment}}
-{{end}}
+{%- for column in table_info.columns %}
+  {{column.ts_name}}: {{column.ts_type}}; //{{column.column_comment}}
+
+{%- endfor %}
+
 }
 
 export interface {{.JavaName}}ListPagination {
@@ -15,11 +18,12 @@ export interface {{.JavaName}}ListData {
 }
 
 export interface {{.JavaName}}ListParams {
-{{range .TableColumn}}    {{.JavaName}}?: {{.TsType}}; //{{.ColumnComment}}
-{{end}}
-    pageSize?: number;
-    current?: number;
-    filter?: { [key: string]: any[] };
-    sorter?: { [key: string]: any };
+  pageSize?: number;
+  current?: number;
+  filter?: { [key: string]: any[] };
+  sorter?: { [key: string]: any };
+{%- for column in table_info.columns %}
+  {{column.ts_name}}?: {{column.ts_type}}; //{{column.column_comment}}
 
+{%- endfor %}
 }
