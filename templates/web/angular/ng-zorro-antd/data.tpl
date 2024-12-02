@@ -1,11 +1,11 @@
 export interface Add{{table_info.class_name}}Param {
   {%- for column in table_info.columns %}
-  {% if column.column_key =="PRI"  %}
-  {% elif column.ts_name is containing("create") %}
-  {% elif column.ts_name is containing("update") %}
-  {% else %}
+  {%- if column.column_key =="PRI"  %}
+  {%- elif column.ts_name is containing("create") %}
+  {%- elif column.ts_name is containing("update") %}
+  {%- else %}
   {{column.ts_name}}: {{column.ts_type}}; //{{column.column_comment}}
-  {% endif %}
+  {%- endif %}
   {%- endfor %}
 
 }
@@ -16,11 +16,11 @@ export interface Delete{{table_info.class_name}}Param {
 
 export interface Update{{table_info.class_name}}Param {
 {%- for column in table_info.columns %}
-  {% if column.ts_name is containing("create") %}
-  {% elif column.ts_name is containing("update") %}
-  {% else %}
+  {%- if column.ts_name is containing("create") %}
+  {%- elif column.ts_name is containing("update") %}
+  {%- else %}
   {{column.ts_name}}: {{column.ts_type}}; //{{column.column_comment}}
-  {% endif %}
+  {%- endif %}
 {%- endfor %}
 
 }
@@ -34,15 +34,15 @@ export interface QueryList{{table_info.class_name}}Param {
   pageNum?: number;
   pageSize?: number;
 {%- for column in table_info.columns %}
-  {% if column.column_key =="PRI"  %}
-  {% elif column.ts_name is containing("create") %}
-  {% elif column.ts_name is containing("update") %}
-  {% elif column.ts_name is containing("sort") %}
-  {% elif column.ts_name is containing("Sort") %}
-  {% elif column.ts_name is containing("remark") %}
-  {% else %}
+  {%- if column.column_key =="PRI"  %}
+  {%- elif column.ts_name is containing("create") %}
+  {%- elif column.ts_name is containing("update") %}
+  {%- elif column.ts_name is containing("sort") %}
+  {%- elif column.ts_name is containing("Sort") %}
+  {%- elif column.ts_name is containing("remark") %}
+  {%- else %}
   {{column.ts_name}}?: {{column.ts_type}}; //{{column.column_comment}}
-  {% endif %}
+  {%- endif %}
 {%- endfor %}
 }
 

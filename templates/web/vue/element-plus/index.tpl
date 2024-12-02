@@ -35,11 +35,11 @@ const pageSize = ref(10)
 
 const recordVo = ref<{{table_info.class_name}}RecordVo>({
 {%- for column in table_info.columns %}
-  {% if column.ts_type == "string"  %}
+  {%- if column.ts_type == "string"  %}
   {{column.ts_name}}: '',
-  {% else %}
+  {%- else %}
   {{column.ts_name}}: 0,
-  {% endif %}
+  {%- endif %}
 {%- endfor %}
 
 })

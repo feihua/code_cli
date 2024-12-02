@@ -2,32 +2,32 @@
   <el-form :inline="true" :model="searchParam" class="demo-form-inline" style="height: 32px; margin-left: 20px" ref="formRef">
     {%- for column in table_info.columns %}
     <el-form-item label="{{column.column_comment}}">
-      {% if column.column_key =="PRI"  %}
-      {% elif column.ts_name is containing("create") %}
-      {% elif column.ts_name is containing("update") %}
-      {% elif column.ts_name is containing("sort") %}
-      {% elif column.ts_name is containing("Sort") %}
-      {% elif column.ts_name is containing("remark") %}
+      {%- if column.column_key =="PRI"  %}
+      {%- elif column.ts_name is containing("create") %}
+      {%- elif column.ts_name is containing("update") %}
+      {%- elif column.ts_name is containing("sort") %}
+      {%- elif column.ts_name is containing("Sort") %}
+      {%- elif column.ts_name is containing("remark") %}
         <el-input v-model="searchParam.{{table_info.class_name}}" :rows="2" type="textarea" 请输入{{column.column_comment}}/>
-      {% elif column.ts_name is containing("Status") %}
+      {%- elif column.ts_name is containing("Status") %}
         <el-radio-group v-model="searchParam.{{table_info.class_name}}" placeholder="请选择{{column.column_comment}}">
           <el-radio :label="1">启用</el-radio>
           <el-radio :label="0">禁用</el-radio>
         </el-radio-group>
-      {% elif column.ts_name is containing("status") %}
+      {%- elif column.ts_name is containing("status") %}
         <el-radio-group v-model="searchParam.{{table_info.class_name}}" placeholder="请选择{{column.column_comment}}">
           <el-radio :label="1">启用</el-radio>
           <el-radio :label="0">禁用</el-radio>
         </el-radio-group>
-      {% elif column.ts_name is containing("Type") %}
+      {%- elif column.ts_name is containing("Type") %}
         <el-radio-group v-model="searchParam.{{table_info.class_name}}" placeholder="请选择{{column.column_comment}}">
           <el-radio :label="1">启用</el-radio>
           <el-radio :label="0">禁用</el-radio>
         </el-radio-group>
-      {% else %}
+      {%- else %}
         <el-input v-model="searchParam.{{table_info.class_name}}" placeholder="请输入{{column.column_comment}}"/>
 
-      {% endif %}
+      {%- endif %}
       </el-form-item>
     {%- endfor %}
     
@@ -52,17 +52,17 @@ const searchParam = reactive<List{{table_info.class_name}}Param>({
   current: 1,
   pageSize: 10,
 {%- for column in table_info.columns %}
-  {% if column.column_key =="PRI"  %}
-  {% elif column.ts_name is containing("create") %}
-  {% elif column.ts_name is containing("update") %}
-  {% elif column.ts_name is containing("remark") %}
-  {% else %}
-    {% if column.ts_type == "string"  %}
+  {%- if column.column_key =="PRI"  %}
+  {%- elif column.ts_name is containing("create") %}
+  {%- elif column.ts_name is containing("update") %}
+  {%- elif column.ts_name is containing("remark") %}
+  {%- else %}
+    {%- if column.ts_type == "string"  %}
     {{column.ts_name}}: '',
-    {% else %}
+    {%- else %}
     {{column.ts_name}}: 0,
-    {% endif %}
-  {% endif %}
+    {%- endif %}
+  {%- endif %}
 {%- endfor %}
 
 });

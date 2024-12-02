@@ -126,7 +126,7 @@ const {{table_info.class_name}}List: React.FC = () => {
 
   const columns: ProColumns<{{table_info.class_name}}ListItem>[] = [
 {%- for column in table_info.columns %}
-  {% if column.ts_name is containing("Name") %}
+  {%- if column.ts_name is containing("Name") %}
     {
       title: '{{column.column_comment}}',
       dataIndex: '{{column.ts_name}}',
@@ -138,7 +138,7 @@ const {{table_info.class_name}}List: React.FC = () => {
           }}>{dom}</a>;
         },
     },
-  {% elif column.ts_name is containing("name") %}
+  {%- elif column.ts_name is containing("name") %}
     {
       title: '{{column.column_comment}}',
       dataIndex: '{{column.ts_name}}',
@@ -150,7 +150,7 @@ const {{table_info.class_name}}List: React.FC = () => {
           }}>{dom}</a>;
         },
     },
-  {% elif column.ts_name is containing("Status") %}
+  {%- elif column.ts_name is containing("Status") %}
     {
       title: '{{column.column_comment}}',
       dataIndex: '{{column.ts_name}}',
@@ -172,7 +172,7 @@ const {{table_info.class_name}}List: React.FC = () => {
       );
     },
     },
-  {% elif column.ts_name is containing("status") %}
+  {%- elif column.ts_name is containing("status") %}
     {
       title: '{{column.column_comment}}',
       dataIndex: '{{column.ts_name}}',
@@ -194,7 +194,7 @@ const {{table_info.class_name}}List: React.FC = () => {
       );
     },
     },
-  {% elif column.ts_name is containing("Type") %}
+  {%- elif column.ts_name is containing("Type") %}
     {
       title: '{{column.column_comment}}',
       dataIndex: '{{column.ts_name}}',
@@ -218,13 +218,13 @@ const {{table_info.class_name}}List: React.FC = () => {
         return <>未知{entity.{{column.ts_name}}}</>;
       },
     },
-  {% else %}
+  {%- else %}
     {
       title: '{{column.column_comment}}',
       dataIndex: '{{column.ts_name}}',
       hideInSearch: true,
     },
-  {% endif %}
+  {%- endif %}
 {%- endfor %}
 
     {

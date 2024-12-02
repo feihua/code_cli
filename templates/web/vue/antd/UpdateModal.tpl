@@ -12,10 +12,10 @@
       <a-form ref="formRef" :model="formState" name="form_in_modal" :label-col="{ span: 7 }"
             :wrapper-col="{ span: 13 }">
             {%- for column in table_info.columns %}
-              {% if column.column_key =="PRI"  %}
-              {% elif column.ts_name is containing("create") %}
-              {% elif column.ts_name is containing("update") %}
-              {% elif column.ts_name is containing("remark") %}
+              {%- if column.column_key =="PRI"  %}
+              {%- elif column.ts_name is containing("create") %}
+              {%- elif column.ts_name is containing("update") %}
+              {%- elif column.ts_name is containing("remark") %}
               <a-form-item
                   name="{{column.ts_name}}"
                   label="{{column.column_comment}}"
@@ -23,7 +23,7 @@
               >
                   <a-textarea v-model:value="formState.{{column.ts_name}}" allow-clear placeholder="请选择{{column.column_comment}}"/>
              </a-form-item>
-              {% elif column.ts_name is containing("Status") %}
+              {%- elif column.ts_name is containing("Status") %}
               <a-form-item
                   name="{{column.ts_name}}"
                   label="{{column.column_comment}}"
@@ -34,7 +34,7 @@
                       <a-radio :value="0">否</a-radio>
                   </a-radio-group>
               </a-form-item>
-              {% elif column.ts_name is containing("status") %}
+              {%- elif column.ts_name is containing("status") %}
               <a-form-item
                   name="{{column.ts_name}}"
                   label="{{column.column_comment}}"
@@ -45,7 +45,7 @@
                       <a-radio :value="0">否</a-radio>
                   </a-radio-group>
               </a-form-item>
-              {% elif column.ts_name is containing("Sort") %}
+              {%- elif column.ts_name is containing("Sort") %}
               <a-form-item
                   name="{{column.ts_name}}"
                   label="{{column.column_comment}}"
@@ -53,7 +53,7 @@
               >
                   <a-input-number v-model:value="formState.{{column.ts_name}}" style="width: 234px" placeholder="请选择{{column.column_comment}}"/>
               </a-form-item>
-              {% elif column.ts_name is containing("sort") %}
+              {%- elif column.ts_name is containing("sort") %}
               <a-form-item
                   name="{{column.ts_name}}"
                   label="{{column.column_comment}}"
@@ -61,7 +61,7 @@
               >
                   <a-input-number v-model:value="formState.{{column.ts_name}}" style="width: 234px" placeholder="请选择{{column.column_comment}}"/>
               </a-form-item>
-              {% elif column.ts_name is containing("Type") %}
+              {%- elif column.ts_name is containing("Type") %}
               <a-form-item
                   name="{{column.ts_name}}"
                   label="{{column.column_comment}}"
@@ -72,7 +72,7 @@
                       <a-radio :value="0">否</a-radio>
                   </a-radio-group>
               </a-form-item>
-              {% else %}
+              {%- else %}
               <a-form-item
                   name="{{column.ts_name}}"
                   label="{{column.column_comment}}"
@@ -80,7 +80,7 @@
               >
                   <a-input v-model:value="formState.{{column.ts_name}}" placeholder="请选择{{column.column_comment}}"/>
               </a-form-item>
-              {% endif %}
+              {%- endif %}
             {%- endfor %}
     </a-form>
     </a-modal>
@@ -105,15 +105,15 @@ const formRef = ref<FormInstance>();
 const updateVisible = ref(false);
 const formState = ref<Update{{table_info.class_name}}Param>({
 {%- for column in table_info.columns %}
-  {% if column.ts_name is containing("create") %}
-  {% elif column.ts_name is containing("update") %}
-  {% else %}
-    {% if column.ts_type == "string"  %}
+  {%- if column.ts_name is containing("create") %}
+  {%- elif column.ts_name is containing("update") %}
+  {%- else %}
+    {%- if column.ts_type == "string"  %}
     {{column.ts_name}}: '',
-    {% else %}
+    {%- else %}
     {{column.ts_name}}: 0,
-    {% endif %}
-  {% endif %}
+    {%- endif %}
+  {%- endif %}
 {%- endfor %}
 
 });

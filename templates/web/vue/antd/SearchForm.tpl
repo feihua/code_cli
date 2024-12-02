@@ -7,11 +7,11 @@
       @finish="onFinish"
   >
         {%- for column in table_info.columns %}
-          {% if column.column_key =="PRI"  %}
-          {% elif column.ts_name is containing("create") %}
-          {% elif column.ts_name is containing("update") %}
-          {% elif column.ts_name is containing("remark") %}
-          {% elif column.ts_name is containing("Status") %}
+          {%- if column.column_key =="PRI"  %}
+          {%- elif column.ts_name is containing("create") %}
+          {%- elif column.ts_name is containing("update") %}
+          {%- elif column.ts_name is containing("remark") %}
+          {%- elif column.ts_name is containing("Status") %}
           <a-form-item
               name="{{column.ts_name}}"
               label="{{column.column_comment}}"
@@ -22,7 +22,7 @@
                   <a-radio :value="0">否</a-radio>
               </a-radio-group>
           </a-form-item>
-          {% elif column.ts_name is containing("status") %}
+          {%- elif column.ts_name is containing("status") %}
           <a-form-item
               name="{{column.ts_name}}"
               label="{{column.column_comment}}"
@@ -33,9 +33,9 @@
                   <a-radio :value="0">否</a-radio>
               </a-radio-group>
           </a-form-item>
-          {% elif column.ts_name is containing("Sort") %}
-          {% elif column.ts_name is containing("sort") %}
-          {% elif column.ts_name is containing("Type") %}
+          {%- elif column.ts_name is containing("Sort") %}
+          {%- elif column.ts_name is containing("sort") %}
+          {%- elif column.ts_name is containing("Type") %}
           <a-form-item
               name="{{column.ts_name}}"
               label="{{column.column_comment}}"
@@ -46,7 +46,7 @@
                   <a-radio :value="0">否</a-radio>
               </a-radio-group>
           </a-form-item>
-          {% else %}
+          {%- else %}
           <a-form-item
               name="{{column.ts_name}}"
               label="{{column.column_comment}}"
@@ -54,7 +54,7 @@
           >
               <a-input v-model:value="formState.{{column.ts_name}}" placeholder="请选择{{column.column_comment}}"/>
           </a-form-item>
-          {% endif %}
+          {%- endif %}
         {%- endfor %}
 
 
@@ -85,13 +85,13 @@ const formRef = ref<FormInstance>();
 
 const formState = reactive<Search{{table_info.class_name}}Param>({
 {%- for column in table_info.columns %}
-  {% if column.column_key =="PRI"  %}
-  {% elif column.ts_name is containing("create") %}
-  {% elif column.ts_name is containing("update") %}
-  {% elif column.ts_name is containing("remark") %}
-  {% else %}
+  {%- if column.column_key =="PRI"  %}
+  {%- elif column.ts_name is containing("create") %}
+  {%- elif column.ts_name is containing("update") %}
+  {%- elif column.ts_name is containing("remark") %}
+  {%- else %}
      {{column.ts_name}}: undefined,
-  {% endif %}
+  {%- endif %}
 {%- endfor %}
 
 });

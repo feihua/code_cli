@@ -88,28 +88,28 @@ export class {{table_info.class_name}}Component implements OnInit {
 
   searchForm: FormGroup<{
     {%- for column in table_info.columns %}
-      {% if column.column_key =="PRI"  %}
-      {% elif column.ts_name is containing("create") %}
-      {% elif column.ts_name is containing("update") %}
-      {% elif column.ts_name is containing("remark") %}
-      {% elif column.ts_name is containing("Sort") %}
-      {% elif column.ts_name is containing("sort") %}
-      {% else %}
+      {%- if column.column_key =="PRI"  %}
+      {%- elif column.ts_name is containing("create") %}
+      {%- elif column.ts_name is containing("update") %}
+      {%- elif column.ts_name is containing("remark") %}
+      {%- elif column.ts_name is containing("Sort") %}
+      {%- elif column.ts_name is containing("sort") %}
+      {%- else %}
       {{column.ts_name}}: FormControl<{{column.ts_type}}>, //{{column.column_comment}}
-      {% endif %}
+      {%- endif %}
     {%- endfor %}
 
   }> = this.fb.group({
     {%- for column in table_info.columns %}
-      {% if column.column_key =="PRI"  %}
-      {% elif column.ts_name is containing("create") %}
-      {% elif column.ts_name is containing("update") %}
-      {% elif column.ts_name is containing("remark") %}
-      {% elif column.ts_name is containing("Sort") %}
-      {% elif column.ts_name is containing("sort") %}
-      {% else %}
+      {%- if column.column_key =="PRI"  %}
+      {%- elif column.ts_name is containing("create") %}
+      {%- elif column.ts_name is containing("update") %}
+      {%- elif column.ts_name is containing("remark") %}
+      {%- elif column.ts_name is containing("Sort") %}
+      {%- elif column.ts_name is containing("sort") %}
+      {%- else %}
        {{column.ts_name}}: '', //{{column.column_comment}}
-      {% endif %}
+      {%- endif %}
     {%- endfor %}
 
   });
@@ -129,22 +129,22 @@ export class {{table_info.class_name}}Component implements OnInit {
   // 新增相关参数
   addForm: FormGroup<{
 {%- for column in table_info.columns %}
-  {% if column.column_key =="PRI"  %}
-  {% elif column.ts_name is containing("create") %}
-  {% elif column.ts_name is containing("update") %}
-  {% else %}
+  {%- if column.column_key =="PRI"  %}
+  {%- elif column.ts_name is containing("create") %}
+  {%- elif column.ts_name is containing("update") %}
+  {%- else %}
   {{column.ts_name}}: FormControl<{{column.ts_type}}>, //{{column.column_comment}}
-  {% endif %}
+  {%- endif %}
 {%- endfor %}
 
   }> = this.fb.group({
 {%- for column in table_info.columns %}
-  {% if column.column_key =="PRI"  %}
-  {% elif column.ts_name is containing("create") %}
-  {% elif column.ts_name is containing("update") %}
-  {% else %}
+  {%- if column.column_key =="PRI"  %}
+  {%- elif column.ts_name is containing("create") %}
+  {%- elif column.ts_name is containing("update") %}
+  {%- else %}
   {{column.ts_name}}: '', //{{column.column_comment}}
-  {% endif %}
+  {%- endif %}
 {%- endfor %}
 
   });
@@ -159,12 +159,12 @@ export class {{table_info.class_name}}Component implements OnInit {
     const addRecord = this.addForm.value
     this.{{table_info.object_name}}Service.add{{table_info.class_name}}({
     {%- for column in table_info.columns %}
-      {% if column.column_key =="PRI"  %}
-      {% elif column.ts_name is containing("create") %}
-      {% elif column.ts_name is containing("update") %}
-      {% else %}
+      {%- if column.column_key =="PRI"  %}
+      {%- elif column.ts_name is containing("create") %}
+      {%- elif column.ts_name is containing("update") %}
+      {%- else %}
        {{column.ts_name}}: addRecord.{{column.ts_name}}, //{{column.column_comment}}
-      {% endif %}
+      {%- endif %}
     {%- endfor %}
     }).subscribe(res => {
       this.message.create(res.code == 0 ? 'success' : 'error', res.message);
@@ -184,20 +184,20 @@ export class {{table_info.class_name}}Component implements OnInit {
 
   updateForm: FormGroup<{
     {%- for column in table_info.columns %}
-      {% if column.ts_name is containing("create") %}
-      {% elif column.ts_name is containing("update") %}
-      {% else %}
+      {%- if column.ts_name is containing("create") %}
+      {%- elif column.ts_name is containing("update") %}
+      {%- else %}
       {{column.ts_name}}: FormControl<{{column.ts_type}}>, //{{column.column_comment}}
-      {% endif %}
+      {%- endif %}
     {%- endfor %}
 
   }> = this.fb.group({
 {%- for column in table_info.columns %}
-  {% if column.ts_name is containing("create") %}
-  {% elif column.ts_name is containing("update") %}
-  {% else %}
+  {%- if column.ts_name is containing("create") %}
+  {%- elif column.ts_name is containing("update") %}
+  {%- else %}
   {{column.ts_name}}: '', //{{column.column_comment}}
-  {% endif %}
+  {%- endif %}
 {%- endfor %}
   });
 
@@ -209,11 +209,11 @@ export class {{table_info.class_name}}Component implements OnInit {
       const updateRecord = res.data
       this.updateForm = this.fb.group({
         {%- for column in table_info.columns %}
-          {% if column.ts_name is containing("create") %}
-          {% elif column.ts_name is containing("update") %}
-          {% else %}
+          {%- if column.ts_name is containing("create") %}
+          {%- elif column.ts_name is containing("update") %}
+          {%- else %}
           {{column.ts_name}}: [updateRecord.{{column.ts_name}}, [Validators.required]],
-          {% endif %}
+          {%- endif %}
         {%- endfor %}
       })
     })
@@ -225,11 +225,11 @@ export class {{table_info.class_name}}Component implements OnInit {
     const updateRecord = this.updateForm.value
     this.{{table_info.object_name}}Service.update{{table_info.class_name}}({
         {%- for column in table_info.columns %}
-          {% if column.ts_name is containing("create") %}
-          {% elif column.ts_name is containing("update") %}
-          {% else %}
+          {%- if column.ts_name is containing("create") %}
+          {%- elif column.ts_name is containing("update") %}
+          {%- else %}
           {{column.ts_name}}: updateRecord.{{column.ts_name}}, //{{column.column_comment}}
-          {% endif %}
+          {%- endif %}
         {%- endfor %}
     }).subscribe(res => {
       this.message.create(res.code == 0 ? 'success' : 'error', res.message);
@@ -343,30 +343,30 @@ export class {{table_info.class_name}}Component implements OnInit {
 
   private query{{table_info.class_name}}List() {
     const {  {%- for column in table_info.columns %}
-       {% if column.column_key =="PRI"  %}
-       {% elif column.ts_name is containing("create") %}
-       {% elif column.ts_name is containing("update") %}
-       {% elif column.ts_name is containing("remark") %}
-       {% elif column.ts_name is containing("Sort") %}
-       {% elif column.ts_name is containing("sort") %}
-       {% else %}
+       {%- if column.column_key =="PRI"  %}
+       {%- elif column.ts_name is containing("create") %}
+       {%- elif column.ts_name is containing("update") %}
+       {%- elif column.ts_name is containing("remark") %}
+       {%- elif column.ts_name is containing("Sort") %}
+       {%- elif column.ts_name is containing("sort") %}
+       {%- else %}
        {{column.ts_name}}, //{{column.column_comment}}
-       {% endif %}
+       {%- endif %}
      {%- endfor %}
     } = this.searchForm.value;
     this.{{table_info.object_name}}Service.query{{table_info.class_name}}List({
       current: this.pageIndex,
       pageSize: this.pageSize,
        {%- for column in table_info.columns %}
-       {% if column.column_key =="PRI"  %}
-       {% elif column.ts_name is containing("create") %}
-       {% elif column.ts_name is containing("update") %}
-       {% elif column.ts_name is containing("remark") %}
-       {% elif column.ts_name is containing("Sort") %}
-       {% elif column.ts_name is containing("sort") %}
-       {% else %}
+       {%- if column.column_key =="PRI"  %}
+       {%- elif column.ts_name is containing("create") %}
+       {%- elif column.ts_name is containing("update") %}
+       {%- elif column.ts_name is containing("remark") %}
+       {%- elif column.ts_name is containing("Sort") %}
+       {%- elif column.ts_name is containing("sort") %}
+       {%- else %}
        {{column.ts_name}}, //{{column.column_comment}}
-       {% endif %}
+       {%- endif %}
      {%- endfor %}
 
     }).subscribe(res => {

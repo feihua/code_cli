@@ -25,19 +25,19 @@ const {{table_info.class_name}}: React.FC = () => {
 
   const columns: ColumnsType<{{table_info.class_name}}Vo> = [
     {%- for column in table_info.columns %}
-      {% if column.ts_name is containing("Name") %}
+      {%- if column.ts_name is containing("Name") %}
         {
           title: '{{column.column_comment}}',
           dataIndex: '{{column.ts_name}}',
           render: (text: string) => <a>{text}</a>,
         },
-      {% elif column.ts_name is containing("name") %}
+      {%- elif column.ts_name is containing("name") %}
         {
           title: '{{column.column_comment}}',
           dataIndex: '{{column.ts_name}}',
           render: (text: string) => <a>{text}</a>,
         },
-      {% elif column.ts_name is containing("Status") %}
+      {%- elif column.ts_name is containing("Status") %}
         {
           title: '{{column.column_comment}}',
           dataIndex: '{{column.ts_name}}',
@@ -49,7 +49,7 @@ const {{table_info.class_name}}: React.FC = () => {
             );
         },
         },
-      {% elif column.ts_name is containing("status") %}
+      {%- elif column.ts_name is containing("status") %}
         {
           title: '{{column.column_comment}}',
           dataIndex: '{{column.ts_name}}',
@@ -61,7 +61,7 @@ const {{table_info.class_name}}: React.FC = () => {
             );
         },
         },
-      {% elif column.ts_name is containing("Type") %}
+      {%- elif column.ts_name is containing("Type") %}
         {
           title: '{{column.column_comment}}',
           dataIndex: '{{column.ts_name}}',
@@ -71,12 +71,12 @@ const {{table_info.class_name}}: React.FC = () => {
               </>
           ),
         },
-      {% else %}
+      {%- else %}
         {
           title: '{{column.column_comment}}',
           dataIndex: '{{column.ts_name}}',
         },
-      {% endif %}
+      {%- endif %}
     {%- endfor %}
 
     {

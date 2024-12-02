@@ -33,33 +33,33 @@ const AddModal: React.FC<AddModalProps> = ({open, onCreate, onCancel}) => {
               label="{{column.column_comment}}"
               rules={[{required: true, message: '请输入{{column_comment.column_comment}!'}]}
             >
-            {% if column.column_key =="PRI"  %}
-            {% elif column.ts_name is containing("create") %}
-            {% elif column.ts_name is containing("update") %}
-            {% elif column.ts_name is containing("Status") %}
+            {%- if column.column_key =="PRI"  %}
+            {%- elif column.ts_name is containing("create") %}
+            {%- elif column.ts_name is containing("update") %}
+            {%- elif column.ts_name is containing("Status") %}
                 <Radio.Group>
                   <Radio value={0}>禁用</Radio>
                   <Radio value={1}>正常</Radio>
                 </Radio.Group>
-            {% elif column.ts_name is containing("status") %}
+            {%- elif column.ts_name is containing("status") %}
                 <Radio.Group>
                   <Radio value={0}>禁用</Radio>
                   <Radio value={1}>正常</Radio>
                 </Radio.Group>
-            {% elif column.ts_name is containing("Sort") %}
+            {%- elif column.ts_name is containing("Sort") %}
                 <InputNumber style={ {width: 255} }/>
-            {% elif column.ts_name is containing("sort") %}
+            {%- elif column.ts_name is containing("sort") %}
                 <InputNumber style={ {width: 255} }/>
-            {% elif column.ts_name is containing("Type") %}
+            {%- elif column.ts_name is containing("Type") %}
                 <Radio.Group>
                   <Radio value={0}>禁用</Radio>
                   <Radio value={1}>正常</Radio>
                 </Radio.Group>
             {%- elif column is containing("remark") %}
                 <Input.TextArea rows={2} placeholder={'请输入备注'}/>
-            {% else %}
+            {%- else %}
                 <Input id="create-{{column.ts_name}}" placeholder={'请输入{{column.column_comment}!'}/>
-            {% endif %}
+            {%- endif %}
             </FormItem>
           {%- endfor %}
 

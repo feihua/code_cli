@@ -16,30 +16,30 @@
                   name="{{table_info.class_name}}"
                   label="{{column.column_comment}}"
                 >
-                {% elif column.ts_name is containing("remark") %}
+                {%- elif column.ts_name is containing("remark") %}
                    <a-textarea v-model:value="formState.{{table_info.class_name}}" :bordered="false"/>
-                {% elif column.ts_name is containing("Status") %}
+                {%- elif column.ts_name is containing("Status") %}
                   <a-radio-group v-model:value="formState.{{table_info.class_name}}" :bordered="false" disabled>
                       <a-radio :value="1">是</a-radio>
                       <a-radio :value="0">否</a-radio>
                   </a-radio-group>
-                {% elif column.ts_name is containing("status") %}
+                {%- elif column.ts_name is containing("status") %}
                   <a-radio-group v-model:value="formState.{{table_info.class_name}}" :bordered="false" disabled>
                       <a-radio :value="1">是</a-radio>
                       <a-radio :value="0">否</a-radio>
                   </a-radio-group>
-                {% elif column.ts_name is containing("Sort") %}
+                {%- elif column.ts_name is containing("Sort") %}
                   <a-input-number v-model:value="formState.{{table_info.class_name}}" style="width: 234px" :bordered="false"/>
-                {% elif column.ts_name is containing("sort") %}
+                {%- elif column.ts_name is containing("sort") %}
                    <a-input-number v-model:value="formState.{{table_info.class_name}}" style="width: 234px" :bordered="false"/>
-                {% elif column.ts_name is containing("Type") %}
+                {%- elif column.ts_name is containing("Type") %}
                   <a-radio-group v-model:value="formState.{{table_info.class_name}}" :bordered="false" disabled>
                       <a-radio :value="1">是</a-radio>
                       <a-radio :value="0">否</a-radio>
                   </a-radio-group>
-                {% else %}
+                {%- else %}
                   <a-input v-model:value="formState.{{table_info.class_name}}" :bordered="false"/>
-                {% endif %}
+                {%- endif %}
                 </a-form-item>
                 </a-col>
               {%- endfor %}
