@@ -2,52 +2,51 @@
   <el-divider />
   <el-table :data="props.tableData.data" table-layout="auto" @selection-change="handleSelectionChange" size="large">
   <el-table-column type="selection" width="55" />
-  {{range .TableColumn}}{{if isContain .JavaName "Name"}}
-  <el-table-column label="{{.ColumnComment}}" prop="{{.JavaName}}" />
-  {{else if isContain .JavaName "name"}}
-  <el-table-column label="{{.ColumnComment}}" prop="{{.JavaName}}" />
-  {{else if isContain .JavaName "Type"}}
-  <el-table-column label="{{.ColumnComment}}" prop="{{.JavaName}}" >
-    <template #default="scope">
-          <el-tag
-            :type="scope.row.{{.JavaName}} === 0 ? 'danger' : 'success'"
-            disable-transitions
-            size="large"
-            effect="dark"
-          >{ { scope.row.{{.JavaName}} === 0 ? '禁用' : '启用' } }
-          </el-tag
-          >
-    </template>
-  </el-table-column>
-  {{else if isContain .JavaName "status"}}
-  <el-table-column label="{{.ColumnComment}}" prop="{{.JavaName}}" >
+
+  {%- for column in table_info.columns %}
+    {% if column.rust_name is containing("Status") %}
+    <el-table-column label="{{column.column_comment}}" prop="{{column.ts_name}}" >
       <template #default="scope">
             <el-tag
-              :type="scope.row.{{.JavaName}} === 0 ? 'danger' : 'success'"
+              :type="scope.row.{{column.ts_name}} === 0 ? 'danger' : 'success'"
               disable-transitions
               size="large"
               effect="dark"
-            >{ { scope.row.{{.JavaName}} === 0 ? '禁用' : '启用' } }
+            >{ { scope.row.{{column.ts_name}} === 0 ? '禁用' : '启用' } }
             </el-tag
             >
       </template>
     </el-table-column>
-  {{else if isContain .JavaName "Status"}}
-  <el-table-column label="{{.ColumnComment}}" prop="{{.JavaName}}" >
+    {% elif column.rust_name is containing("status") %}
+    <el-table-column label="{{column.column_comment}}" prop="{{column.ts_name}}" >
       <template #default="scope">
             <el-tag
-              :type="scope.row.{{.JavaName}} === 0 ? 'danger' : 'success'"
+              :type="scope.row.{{column.ts_name}} === 0 ? 'danger' : 'success'"
               disable-transitions
               size="large"
               effect="dark"
-            >{ { scope.row.{{.JavaName}} === 0 ? '禁用' : '启用' } }
+            >{ { scope.row.{{column.ts_name}} === 0 ? '禁用' : '启用' } }
             </el-tag
             >
       </template>
     </el-table-column>
-  {{else}}
-  <el-table-column label="{{.ColumnComment}}" prop="{{.JavaName}}" />
-  {{end}}{{end}}
+    {% elif column.rust_name is containing("Type") %}
+    <el-table-column label="{{column.column_comment}}" prop="{{column.ts_name}}" >
+      <template #default="scope">
+            <el-tag
+              :type="scope.row.{{column.ts_name}} === 0 ? 'danger' : 'success'"
+              disable-transitions
+              size="large"
+              effect="dark"
+            >{ { scope.row.{{column.ts_name}} === 0 ? '禁用' : '启用' } }
+            </el-tag
+            >
+      </template>
+    </el-table-column>
+    {% else %}
+    <el-table-column label="{{column.column_comment}}" prop="{{column.ts_name}}" />
+    {% endif %}
+  {%- endfor %}
 
     <el-table-column label="操作">
       <template #default="scope">
@@ -72,9 +71,9 @@
 
 <script lang="ts" setup>
 
-import type { {{.JavaName}}RecordVo } from '../data'
+import type { {{table_info.class_name}}RecordVo } from '../data'
 import type { IResponse } from '@/api/ajax'
-import { remove{{.JavaName}} } from '../service'
+import { remove{{table_info.class_name}} } from '../service'
 import { ref } from 'vue'
 import { EditPen } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -90,15 +89,15 @@ const pageSize = ref(10)
 
 const emit = defineEmits(['handleQuery', 'handleEditView', 'handleDetailView', 'handleSelectMore'])
 
-const handleEditView = (index: number, row: {{.JavaName}}RecordVo) => {
+const handleEditView = (index: number, row: {{table_info.class_name}}RecordVo) => {
   emit('handleEditView', row)
 }
 
-const handleDetailView = (index: number, row: {{.JavaName}}RecordVo) => {
+const handleDetailView = (index: number, row: {{table_info.class_name}}RecordVo) => {
   emit('handleDetailView', row)
 }
 
-const handleDelete = (index: number, row: {{.JavaName}}RecordVo) => {
+const handleDelete = (index: number, row: {{table_info.class_name}}RecordVo) => {
   ElMessageBox.confirm(
     '确定删除?',
     {
@@ -107,7 +106,7 @@ const handleDelete = (index: number, row: {{.JavaName}}RecordVo) => {
       type: 'warning'
     }
   ).then(async () => {
-    const res: IResponse = await remove{{.JavaName}}([row.id])
+    const res: IResponse = await remove{{table_info.class_name}}([row.id])
     if (res.code == 0) {
       emit('handleQuery', { current: currentPage.value, pageSize: pageSize.value })
     }
@@ -119,7 +118,7 @@ const handleDelete = (index: number, row: {{.JavaName}}RecordVo) => {
 
 }
 
-const handleSelectionChange = (recordVo: {{.JavaName}}RecordVo[]) => {
+const handleSelectionChange = (recordVo: {{table_info.class_name}}RecordVo[]) => {
   emit('handleSelectMore', recordVo.map((value) => value.id))
 }
 

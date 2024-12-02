@@ -2,37 +2,45 @@
   <el-dialog :model-value="dialogUpdateFormVisible" title="更新" style="width: 480px;border-radius: 10px">
     <el-form
         label-width="100px"
-        :model="updateParamVo"
+        :model="updateParam"
         style="max-width: 380px"
         :rules="rules"
         ref="ruleFormRef"
     >
     {{range .TableColumn}}
 
-     <el-form-item label="{{.ColumnComment}}" prop="{{.JavaName}}">{{if isContain .JavaName "Sort"}}
-        <el-input-number v-model="updateParamVo.{{.JavaName}}" placeholder="请输入{{.ColumnComment}}"/>
-    {{else if isContain .JavaName "sort"}}
-        <el-input-number v-model="updateParamVo.{{.JavaName}}" placeholder="请输入{{.ColumnComment}}"/>
-    {{else if isContain .JavaName "status"}}
-        <el-radio-group v-model="updateParamVo.{{.JavaName}}" placeholder="请选择状态">
-          <el-radio :label="1">启用</el-radio>
-          <el-radio :label="0">禁用</el-radio>
-        </el-radio-group>
-    {{else if isContain .JavaName "Status"}}
-        <el-radio-group v-model="updateParamVo.{{.JavaName}}" placeholder="请选择状态">
-          <el-radio :label="1">启用</el-radio>
-          <el-radio :label="0">禁用</el-radio>
-        </el-radio-group>
-   {{else if isContain .JavaName "Type"}}
-        <el-radio-group v-model="updateParamVo.{{.JavaName}}" placeholder="请选择状态">
-          <el-radio :label="1">启用</el-radio>
-          <el-radio :label="0">禁用</el-radio>
-        </el-radio-group>
-     {{else if isContain .JavaName "remark"}}
-        <el-input v-model="updateParamVo.{{.JavaName}}" type="textarea" placeholder="请输入{{.ColumnComment}}"/>
-     {{else}}
-        <el-input v-model="updateParamVo.{{.JavaName}}" placeholder="请输入{{.ColumnComment}}"/>
-     {{end}} </el-form-item>{{end}}
+    {%- for column in table_info.columns %}
+    <el-form-item label="{{column.column_comment}}">
+      {% if column.column_key =="PRI"  %}
+      {% elif column.ts_name is containing("create") %}
+      {% elif column.ts_name is containing("update") %}
+      {% elif column.ts_name is containing("remark") %}
+        <el-input v-model="updateParam.{{table_info.class_name}}" :rows="2" type="textarea" 请输入备注/>
+      {% elif column.ts_name is containing("Status") %}
+        <el-select v-model="updateParam.{{table_info.class_name}}" placeholder="请选择状态">
+          <el-option label="启用" value="1"/>
+          <el-option label="禁用" value="0"/>
+        </el-select>
+      {% elif column.ts_name is containing("status") %}
+        <el-select v-model="updateParam.{{table_info.class_name}}" placeholder="请选择状态">
+          <el-option label="启用" value="1"/>
+          <el-option label="禁用" value="0"/>
+        </el-select>
+      {% elif column.ts_name is containing("Sort") %}
+        <el-input-number v-model="updateParam.{{table_info.class_name}}" placeholder="请输入{{column.column_comment}}"/>
+      {% elif column.ts_name is containing("sort") %}
+        <el-input-number v-model="updateParam.{{table_info.class_name}}" placeholder="请输入{{column.column_comment}}"/>
+      {% elif column.ts_name is containing("Type") %}
+        <el-select v-model="updateParam.{{table_info.class_name}}" placeholder="请选择状态">
+          <el-option label="启用" value="1"/>
+          <el-option label="禁用" value="0"/>
+        </el-select>
+      {% else %}
+        <el-input v-model="updateParam.{{table_info.class_name}}" placeholder="请输入{{column.column_comment}}"/>
+
+      {% endif %}
+      </el-form-item>
+    {%- endfor %}
 
       <el-form-item>
         <el-button type="primary" @click="handleEdit(ruleFormRef)">保存</el-button>
@@ -45,21 +53,25 @@
 <script lang="ts" setup>
 
 import { onMounted, reactive, ref} from "vue";
-import type {Update{{.JavaName}}Param} from "../data.d";
+import type {Update{{table_info.class_name}}Param} from "../data.d";
 import { type FormRules, type FormInstance, ElMessage, ElMessageBox } from 'element-plus'
 import type {IResponse} from "@/api/ajax";
-import {update{{.JavaName}} } from "../service";
-import {query{{.JavaName}}Detail} from "../service";
+import {update{{table_info.class_name}} } from "../service";
+import {query{{table_info.class_name}}Detail} from "../service";
 
 const ruleFormRef = ref<FormInstance>()
-let updateParamVo = ref<Update{{.JavaName}}Param>({
-  {{- range .TableColumn}}
-  {{- if isContain .JavaName "create"}}
-  {{- else if isContain .JavaName "update"}}
-  {{- else}}
-  {{if eq .TsType "string"}}{{.JavaName}}: '',{{else}}{{.JavaName}}: 0,{{end}}
-  {{- end}}
-  {{- end}}
+let updateParam = ref<Update{{table_info.class_name}}Param>({
+{%- for column in table_info.columns %}
+  {% if column.ts_name is containing("create") %}
+  {% elif column.ts_name is containing("update") %}
+  {% else %}
+    {% if column.ts_type == "string"  %}
+    {{column.ts_name}}: '',
+    {% else %}
+    {{column.ts_name}}: 0,
+    {% endif %}
+  {% endif %}
+{%- endfor %}
 
 })
 
@@ -67,18 +79,20 @@ const dialogUpdateFormVisible = ref(false)
 
 
 const rules = reactive<FormRules>({
-    {{range .TableColumn}}
-    {{- if isContain .JavaName "create"}}
-    {{- else if isContain .JavaName "update"}}
-    {{- else if isContain .JavaName "id"}}
-    {{- else if isContain .JavaName "remark"}}
-    {{- else}}
-    {{.JavaName}}: [
-        {required: true, message: '{{.ColumnComment}}不能为空', trigger: 'blur'},
+{%- for column in table_info.columns %}
+  {% if column.column_key =="PRI"  %}
+  {% elif column.ts_name is containing("create") %}
+  {% elif column.ts_name is containing("update") %}
+  {% elif column.ts_name is containing("remark") %}
+  {% else %}
+    {{table_info.class_name}}: [
+        {required: true, message: '{{column.column_comment}}不能为空', trigger: 'blur'},
         // {min: 1, max: 5, message: 'Length should be 3 to 5', trigger: 'blur'},
       ],
-     {{end}}
-     {{end}}
+  {% endif %}
+{%- endfor %}
+
+})
 
 const emit = defineEmits(['handleQuery', 'handleEdit'])
 
@@ -90,7 +104,7 @@ const handleEdit = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate(async (valid, fields) => {
     if (valid) {
-      const updateResult: IResponse = await update{{.JavaName}}(updateParamVo.value)
+      const updateResult: IResponse = await update{{table_info.class_name}}(updateParamVo.value)
       if (updateResult.code === 0) {
         dialogUpdateFormVisible.value = false
         formEl.resetFields()
@@ -103,14 +117,14 @@ const handleEdit = async (formEl: FormInstance | undefined) => {
   })
 }
 
-const query{{.JavaName}}Info = async (id: number) => {
-  const res: IResponse = await query{{.JavaName}}Detail(id)
-  updateParamVo.value = res.data
+const query{{table_info.class_name}}Info = async (id: number) => {
+  const res: IResponse = await query{{table_info.class_name}}Detail(id)
+  updateParam.value = res.data
 
 }
 
 defineExpose({
-  query{{.JavaName}}Info
+  query{{table_info.class_name}}Info
 });
 </script>
 
