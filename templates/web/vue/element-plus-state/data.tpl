@@ -58,6 +58,5 @@ export interface {{table_info.class_name}}RecordVo {
   {{column.ts_name}}?: {{column.ts_type}}; //{{column.column_comment}}
 {%- endfor %}
 
-{{range .TableColumn}}    {{table_info.class_name}}: {{.TsType}}; //{{.ColumnComment}}
-{{end}}
+
 }

@@ -1,58 +1,57 @@
 <template>
   <el-divider />
-  <el-table :data="{{.LowerJavaName}}List" table-layout="auto" @selection-change="handleSelectionChange" size="large">
+  <el-table :data="{{table_info.object_name}}List" table-layout="auto" @selection-change="handleSelectionChange" size="large">
     <el-table-column type="selection" width="55" />
-  {{- range .TableColumn}}{{- if isContain .JavaName "Name"}}
-  <el-table-column label="{{.ColumnComment}}" prop="{{.JavaName}}" />
-  {{- else if isContain .JavaName "name"}}
-  <el-table-column label="{{.ColumnComment}}" prop="{{.JavaName}}" />
-  {{- else if isContain .JavaName "Type"}}
-  <el-table-column label="{{.ColumnComment}}" prop="{{.JavaName}}" >
-    <template #default="scope">
-          <el-tag
-            :type="scope.row.{{.JavaName}} === 0 ? 'danger' : 'success'"
-            disable-transitions
-            size="large"
-            effect="dark"
-          >{ { scope.row.{{.JavaName}} === 0 ? '禁用' : '启用' } }
-          </el-tag
-          >
-    </template>
-  </el-table-column>
-  {{- else if isContain .JavaName "status"}}
-  <el-table-column label="{{.ColumnComment}}" prop="{{.JavaName}}" >
+
+  {%- for column in table_info.columns %}
+    {% if column.rust_name is containing("Status") %}
+    <el-table-column label="{{column.column_comment}}" prop="{{column.ts_name}}" >
       <template #default="scope">
             <el-tag
-              :type="scope.row.{{.JavaName}} === 0 ? 'danger' : 'success'"
+              :type="scope.row.{{column.ts_name}} === 0 ? 'danger' : 'success'"
               disable-transitions
               size="large"
               effect="dark"
-            >{ { scope.row.{{.JavaName}} === 0 ? '禁用' : '启用' } }
+            >{ { scope.row.{{column.ts_name}} === 0 ? '禁用' : '启用' } }
             </el-tag
             >
       </template>
     </el-table-column>
-  {{- else if isContain .JavaName "Status"}}
-  <el-table-column label="{{.ColumnComment}}" prop="{{.JavaName}}" >
+    {% elif column.rust_name is containing("status") %}
+    <el-table-column label="{{column.column_comment}}" prop="{{column.ts_name}}" >
       <template #default="scope">
             <el-tag
-              :type="scope.row.{{.JavaName}} === 0 ? 'danger' : 'success'"
+              :type="scope.row.{{column.ts_name}} === 0 ? 'danger' : 'success'"
               disable-transitions
               size="large"
               effect="dark"
-            >{ { scope.row.{{.JavaName}} === 0 ? '禁用' : '启用' } }
+            >{ { scope.row.{{column.ts_name}} === 0 ? '禁用' : '启用' } }
             </el-tag
             >
       </template>
     </el-table-column>
-  {{- else}}
-  <el-table-column label="{{.ColumnComment}}" prop="{{.JavaName}}" />
-  {{- end}}{{- end}}
+    {% elif column.rust_name is containing("Type") %}
+    <el-table-column label="{{column.column_comment}}" prop="{{column.ts_name}}" >
+      <template #default="scope">
+            <el-tag
+              :type="scope.row.{{column.ts_name}} === 0 ? 'danger' : 'success'"
+              disable-transitions
+              size="large"
+              effect="dark"
+            >{ { scope.row.{{column.ts_name}} === 0 ? '禁用' : '启用' } }
+            </el-tag
+            >
+      </template>
+    </el-table-column>
+    {% else %}
+    <el-table-column label="{{column.column_comment}}" prop="{{column.ts_name}}" />
+    {% endif %}
+  {%- endfor %}
 
     <el-table-column label="操作">
       <template #default="scope">
-        <el-button type="primary" link @click="query{{.JavaName}}Detail(scope.row.id, false)" icon="Setting">详情</el-button>
-        <el-button type="primary" link @click="query{{.JavaName}}Detail(scope.row.id, true)" icon="EditPen">编辑</el-button>
+        <el-button type="primary" link @click="query{{table_info.class_name}}Detail(scope.row.id, false)" icon="Setting">详情</el-button>
+        <el-button type="primary" link @click="query{{table_info.class_name}}Detail(scope.row.id, true)" icon="EditPen">编辑</el-button>
         <el-button type="danger" link @click="handleDelete(scope.$index, scope.row)" icon="Delete">删除</el-button>
       </template>
     </el-table-column>
@@ -70,29 +69,29 @@
 </template>
 
 <script lang="ts" setup>
-import type { {{.JavaName}}RecordVo } from '../data';
+import type { {{table_info.class_name}}RecordVo } from '../data';
 import type { IResponse } from '@/api/ajax';
-import { remove{{.JavaName}} } from '../service';
+import { remove{{table_info.class_name}} } from '../service';
 import { onMounted, ref } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 
-import { use{{.JavaName}}Store } from '../store/{{.LowerJavaName}}Store';
+import { use{{table_info.class_name}}Store } from '../store/{{table_info.object_name}}Store';
 import { storeToRefs } from 'pinia';
 
-const store = use{{.JavaName}}Store();
+const store = use{{table_info.class_name}}Store();
 
-const { listParam, {{.LowerJavaName}}List } = storeToRefs(store);
-const { query{{.JavaName}}List, query{{.JavaName}}Detail } = store;
+const { listParam, {{table_info.object_name}}List } = storeToRefs(store);
+const { query{{table_info.class_name}}List, query{{table_info.class_name}}Detail } = store;
 
 const value = ref(true);
 
-const handleDelete = (index: number, row: {{.JavaName}}RecordVo) => {
+const handleDelete = (index: number, row: {{table_info.class_name}}RecordVo) => {
   ElMessageBox.confirm('确定删除?', {
     confirmButtonText: '删除',
     cancelButtonText: '取消',
     type: 'warning',
   }).then(async () => {
-    const res: IResponse = await remove{{.JavaName}}({ids:[row.id]});
+    const res: IResponse = await remove{{table_info.class_name}}({ids:[row.id]});
     if (res.code === 0) {
       ElMessage.success(res.message);
       queryUserList(listParam.value);
@@ -102,7 +101,7 @@ const handleDelete = (index: number, row: {{.JavaName}}RecordVo) => {
   });
 };
 
-const handleSelectionChange = (recordVo: {{.JavaName}}RecordVo[]) => {
+const handleSelectionChange = (recordVo: {{table_info.class_name}}RecordVo[]) => {
   // emit(
   //   'handleSelectMore',
   //   recordVo.map((value) => value.id),
@@ -110,15 +109,15 @@ const handleSelectionChange = (recordVo: {{.JavaName}}RecordVo[]) => {
 };
 
 const handleSizeChange = (val: number) => {
-  query{{.JavaName}}List({ current: listParam.value.current, pageSize: val });
+  query{{table_info.class_name}}List({ current: listParam.value.current, pageSize: val });
 };
 
 const handleCurrentChange = (val: number) => {
-  query{{.JavaName}}List({ current: val, pageSize: listParam.value.pageSize });
+  query{{table_info.class_name}}List({ current: val, pageSize: listParam.value.pageSize });
 };
 
 onMounted(() => {
-  query{{.JavaName}}List({ current: 1, pageSize: 10 });
+  query{{table_info.class_name}}List({ current: 1, pageSize: 10 });
 });
 </script>
 

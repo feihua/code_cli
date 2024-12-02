@@ -1,42 +1,36 @@
 <template>
   <el-form :inline="true" :model="searchParam" class="demo-form-inline" style="height: 32px; margin-left: 20px" ref="formRef">
-    {{range .TableColumn}}
-    {{- if isContain .JavaName "create"}}
-    {{- else if isContain .JavaName "update"}}
-    {{- else if isContain .JavaName "id"}}
-    {{- else if isContain .JavaName "remark"}}
-    {{- else if isContain .JavaName "Sort"}}
-    {{- else if isContain .JavaName "sort"}}
-    {{- else if isContain .JavaName "status"}}
-     <el-form-item label="{{.ColumnComment}}">
-        <el-select v-model="searchParam.{{.JavaName}}" placeholder="请选择状态">
-          <el-option label="启用" value="1"/>
-          <el-option label="禁用" value="0"/>
-        </el-select>
-     </el-form-item>
-    {{- else if isContain .JavaName "Status"}}
-     <el-form-item label="{{.ColumnComment}}">
-       <el-select v-model="searchParam.{{.JavaName}}" placeholder="请选择状态">
-         <el-option label="启用" value="1"/>
-         <el-option label="禁用" value="0"/>
-       </el-select>
-     </el-form-item>
-   {{- else if isContain .JavaName "Type"}}
-     <el-form-item label="{{.ColumnComment}}">
-        <el-select v-model="searchParam.{{.JavaName}}" placeholder="请选择状态">
-          <el-option label="启用" value="1"/>
-          <el-option label="禁用" value="0"/>
-        </el-select>
-     </el-form-item>
-     {{- else if isContain .JavaName "remark"}}
-     <el-form-item label="{{.ColumnComment}}">
-        <el-input v-model="searchParam.{{.JavaName}}" :rows="2" type="textarea" 请输入备注/>
-     </el-form-item>
-     {{- else}}
-     <el-form-item label="{{.ColumnComment}}">
-        <el-input v-model="searchParam.{{.JavaName}}" placeholder="请输入{{.ColumnComment}}"/>
-     </el-form-item>{{- end}}{{- end}}
+    {%- for column in table_info.columns %}
+    <el-form-item label="{{column.column_comment}}">
+      {% if column.column_key =="PRI"  %}
+      {% elif column.ts_name is containing("create") %}
+      {% elif column.ts_name is containing("update") %}
+      {% elif column.ts_name is containing("sort") %}
+      {% elif column.ts_name is containing("Sort") %}
+      {% elif column.ts_name is containing("remark") %}
+        <el-input v-model="searchParam.{{table_info.class_name}}" :rows="2" type="textarea" 请输入{{column.column_comment}}/>
+      {% elif column.ts_name is containing("Status") %}
+        <el-radio-group v-model="searchParam.{{table_info.class_name}}" placeholder="请选择{{column.column_comment}}">
+          <el-radio :label="1">启用</el-radio>
+          <el-radio :label="0">禁用</el-radio>
+        </el-radio-group>
+      {% elif column.ts_name is containing("status") %}
+        <el-radio-group v-model="searchParam.{{table_info.class_name}}" placeholder="请选择{{column.column_comment}}">
+          <el-radio :label="1">启用</el-radio>
+          <el-radio :label="0">禁用</el-radio>
+        </el-radio-group>
+      {% elif column.ts_name is containing("Type") %}
+        <el-radio-group v-model="searchParam.{{table_info.class_name}}" placeholder="请选择{{column.column_comment}}">
+          <el-radio :label="1">启用</el-radio>
+          <el-radio :label="0">禁用</el-radio>
+        </el-radio-group>
+      {% else %}
+        <el-input v-model="searchParam.{{table_info.class_name}}" placeholder="请输入{{column.column_comment}}"/>
 
+      {% endif %}
+      </el-form-item>
+    {%- endfor %}
+    
      <el-form-item>
         <el-button type="primary" @click="onFinish" icon="Search" style="width: 120px">查询</el-button>
         <el-button @click="resetFields" style="width: 100px">重置</el-button>
@@ -46,34 +40,39 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue';
 
-import { use{{.JavaName}}Store } from '../store/{{.LowerJavaName}}Store';
-import type { List{{.JavaName}}Param } from '../data';
+import { use{{table_info.class_name}}Store } from '../store/{{table_info.object_name}}Store';
+import type { List{{table_info.class_name}}Param } from '../data';
 import type { FormInstance } from 'element-plus';
 
-const store = use{{.JavaName}}Store();
-const { query{{.JavaName}}List } = store;
+const store = use{{table_info.class_name}}Store();
+const { query{{table_info.class_name}}List } = store;
 const formRef = ref<FormInstance>();
 
-const searchParam = reactive<List{{.JavaName}}Param>({
+const searchParam = reactive<List{{table_info.class_name}}Param>({
   current: 1,
   pageSize: 10,
-  {{- range .TableColumn}}
-  {{- if isContain .JavaName "create"}}
-  {{- else if isContain .JavaName "update"}}
-  {{- else if isContain .JavaName "id"}}
-  {{- else if isContain .JavaName "remark"}}
-  {{- else}}
-  {{if eq .TsType "string"}}{{.JavaName}}: '',{{else}}{{.JavaName}}: 0,{{end}}
-  {{- end}}
-  {{- end}}
+{%- for column in table_info.columns %}
+  {% if column.column_key =="PRI"  %}
+  {% elif column.ts_name is containing("create") %}
+  {% elif column.ts_name is containing("update") %}
+  {% elif column.ts_name is containing("remark") %}
+  {% else %}
+    {% if column.ts_type == "string"  %}
+    {{column.ts_name}}: '',
+    {% else %}
+    {{column.ts_name}}: 0,
+    {% endif %}
+  {% endif %}
+{%- endfor %}
+
 });
 
 const onFinish = () => {
-  query{{.JavaName}}List(searchParam);
+  query{{table_info.class_name}}List(searchParam);
 };
 
 const resetFields = () => {
   formRef.value?.resetFields();
-  query{{.JavaName}}List({ current: 1, pageSize: 10 });
+  query{{table_info.class_name}}List({ current: 1, pageSize: 10 });
 };
 </script>

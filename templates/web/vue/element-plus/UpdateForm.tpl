@@ -17,24 +17,24 @@
       {% elif column.ts_name is containing("remark") %}
         <el-input v-model="updateParam.{{table_info.class_name}}" :rows="2" type="textarea" 请输入备注/>
       {% elif column.ts_name is containing("Status") %}
-        <el-select v-model="updateParam.{{table_info.class_name}}" placeholder="请选择状态">
-          <el-option label="启用" value="1"/>
-          <el-option label="禁用" value="0"/>
-        </el-select>
+        <el-radio-group v-model="addParam.{{table_info.class_name}}" placeholder="请选择{{column.column_comment}}">
+          <el-radio :label="1">启用</el-radio>
+          <el-radio :label="0">禁用</el-radio>
+        </el-radio-group>
       {% elif column.ts_name is containing("status") %}
-        <el-select v-model="updateParam.{{table_info.class_name}}" placeholder="请选择状态">
-          <el-option label="启用" value="1"/>
-          <el-option label="禁用" value="0"/>
-        </el-select>
+        <el-radio-group v-model="addParam.{{table_info.class_name}}" placeholder="请选择{{column.column_comment}}">
+          <el-radio :label="1">启用</el-radio>
+          <el-radio :label="0">禁用</el-radio>
+        </el-radio-group>
       {% elif column.ts_name is containing("Sort") %}
         <el-input-number v-model="updateParam.{{table_info.class_name}}" placeholder="请输入{{column.column_comment}}"/>
       {% elif column.ts_name is containing("sort") %}
         <el-input-number v-model="updateParam.{{table_info.class_name}}" placeholder="请输入{{column.column_comment}}"/>
       {% elif column.ts_name is containing("Type") %}
-        <el-select v-model="updateParam.{{table_info.class_name}}" placeholder="请选择状态">
-          <el-option label="启用" value="1"/>
-          <el-option label="禁用" value="0"/>
-        </el-select>
+        <el-radio-group v-model="addParam.{{table_info.class_name}}" placeholder="请选择{{column.column_comment}}">
+          <el-radio :label="1">启用</el-radio>
+          <el-radio :label="0">禁用</el-radio>
+        </el-radio-group>
       {% else %}
         <el-input v-model="updateParam.{{table_info.class_name}}" placeholder="请输入{{column.column_comment}}"/>
 
