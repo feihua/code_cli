@@ -1,30 +1,30 @@
 import { create } from 'zustand';
-import { query{{.JavaName}}List1 } from '../service.ts';
-import { List{{.JavaName}}Param, {{.JavaName}}Vo } from '../data';
+import { query{{table_info.class_name}}List1 } from '../service.ts';
+import { List{{table_info.class_name}}Param, {{table_info.class_name}}Vo } from '../data';
 
-interface {{.JavaName}}State {
-  listParam: List{{.JavaName}}Param;
-  {{.LowerJavaName}}List: {{.JavaName}}Vo[];
+interface {{table_info.class_name}}State {
+  listParam: List{{table_info.class_name}}Param;
+  {{table_info.object_name}}List: {{table_info.class_name}}Vo[];
   total: number;
-  query{{.JavaName}}List: (params: List{{.JavaName}}Param) => void;
+  query{{table_info.class_name}}List: (params: List{{table_info.class_name}}Param) => void;
 }
 
-const use{{.JavaName}}Store = create<{{.JavaName}}State>()((set) => ({
+const use{{table_info.class_name}}Store = create<{{table_info.class_name}}State>()((set) => ({
   listParam: {
     current: 1,
     pageSize: 10,
   },
   total: 10,
-  {{.LowerJavaName}}List: [],
-  query{{.JavaName}}List: (params: List{{.JavaName}}Param) => {
+  {{table_info.object_name}}List: [],
+  query{{table_info.class_name}}List: (params: List{{table_info.class_name}}Param) => {
     set({ listParam: params });
-    query{{.JavaName}}List1(params).then((res) => {
+    query{{table_info.class_name}}List1(params).then((res) => {
       set({
-        {{.LowerJavaName}}List: res.data,
+        {{table_info.object_name}}List: res.data,
         total: res.total,
       });
     });
   },
 }));
 
-export default use{{.JavaName}}Store;
+export default use{{table_info.class_name}}Store;
