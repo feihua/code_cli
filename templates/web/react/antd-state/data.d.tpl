@@ -1,4 +1,4 @@
-export interface List{{.JavaName}}Param {
+export interface List{{table_info.class_name}}Param {
   current?: number;
   pageSize?: number;
 {%- for column in table_info.columns %}
@@ -15,7 +15,7 @@ export interface List{{.JavaName}}Param {
 
 }
 
-export interface {{.JavaName}}Vo {
+export interface {{table_info.class_name}}Vo {
 {%- for column in table_info.columns %}
   {{column.ts_name}}: {{column.ts_type}}; //{{column.column_comment}}
 {%- endfor %}

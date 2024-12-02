@@ -1,4 +1,4 @@
-export interface {{.JavaName}}ListItem {
+export interface {{table_info.class_name}}ListItem {
 {%- for column in table_info.columns %}
   {{column.ts_name}}: {{column.ts_type}}; //{{column.column_comment}}
 
@@ -6,18 +6,18 @@ export interface {{.JavaName}}ListItem {
 
 }
 
-export interface {{.JavaName}}ListPagination {
+export interface {{table_info.class_name}}ListPagination {
   total: number;
   pageSize: number;
   current: number;
 }
 
-export interface {{.JavaName}}ListData {
-  list: {{.JavaName}}ListItem[];
-  pagination: Partial<{{.JavaName}}ListPagination>;
+export interface {{table_info.class_name}}ListData {
+  list: {{table_info.class_name}}ListItem[];
+  pagination: Partial<{{table_info.class_name}}ListPagination>;
 }
 
-export interface {{.JavaName}}ListParams {
+export interface {{table_info.class_name}}ListParams {
   pageSize?: number;
   current?: number;
   filter?: { [key: string]: any[] };

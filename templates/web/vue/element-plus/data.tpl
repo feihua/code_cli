@@ -1,4 +1,4 @@
-export interface Add{{.JavaName}}Param {
+export interface Add{{table_info.class_name}}Param {
 {%- for column in table_info.columns %}
   {% if column.column_key =="PRI"  %}
   {% elif column.ts_name is containing("create") %}
@@ -10,7 +10,7 @@ export interface Add{{.JavaName}}Param {
 
 }
 
-export interface Update{{.JavaName}}Param {
+export interface Update{{table_info.class_name}}Param {
 {%- for column in table_info.columns %}
   {% if column.ts_name is containing("create") %}
   {% elif column.ts_name is containing("update") %}
@@ -20,7 +20,7 @@ export interface Update{{.JavaName}}Param {
 {%- endfor %}
 }
 
-export interface Search{{.JavaName}}Param {
+export interface Search{{table_info.class_name}}Param {
 {%- for column in table_info.columns %}
   {% if column.column_key =="PRI"  %}
   {% elif column.ts_name is containing("create") %}
@@ -35,7 +35,7 @@ export interface Search{{.JavaName}}Param {
 
 }
 
-export interface List{{.JavaName}}Param {
+export interface List{{table_info.class_name}}Param {
    current?: number;
    pageSize?: number;
 {%- for column in table_info.columns %}
@@ -53,11 +53,11 @@ export interface List{{.JavaName}}Param {
 
 }
 
-export interface {{.JavaName}}RecordVo {
+export interface {{table_info.class_name}}RecordVo {
 {%- for column in table_info.columns %}
   {{column.ts_name}}?: {{column.ts_type}}; //{{column.column_comment}}
 {%- endfor %}
 
-{{range .TableColumn}}    {{.JavaName}}: {{.TsType}}; //{{.ColumnComment}}
+{{range .TableColumn}}    {{table_info.class_name}}: {{.TsType}}; //{{.ColumnComment}}
 {{end}}
 }
