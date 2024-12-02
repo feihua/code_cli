@@ -79,7 +79,10 @@
 >
   <form nz-form [formGroup]="addForm" *nzModalContent>
     {%- for column in table_info.columns %}
-    {%- if column.ts_name is containing("Status")  %}
+    {% if column.column_key =="PRI"  %}
+    {% elif column.ts_name is containing("create") %}
+    {% elif column.ts_name is containing("update") %}
+    {%- elif column.ts_name is containing("Status")  %}
     <nz-form-item>
       <nz-form-label [nzSpan]="7" nzRequired>{{column.column_comment}}</nz-form-label>
       <nz-form-control [nzSpan]="12" nzHasFeedback>
@@ -159,7 +162,9 @@
 >
   <form nz-form [formGroup]="updateForm" *nzModalContent>
     {%- for column in table_info.columns %}
-    {%- if column.ts_name is containing("Status")  %}
+    {% if column.ts_name is containing("create") %}
+    {% elif column.ts_name is containing("update") %}
+    {%- elif column.ts_name is containing("Status")  %}
     <nz-form-item>
       <nz-form-label [nzSpan]="7" nzRequired>{{column.column_comment}}</nz-form-label>
       <nz-form-control [nzSpan]="12" nzHasFeedback>
