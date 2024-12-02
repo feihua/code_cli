@@ -8,19 +8,19 @@ import type {ProDescriptionsItemProps} from '@ant-design/pro-descriptions';
 import ProDescriptions from '@ant-design/pro-descriptions';
 import CreateForm from './components/CreateForm';
 import UpdateForm from './components/UpdateForm';
-import type { {{.JavaName}}ListItem} from './data.d';
-import {add{{.JavaName}}, query{{.JavaName}}List, remove{{.JavaName}}, update{{.JavaName}}, update{{.JavaName}}Status} from './service';
+import type { {{table_info.class_name}}ListItem} from './data.d';
+import {add{{table_info.class_name}}, query{{table_info.class_name}}List, remove{{table_info.class_name}}, update{{table_info.class_name}}, update{{table_info.class_name}}Status} from './service';
 
 const {confirm} = Modal;
 
 /**
- * 添加{{.Comment}}
+ * 添加{{table_info.table_comment}}
  * @param fields
  */
-const handleAdd = async (fields: {{.JavaName}}ListItem) => {
+const handleAdd = async (fields: {{table_info.class_name}}ListItem) => {
   const hide = message.loading('正在添加');
   try {
-    await add{{.JavaName}}({...fields});
+    await add{{table_info.class_name}}({...fields});
     hide();
     message.success('添加成功');
     return true;
@@ -31,13 +31,13 @@ const handleAdd = async (fields: {{.JavaName}}ListItem) => {
 };
 
 /**
- * 更新{{.Comment}}
+ * 更新{{table_info.table_comment}}
  * @param fields
  */
-const handleUpdate = async (fields: {{.JavaName}}ListItem) => {
+const handleUpdate = async (fields: {{table_info.class_name}}ListItem) => {
   const hide = message.loading('正在更新');
   try {
-    await update{{.JavaName}}(fields);
+    await update{{table_info.class_name}}(fields);
     hide();
 
     message.success('更新成功');
@@ -49,14 +49,14 @@ const handleUpdate = async (fields: {{.JavaName}}ListItem) => {
 };
 
 /**
- *  删除{{.Comment}}
+ *  删除{{table_info.table_comment}}
  * @param ids
  */
 const handleRemove = async (ids: number[]) => {
   const hide = message.loading('正在删除');
   if (ids.length === 0) return true;
   try {
-    await remove{{.JavaName}}(ids);
+    await remove{{table_info.class_name}}(ids);
     hide();
     message.success('删除成功，即将刷新');
     return true;
@@ -67,7 +67,7 @@ const handleRemove = async (ids: number[]) => {
 };
 
 /**
- * 更新{{.Comment}}状态
+ * 更新{{table_info.table_comment}}状态
  * @param ids
  * @param status
  */
@@ -78,7 +78,7 @@ const handleStatus = async (ids: number[], status: number) => {
     return true;
   }
   try {
-    await update{{.JavaName}}Status({ {{.LowerJavaName}}Ids: ids, {{.LowerJavaName}}Status: status});
+    await update{{table_info.class_name}}Status({ {{table_info.object_name}}Ids: ids, {{table_info.object_name}}Status: status});
     hide();
     message.success('更新状态成功');
     return true;
@@ -88,12 +88,12 @@ const handleStatus = async (ids: number[], status: number) => {
   }
 };
 
-const {{.JavaName}}List: React.FC = () => {
+const {{table_info.class_name}}List: React.FC = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
-  const [currentRow, setCurrentRow] = useState<{{.JavaName}}ListItem>();
+  const [currentRow, setCurrentRow] = useState<{{table_info.class_name}}ListItem>();
 
   const showDeleteConfirm = (ids: number[]) => {
     confirm({
@@ -124,11 +124,12 @@ const {{.JavaName}}List: React.FC = () => {
     });
   };
 
-  const columns: ProColumns<{{.JavaName}}ListItem>[] = [
-    {{range .TableColumn}}{{if isContain .JavaName "Name"}}
+  const columns: ProColumns<{{table_info.class_name}}ListItem>[] = [
+{%- for column in table_info.columns %}
+  {% if column.ts_name is containing("Name") %}
     {
-      title: '{{.ColumnComment}}',
-      dataIndex: '{{.JavaName}}',
+      title: '{{column.column_comment}}',
+      dataIndex: '{{column.ts_name}}',
       hideInSearch: true,
       render: (dom, entity) => {
           return <a onClick={() => {
@@ -137,10 +138,11 @@ const {{.JavaName}}List: React.FC = () => {
           }}>{dom}</a>;
         },
     },
-    {{else if isContain .JavaName "name"}}
+  {% elif column.ts_name is containing("name") %}
     {
-      title: '{{.ColumnComment}}',
-      dataIndex: '{{.JavaName}}',
+      title: '{{column.column_comment}}',
+      dataIndex: '{{column.ts_name}}',
+      hideInSearch: true,
       render: (dom, entity) => {
           return <a onClick={() => {
             setCurrentRow(entity);
@@ -148,10 +150,10 @@ const {{.JavaName}}List: React.FC = () => {
           }}>{dom}</a>;
         },
     },
-    {{else if isContain .JavaName "Type"}}
+  {% elif column.ts_name is containing("Status") %}
     {
-      title: '{{.ColumnComment}}',
-      dataIndex: '{{.JavaName}}',
+      title: '{{column.column_comment}}',
+      dataIndex: '{{column.ts_name}}',
       renderFormItem: (text, row, index) => {
           return <Select
             value={row.value}
@@ -163,64 +165,67 @@ const {{.JavaName}}List: React.FC = () => {
 
     },
     render: (dom, entity) => {
-        switch (entity.{{.JavaName}}) {
+      return (
+        <Switch checked={entity.{{column.ts_name}} == 1} onChange={(flag) => {
+          showStatusConfirm( [entity.id], flag ? 1 : 0)
+        }}/>
+      );
+    },
+    },
+  {% elif column.ts_name is containing("status") %}
+    {
+      title: '{{column.column_comment}}',
+      dataIndex: '{{column.ts_name}}',
+      renderFormItem: (text, row, index) => {
+          return <Select
+            value={row.value}
+            options={ [
+              {value: '1', label: '正常'},
+              {value: '0', label: '禁用'},
+            ]}
+          />
+
+    },
+    render: (dom, entity) => {
+      return (
+        <Switch checked={entity.{{column.ts_name}} == 1} onChange={(flag) => {
+          showStatusConfirm( [entity.id], flag ? 1 : 0)
+        }}/>
+      );
+    },
+    },
+  {% elif column.ts_name is containing("Type") %}
+    {
+      title: '{{column.column_comment}}',
+      dataIndex: '{{column.ts_name}}',
+      renderFormItem: (text, row, index) => {
+          return <Select
+            value={row.value}
+            options={ [
+              {value: '1', label: '正常'},
+              {value: '0', label: '禁用'},
+            ]}
+          />
+
+    },
+    render: (dom, entity) => {
+        switch (entity.{{column.ts_name}}) {
           case 1:
             return <Tag color={'success'}>正常</Tag>;
           case 0:
             return <Tag>禁用</Tag>;
         }
-        return <>未知{entity.{{.JavaName}}}</>;
+        return <>未知{entity.{{column.ts_name}}}</>;
       },
     },
-    {{else if isContain .JavaName "status"}}
+  {% else %}
     {
-      title: '{{.ColumnComment}}',
-      dataIndex: '{{.JavaName}}',
-      renderFormItem: (text, row, index) => {
-          return <Select
-            value={row.value}
-            options={ [
-              {value: '1', label: '正常'},
-              {value: '0', label: '禁用'},
-            ]}
-          />
-
-    },
-    render: (dom, entity) => {
-      return (
-        <Switch checked={entity.{{.JavaName}} == 1} onChange={(flag) => {
-          showStatusConfirm( [entity.id], flag ? 1 : 0)
-        }}/>
-      );
-    },
-    },
-    {{else if isContain .JavaName "Status"}}
-    {
-      title: '{{.ColumnComment}}',
-      dataIndex: '{{.JavaName}}',
-      renderFormItem: (text, row, index) => {
-          return <Select
-            value={row.value}
-            options={ [
-              {value: '1', label: '正常'},
-              {value: '0', label: '禁用'},
-            ]}
-          />
-
-    },
-    render: (dom, entity) => {
-      return (
-        <Switch checked={entity.{{.JavaName}} == 1} onChange={(flag) => {
-          showStatusConfirm( [entity.id], flag ? 1 : 0)
-        }}/>
-      );
-    },
-    },{{else}}
-    {
-      title: '{{.ColumnComment}}',
-      dataIndex: '{{.JavaName}}',
+      title: '{{column.column_comment}}',
+      dataIndex: '{{column.ts_name}}',
       hideInSearch: true,
-    },{{end}}{{end}}
+    },
+  {% endif %}
+{%- endfor %}
 
     {
       title: '操作',
@@ -256,8 +261,8 @@ const {{.JavaName}}List: React.FC = () => {
 
 return (
     <PageContainer>
-      <ProTable<{{.JavaName}}ListItem>
-        headerTitle="{{.Comment}}管理"
+      <ProTable<{{table_info.class_name}}ListItem>
+        headerTitle="{{table_info.table_comment}}管理"
         actionRef={actionRef}
         rowKey="id"
         search={ {
@@ -268,7 +273,7 @@ return (
             <PlusOutlined/> 新增
           </Button>,
         ]}
-        request={query{{.JavaName}}List}
+        request={query{{table_info.class_name}}List}
         columns={columns}
         rowSelection={ {} }
         pagination={ {pageSize: 10}}
@@ -361,16 +366,16 @@ return (
         closable={false}
       >
         {currentRow?.id && (
-          <ProDescriptions<{{.JavaName}}ListItem>
+          <ProDescriptions<{{table_info.class_name}}ListItem>
             column={2}
-            title={"{{.Comment}}详情"}
+            title={"{{table_info.table_comment}}详情"}
             request={async () => ({
               data: currentRow || {},
             })}
             params={ {
               id: currentRow?.id,
             }}
-            columns={columns as ProDescriptionsItemProps<{{.JavaName}}ListItem>[]}
+            columns={columns as ProDescriptionsItemProps<{{table_info.class_name}}ListItem>[]}
           />
         )}
       </Drawer>
@@ -378,4 +383,4 @@ return (
   );
 };
 
-export default {{.JavaName}}List;
+export default {{table_info.class_name}}List;
