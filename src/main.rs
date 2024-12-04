@@ -47,6 +47,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     //go
     let project_name = "github.com/demo/test";
     context.insert("project_name", project_name);
+    context.insert("rpc_client", "system");
 
     // 数据库链接信息
     let mut info = DbInfo::default();
@@ -62,7 +63,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let table_info_list = DbUtil::get_tables(info);
     let orm_type = "";
     let module_name = "system";
-
     for x in table_info_list {
         context.insert("table_info", &x);
         // Mybatis::generate_mybatis_curd(&mut tera, x.clone(), context.clone());
@@ -73,8 +73,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         // Axum::generate_axum_curd(&mut tera, x.clone(), orm_type, context.clone());
         // Actix::generate_actix_curd(&mut tera, x.clone(), orm_type, context.clone());
         // Hertz::generate_hertz_curd(&mut tera, x.clone(), context.clone());
-        // Gozero::generate_go_zero_curd(&mut tera, x.clone(), context.clone());
-        Gf::generate_gf_curd(&mut tera, x.clone(), context.clone(), module_name);
+        Gozero::generate_go_zero_curd(&mut tera, x.clone(), context.clone());
+        // Gf::generate_gf_curd(&mut tera, x.clone(), context.clone(), module_name);
         // ElementPlus::generate_vue_element_curd(&mut tera, x.clone(), context.clone());
         // ElementPlusState::generate_vue_element_state_curd(&mut tera, x.clone(), context.clone());
         // VueAntd::generate_vue_antd_curd(&mut tera, x.clone(), context.clone());

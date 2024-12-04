@@ -1,4 +1,4 @@
-package {{.GoName}}servicelogic
+package {{table_info.table_name}}_service
 
 import (
 	"context"
@@ -8,40 +8,46 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-// Query{{.JavaName}}DetailLogic 查询{{.Comment}}详情
+// Query{{table_info.class_name}}DetailLogic 查询{{table_info.table_comment}}详情
 /*
-Author: {{.Author}}
-Date: {{.CreateTime}}
+Author: {{author}}
+Date: {{create_time}}
 */
-type Query{{.JavaName}}DetailLogic struct {
+type Query{{table_info.class_name}}DetailLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewQuery{{.JavaName}}DetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Query{{.JavaName}}DetailLogic {
-	return &Query{{.JavaName}}DetailLogic{
+func NewQuery{{table_info.class_name}}DetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Query{{table_info.class_name}}DetailLogic {
+	return &Query{{table_info.class_name}}DetailLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-// Query{{.JavaName}}Detail 查询{{.Comment}}详情
-func (l *Query{{.JavaName}}DetailLogic) Query{{.JavaName}}Detail(in *{{.RpcClient}}.Query{{.JavaName}}DetailReq) (*{{.RpcClient}}.Query{{.JavaName}}DetailResp, error) {
-	item, err := query.{{.UpperOriginalName}}.WithContext(l.ctx).Where(query.{{.UpperOriginalName}}.ID.Eq(in.Id)).First()
+// Query{{table_info.class_name}}Detail 查询{{table_info.table_comment}}详情
+func (l *Query{{table_info.class_name}}DetailLogic) Query{{table_info.class_name}}Detail(in *{{rpc_client}}.Query{{table_info.class_name}}DetailReq) (*{{rpc_client}}.Query{{table_info.class_name}}DetailResp, error) {
+	item, err := query.{{table_info.original_class_name}}.WithContext(l.ctx).Where(query.{{table_info.original_class_name}}.ID.Eq(in.Id)).First()
 
 	if err != nil {
-		logc.Errorf(l.ctx, "查询{{.Comment}}详情失败,参数:%+v,异常:%s", in, err.Error())
-		return nil, errors.New("查询{{.Comment}}详情失败")
+		logc.Errorf(l.ctx, "查询{{table_info.table_comment}}详情失败,参数:%+v,异常:%s", in, err.Error())
+		return nil, errors.New("查询{{table_info.table_comment}}详情失败")
 	}
 
-	data := &{{.RpcClient}}.Query{{.JavaName}}DetailResp{
-	{{- range .TableColumn}}
-	    {{.GoNamePublic}}: item.{{- if isContain .GoNamePublic "Time"}}{{.GoNamePublic}}.Format("2006-01-02 15:04:05"), //{{.ColumnComment}}{{- else}}{{Replace .GoNamePublic "Id" "ID"}}, //{{.ColumnComment}}{{- end}}
-    {{- end}}
+	data := &{{rpc_client}}.Query{{table_info.class_name}}DetailResp{
+    {%- for column in table_info.columns %}
+      {%- if column.go_name is containing("Time") %}
+        {{column.go_name}}: item.{{column.go_name}}.Format("2006-01-02 15:04:05"), //{{column.column_comment}}
+      {%- else %}
+        {{column.go_name}}: item.{{column.go_name}}, //{{column.column_comment}}
+      {%- endif %}
+
+    {%- endfor %}
+
 	}
 
-    logc.Infof(l.ctx, "查询{{.Comment}}详情,参数：%+v,响应：%+v", in, data)
+    logc.Infof(l.ctx, "查询{{table_info.table_comment}}详情,参数：%+v,响应：%+v", in, data)
 	return data, nil
 }

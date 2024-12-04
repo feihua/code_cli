@@ -1,4 +1,4 @@
-package {{.GoName}}
+package {{table_info.table_name}}
 
 import (
 	"context"
@@ -9,61 +9,63 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-// Query{{.JavaName}}ListLogic 查询{{.Comment}}列表
+// Query{{table_info.class_name}}ListLogic 查询{{table_info.table_comment}}列表
 /*
-Author: {{.Author}}
-Date: {{.CreateTime}}
+Author: {{author}}
+Date: {{create_time}}
 */
-type Query{{.JavaName}}ListLogic struct {
+type Query{{table_info.class_name}}ListLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewQuery{{.JavaName}}ListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Query{{.JavaName}}ListLogic {
-	return &Query{{.JavaName}}ListLogic{
+func NewQuery{{table_info.class_name}}ListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Query{{table_info.class_name}}ListLogic {
+	return &Query{{table_info.class_name}}ListLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-// Query{{.JavaName}}List 查询{{.Comment}}列表
-func (l *Query{{.JavaName}}ListLogic) Query{{.JavaName}}List(req *types.Query{{.JavaName}}ListReq) (resp *types.Query{{.JavaName}}ListResp, err error) {
-    result, err := l.svcCtx.{{.JavaName}}Service.Query{{.JavaName}}List(l.ctx, &{{.RpcClient}}.Query{{.JavaName}}ListReq{
+// Query{{table_info.class_name}}List 查询{{table_info.table_comment}}列表
+func (l *Query{{table_info.class_name}}ListLogic) Query{{table_info.class_name}}List(req *types.Query{{table_info.class_name}}ListReq) (resp *types.Query{{table_info.class_name}}ListResp, err error) {
+    result, err := l.svcCtx.{{table_info.class_name}}Service.Query{{table_info.class_name}}List(l.ctx, &{{rpc_client}}.Query{{table_info.class_name}}ListReq{
 		PageNum:    req.Current,
 		PageSize:   req.PageSize,
-        {{- range .TableColumn}}
-        {{- if eq .ColumnKey "PRI"}}
-        {{- else if isContain .GoNamePublic "Update"}}
-        {{- else if isContain .GoNamePublic "Create"}}
-        {{- else if isContain .JavaName "remark"}}
-        {{- else if isContain .JavaName "sort"}}
-        {{- else if isContain .JavaName "Sort"}}
-        {{- else}}
-        {{.GoNamePublic}}: req.{{.GoNamePublic}}, //{{.ColumnComment}}
-        {{- end}}
-        {{- end}}
+        {%- for column in table_info.columns %}
+          {%- if column.column_key =="PRI"  %}
+          {%- elif column.go_name is containing("Create") %}
+          {%- elif column.go_name is containing("Update") %}
+          {%- elif column.go_name is containing("CreateBy") %}
+          {%- elif column.go_name is containing("Sort") %}
+          {%- elif column.go_name is containing("Remark") %}
+          {%- else %}
+            {{column.go_name}}: req.{{column.go_name}}, //{{column.column_comment}}
+          {%- endif %}
+        {%- endfor %}
+
 	})
 
 	if err != nil {
-		logc.Errorf(l.ctx, "查询字{{.Comment}}列表失败,参数：%+v,响应：%s", req, err.Error())
+		logc.Errorf(l.ctx, "查询字{{table_info.table_comment}}列表失败,参数：%+v,响应：%s", req, err.Error())
 		s, _ := status.FromError(err)
 		return nil, errorx.NewDefaultError(s.Message())
 	}
 
-    var list []*types.Query{{.JavaName}}ListData
+    var list []*types.Query{{table_info.class_name}}ListData
 
 	for _, detail := range result.List {
-		list = append(list, &types.Query{{.JavaName}}ListData{
-        {{range .TableColumn}}{{.GoNamePublic}}: detail.{{.GoNamePublic}}, //{{.ColumnComment}}
-        {{end}}
+		list = append(list, &types.Query{{table_info.class_name}}ListData{
+        {%- for column in table_info.columns %}
+            {{column.go_name}}: detail.{{column.go_name}}, //{{column.column_comment}}
+        {%- endfor %}
 		})
 	}
 
-	return &types.Query{{.JavaName}}ListResp{
+	return &types.Query{{table_info.class_name}}ListResp{
 		Code:    "000000",
-		Message: "查询{{.Comment}}列表成功",
+		Message: "查询{{table_info.table_comment}}列表成功",
 		Current:  req.Current,
         Data:     list,
         PageSize: req.PageSize,

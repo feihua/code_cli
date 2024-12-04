@@ -1,4 +1,4 @@
-package {{.GoName}}
+package {{table_info.table_name}}
 
 import (
 	"context"
@@ -9,51 +9,49 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-// Update{{.JavaName}}StatusLogic 更新{{.Comment}}状态状态
+// Update{{table_info.class_name}}StatusLogic 更新{{table_info.table_comment}}状态状态
 /*
-Author: {{.Author}}
-Date: {{.CreateTime}}
+Author: {{author}}
+Date: {{create_time}}
 */
-type Update{{.JavaName}}StatusLogic struct {
+type Update{{table_info.class_name}}StatusLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewUpdate{{.JavaName}}StatusLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Update{{.JavaName}}StatusLogic {
-	return &Update{{.JavaName}}StatusLogic{
+func NewUpdate{{table_info.class_name}}StatusLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Update{{table_info.class_name}}StatusLogic {
+	return &Update{{table_info.class_name}}StatusLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-// Update{{.JavaName}}Status 更新{{.Comment}}状态
-func (l *Update{{.JavaName}}StatusLogic) Update{{.JavaName}}Status(req *types.Update{{.JavaName}}StatusReq) (resp *types.Update{{.JavaName}}StatusResp, err error) {
-    _, err = l.svcCtx.{{.JavaName}}Service.Update{{.JavaName}}Status(l.ctx, &{{.RpcClient}}.Update{{.JavaName}}StatusReq{
-        {{- range .TableColumn}}
-        {{- if eq .ColumnKey "PRI"}}
-            {{.GoNamePublic}}s: req.{{.GoNamePublic}}s, //{{.ColumnComment}}
-        {{- else if eq .GoNamePublic "UpdateBy"}}
-            UpdateBy: l.ctx.Value("userName").(string),
-        {{- else if isContain .JavaName "status"}}
-            {{.GoNamePublic}}: req.{{.GoNamePublic}}, //{{.ColumnComment}}
-        {{- else if isContain .JavaName "Status"}}
-            {{.GoNamePublic}}: req.{{.GoNamePublic}}, //{{.ColumnComment}}
-        {{- else}}
-        {{- end}}
-        {{- end}}
+// Update{{table_info.class_name}}Status 更新{{table_info.table_comment}}状态
+func (l *Update{{table_info.class_name}}StatusLogic) Update{{table_info.class_name}}Status(req *types.Update{{table_info.class_name}}StatusReq) (resp *types.Update{{table_info.class_name}}StatusResp, err error) {
+    _, err = l.svcCtx.{{table_info.class_name}}Service.Update{{table_info.class_name}}Status(l.ctx, &{{rpc_client}}.Update{{table_info.class_name}}StatusReq{
+    {%- for column in table_info.columns %}
+      {%- if column.column_key =="PRI"  %}
+      {{column.go_name}}s: req.{{column.go_name}}s, //{{column.column_comment}}
+      {%- elif column.go_name is containing("UpdateBy") %}
+        CreateBy: l.ctx.Value("userName").(string),
+      {%- elif column.go_name is containing("Status") %}
+      {{column.go_name}}: req.{{column.go_name}}, //{{column.column_comment}}
+      {%- else %}
+      {%- endif %}
+    {%- endfor %}
 
     })
 
 	if err != nil {
-		logc.Errorf(l.ctx, "更新{{.Comment}}状态失败,参数：%+v,响应：%s", req, err.Error())
+		logc.Errorf(l.ctx, "更新{{table_info.table_comment}}状态失败,参数：%+v,响应：%s", req, err.Error())
 		s, _ := status.FromError(err)
 		return nil, errorx.NewDefaultError(s.Message())
 	}
 
-	return &types.Update{{.JavaName}}StatusResp{
+	return &types.Update{{table_info.class_name}}StatusResp{
 		Code:    "000000",
-		Message: "更新{{.Comment}}状态成功",
+		Message: "更新{{table_info.table_comment}}状态成功",
 	}, nil
 }

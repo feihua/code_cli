@@ -1,4 +1,4 @@
-package {{.GoName}}servicelogic
+package {{table_info.table_name}}_service
 
 import (
 	"context"
@@ -8,70 +8,77 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-// Query{{.JavaName}}ListLogic 查询{{.Comment}}列表
+// Query{{table_info.class_name}}ListLogic 查询{{table_info.table_comment}}列表
 /*
-Author: {{.Author}}
-Date: {{.CreateTime}}
+Author: {{author}}
+Date: {{create_time}}
 */
-type Query{{.JavaName}}ListLogic struct {
+type Query{{table_info.class_name}}ListLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewQuery{{.JavaName}}ListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Query{{.JavaName}}ListLogic {
-	return &Query{{.JavaName}}ListLogic{
+func NewQuery{{table_info.class_name}}ListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Query{{table_info.class_name}}ListLogic {
+	return &Query{{table_info.class_name}}ListLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-// Query{{.JavaName}}List 查询{{.Comment}}列表
-func (l *Query{{.JavaName}}ListLogic) Query{{.JavaName}}List(in *{{.RpcClient}}.Query{{.JavaName}}ListReq) (*{{.RpcClient}}.Query{{.JavaName}}ListResp, error) {
-    {{- $lowerJavaName :=.LowerJavaName}}
-    {{$lowerJavaName}} := query.{{.UpperOriginalName}}
-    q := {{$lowerJavaName}}.WithContext(l.ctx)
+// Query{{table_info.class_name}}List 查询{{table_info.table_comment}}列表
+func (l *Query{{table_info.class_name}}ListLogic) Query{{table_info.class_name}}List(in *{{rpc_client}}.Query{{table_info.class_name}}ListReq) (*{{rpc_client}}.Query{{table_info.class_name}}ListResp, error) {
+    {{table_info.object_name}} := query.{{table_info.original_class_name}}
+    q := {{table_info.object_name}}.WithContext(l.ctx)
 
-	{{- range .TableColumn}}
-	{{- if isContain .GoNamePublic "Create"}}
-    {{- else if isContain .GoNamePublic "Update"}}
-    {{- else if eq .ColumnKey "PRI"}}
-    {{- else if isContain .JavaName "remark"}}
-    {{- else if isContain .JavaName "sort"}}
-    {{- else if isContain .JavaName "Sort"}}
-	{{- else if eq .GoType "string"}}
-	if len(in.{{.GoNamePublic}}) > 0 {
-        q = q.Where({{$lowerJavaName}}.{{.GoNamePublic}}.Like("%" + in.{{.GoNamePublic}} + "%"))
-    }
-    {{- else}}
-	if in.{{.GoNamePublic}} != 2 {
-        q = q.Where({{$lowerJavaName}}.{{.GoNamePublic}}.Eq(in.{{.GoNamePublic}}))
-    }
-	{{- end}}
-	{{- end}}
+    {%- for column in table_info.columns %}
+      {%- if column.column_key =="PRI"  %}
+      {%- elif column.go_name is containing("Create") %}
+      {%- elif column.go_name is containing("Update") %}
+      {%- elif column.go_name is containing("Sort") %}
+      {%- elif column.go_name is containing("Remark") %}
+      {%- else %}
+        {%- if column.go_type == "string"  %}
+        if len(in.{{column.go_name}}) > 0 {
+            q = q.Where({{table_info.object_name}}.{{column.go_name}}.Like("%" + in.{{column.go_name}} + "%"))
+        }
+        {%- else %}
+        if in.{{column.go_name}} != 2 {
+            q = q.Where({{table_info.object_name}}.{{column.go_name}}.Eq(in.{{column.go_name}}))
+        }
+        {%- endif %}
+        {{column.go_name}}: req.{{column.go_name}}, //{{column.column_comment}}
+      {%- endif %}
+    {%- endfor %}
+
+
 
 	result, count, err := q.FindByPage(int((in.PageNum-1)*in.PageSize), int(in.PageSize))
 
 	if err != nil {
-		logc.Errorf(l.ctx, "查询{{.Comment}}列表失败,参数:%+v,异常:%s", in, err.Error())
-		return nil, errors.New("查询{{.Comment}}列表失败")
+		logc.Errorf(l.ctx, "查询{{table_info.table_comment}}列表失败,参数:%+v,异常:%s", in, err.Error())
+		return nil, errors.New("查询{{table_info.table_comment}}列表失败")
 	}
 
-	var list []*{{.RpcClient}}.{{.JavaName}}ListData
+	var list []*{{rpc_client}}.{{table_info.class_name}}ListData
 
 	for _, item := range result {
-		list = append(list, &{{.RpcClient}}.{{.JavaName}}ListData{
-			{{- range .TableColumn}}
-            {{.GoNamePublic}}: item.{{- if isContain .GoNamePublic "Time"}}{{.GoNamePublic}}.Format("2006-01-02 15:04:05"), //{{.ColumnComment}}{{- else}}{{Replace .GoNamePublic "Id" "ID"}}, //{{.ColumnComment}}{{- end}}
-            {{- end}}
+		list = append(list, &{{rpc_client}}.{{table_info.class_name}}ListData{
+        {%- for column in table_info.columns %}
+          {%- if column.go_name is containing("Time") %}
+            {{column.go_name}}: item.{{column.go_name}}.Format("2006-01-02 15:04:05"), //{{column.column_comment}}
+          {%- else %}
+            {{column.go_name}}: item.{{column.go_name}}, //{{column.column_comment}}
+          {%- endif %}
 
+        {%- endfor %}
 		})
 	}
 
-	logc.Infof(l.ctx, "查询{{.Comment}}列表信息,参数：%+v,响应：%+v", in, list)
+	logc.Infof(l.ctx, "查询{{table_info.table_comment}}列表信息,参数：%+v,响应：%+v", in, list)
 
-	return &{{.RpcClient}}.Query{{.JavaName}}ListResp{
+	return &{{rpc_client}}.Query{{table_info.class_name}}ListResp{
 	    Total: count,
     	List:  list,
 	}, nil
