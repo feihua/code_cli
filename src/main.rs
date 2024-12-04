@@ -15,6 +15,12 @@ use crate::util::db_util::DbUtil;
 use rust_embed::Embed;
 use tera::Tera;
 use crate::service::java::mybatis::Mybatis;
+use crate::service::web::react::antd::ReactAntd;
+use crate::service::web::react::antd_state::ReactAntdState;
+use crate::service::web::react::pro::ReactAntdPro;
+use crate::service::web::vue::antd::VueAntd;
+use crate::service::web::vue::element_plus::ElementPlus;
+use crate::service::web::vue::element_plus_state::ElementPlusState;
 
 #[derive(Embed)]
 #[folder = "templates/"]
@@ -37,7 +43,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let table_info_list = DbUtil::get_tables(info);
     for x in table_info_list {
-        Mybatis::generate(&mut tera, x.clone());
+        // Mybatis::generate(&mut tera, x.clone());
         // NgZorroAntd::generate(&mut tera, x.clone());
         // Salvo::generate(&mut tera, x.clone());
         // Rocket::generate(&mut tera, x.clone());
@@ -46,6 +52,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         // Actix::generate(&mut tera, x.clone());
         // Hertz::generate(&mut tera, x.clone());
         // Gozero::generate(&mut tera, x);
+        // ElementPlus::generate(&mut tera, x);
+        // ElementPlusState::generate(&mut tera, x);
+        // VueAntd::generate(&mut tera, x);
+        // ReactAntd::generate(&mut tera, x);
+        // ReactAntdState::generate(&mut tera, x);
+        ReactAntdPro::generate(&mut tera, x);
     }
 
     Ok(())

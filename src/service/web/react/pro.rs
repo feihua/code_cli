@@ -3,14 +3,14 @@ use crate::util::file_util::write_file;
 use chrono::Local;
 use tera::{Context, Tera};
 
-pub struct Angular{
+pub struct ReactAntdPro {
 
 }
 
-impl Angular {
+impl ReactAntdPro {
 
     pub fn generate(mut tera: &mut Tera, table_info: TableInfo) {
-        let package_name = "com.example.springboottpl";
+        let package_name = "test";
         let author = "刘飞华";
         let fmt = "%Y/%m/%d %H:%M:%S";
         let create_time = Local::now().format(fmt).to_string();
@@ -21,18 +21,19 @@ impl Angular {
         context.insert("create_time", create_time.as_str());
         context.insert("package_name", package_name);
 
-        Self::create_zorro_from_tpl(&mut tera, table_info.object_name.as_str(), &mut context);
+        Self::create_antd_pro_tpl(&mut tera, table_info.class_name.as_str(), &mut context);
 
     }
 
-    fn create_zorro_from_tpl(tera: &mut Tera, object_name: &str, mut context: &mut Context) {
-        let path = String::from("web/angular/ng-zorro-antd/"); //数据库密码
-        write_file(tera.clone(), &mut context, format!("{}{}", path, "component.css").as_str(), format!("{}{}/component.css",path, object_name).as_str());
-        write_file(tera.clone(), &mut context, format!("{}{}", path, "data.d.ts").as_str(), format!("{}{}/data.d.ts",path, object_name).as_str());
-        write_file(tera.clone(), &mut context, format!("{}{}", path, "service.ts").as_str(), format!("{}{}/service.ts",path, object_name).as_str());
-        write_file(tera.clone(), &mut context, format!("{}{}", path, "component.ts").as_str(), format!("{}{}/component.ts",path, object_name).as_str());
-        write_file(tera.clone(), &mut context, format!("{}{}", path, "component.html").as_str(), format!("{}{}/component.html",path, object_name).as_str());
+    fn create_antd_pro_tpl(tera: &mut Tera, class_name: &str, mut context: &mut Context) {
+        let path = String::from("web/react/pro/");
+        write_file(tera.clone(), &mut context, format!("{}{}", path, "data.tpl").as_str(), format!("{}{}/data.d.ts",path, class_name).as_str());
+        write_file(tera.clone(), &mut context, format!("{}{}", path, "service.tpl").as_str(), format!("{}{}/service.ts",path, class_name).as_str());
+        write_file(tera.clone(), &mut context, format!("{}{}", path, "AddModal.tpl").as_str(), format!("{}/{}/components/AddModal.tsx",path, class_name).as_str());
+        write_file(tera.clone(), &mut context, format!("{}{}", path, "UpdateModal.tpl").as_str(), format!("{}/{}/components/UpdateModal.tsx",path, class_name).as_str());
+        write_file(tera.clone(), &mut context, format!("{}{}", path, "index.tpl").as_str(), format!("{}{}/index.tsx",path, class_name).as_str());
     }
+
 
 }
 

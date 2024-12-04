@@ -1,34 +1,26 @@
 <template>
   <el-form :inline="true" :model="searchParam" class="demo-form-inline" style="height: 32px; margin-left: 20px" ref="formRef">
     {%- for column in table_info.columns %}
-    <el-form-item label="{{column.column_comment}}">
+
       {%- if column.column_key =="PRI"  %}
       {%- elif column.ts_name is containing("create") %}
       {%- elif column.ts_name is containing("update") %}
       {%- elif column.ts_name is containing("sort") %}
       {%- elif column.ts_name is containing("Sort") %}
       {%- elif column.ts_name is containing("remark") %}
-        <el-input v-model="searchParam.{{table_info.class_name}}" :rows="2" type="textarea" 请输入{{column.column_comment}}/>
-      {%- elif column.ts_name is containing("Status") %}
+      {%- elif column.ts_name is containing("Status") or column.ts_name is containing("status") or column.ts_name is containing("Type") %}
+      <el-form-item label="{{column.column_comment}}">
         <el-radio-group v-model="searchParam.{{table_info.class_name}}" placeholder="请选择{{column.column_comment}}">
           <el-radio :label="1">启用</el-radio>
           <el-radio :label="0">禁用</el-radio>
         </el-radio-group>
-      {%- elif column.ts_name is containing("status") %}
-        <el-radio-group v-model="searchParam.{{table_info.class_name}}" placeholder="请选择{{column.column_comment}}">
-          <el-radio :label="1">启用</el-radio>
-          <el-radio :label="0">禁用</el-radio>
-        </el-radio-group>
-      {%- elif column.ts_name is containing("Type") %}
-        <el-radio-group v-model="searchParam.{{table_info.class_name}}" placeholder="请选择{{column.column_comment}}">
-          <el-radio :label="1">启用</el-radio>
-          <el-radio :label="0">禁用</el-radio>
-        </el-radio-group>
-      {%- else %}
-        <el-input v-model="searchParam.{{table_info.class_name}}" placeholder="请输入{{column.column_comment}}"/>
-
-      {%- endif %}
       </el-form-item>
+      {%- else %}
+       <el-form-item label="{{column.column_comment}}">
+        <el-input v-model="searchParam.{{table_info.class_name}}" placeholder="请输入{{column.column_comment}}"/>
+      </el-form-item>
+      {%- endif %}
+
     {%- endfor %}
     
      <el-form-item>

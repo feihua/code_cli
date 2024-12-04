@@ -22,8 +22,16 @@ export interface {{table_info.class_name}}ListParams {
   current?: number;
   filter?: { [key: string]: any[] };
   sorter?: { [key: string]: any };
-{%- for column in table_info.columns %}
-  {{column.ts_name}}?: {{column.ts_type}}; //{{column.column_comment}}
 
+{%- for column in table_info.columns %}
+  {%- if column.column_key =="PRI"  %}
+  {%- elif column.ts_name is containing("create") %}
+  {%- elif column.ts_name is containing("update") %}
+  {%- elif column.ts_name is containing("remark") %}
+  {%- elif column.ts_name is containing("Sort") %}
+  {%- elif column.ts_name is containing("sort") %}
+  {%- else %}
+  {{column.ts_name}}?: {{column.ts_type}}; //{{column.column_comment}}
+  {%- endif %}
 {%- endfor %}
 }

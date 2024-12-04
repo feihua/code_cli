@@ -30,7 +30,7 @@ const DetailModal: React.FC<DetailModalProps> = (props) => {
               <FormItem
                 name="{{column.ts_name}}"
                 label="{{column.column_comment}}"
-                rules={[{required: true, message: '请输入{{column_comment.column_comment}!'}]}
+                rules={[{required: true, message: '请输入{{column.column_comment}}!'}]}
               >
               {%- if column.ts_name is containing("Status") %}
                   <Radio.Group>
@@ -54,7 +54,7 @@ const DetailModal: React.FC<DetailModalProps> = (props) => {
               {%- elif column is containing("remark") %}
                   <Input.TextArea rows={2} placeholder={'请输入备注'}/>
               {%- else %}
-                  <Input id="detail-{{column.ts_name}}" placeholder={'请输入{{column.column_comment}!'}/>
+                  <Input id="detail-{{column.ts_name}}" placeholder={'请输入{{column.column_comment}}!'}/>
               {%- endif %}
               </FormItem>
               </Col>

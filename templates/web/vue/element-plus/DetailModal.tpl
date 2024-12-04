@@ -1,8 +1,9 @@
 <template>
   <el-dialog :model-value="detailFormVisible" title="详情" style="width: 880px;border-radius: 10px" destroy-on-close :close="handleViewClose">
       <el-descriptions title="{{table_info.table_comment}}详情">
-      {{range .TableColumn}}<el-descriptions-item label="{{column.column_comment}}">{ {detailParam.{{table_info.class_name}} } }</el-descriptions-item>
-      {{end}}
+      {%- for column in table_info.columns %}
+        <el-descriptions-item label="{{column.column_comment}}">{ {detailParam.{{column.ts_name}} } }</el-descriptions-item>
+      {%- endfor %}
       </el-descriptions>
     <el-form
         label-width="100px"
@@ -57,8 +58,13 @@ import type { {{table_info.class_name}}RecordVo} from "../data.d";
 
 const detailFormVisible = ref(false)
 const detailParam = ref<{{table_info.class_name}}RecordVo>({
-{{range .TableColumn}}
-  {{if eq .TsType "string"}}{{table_info.class_name}}: '',{{else}}{{table_info.class_name}}: 0,{{end}}{{end}}
+{%- for column in table_info.columns %}
+    {%- if column.ts_type == "string"  %}
+    {{column.ts_name}}: '',
+    {%- else %}
+    {{column.ts_name}}: 0,
+    {%- endif %}
+{%- endfor %}
 
 })
 

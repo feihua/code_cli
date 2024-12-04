@@ -16,7 +16,7 @@
                   name="{{table_info.class_name}}"
                   label="{{column.column_comment}}"
                 >
-                {%- elif column.ts_name is containing("remark") %}
+                {%- if column.ts_name is containing("remark") %}
                    <a-textarea v-model:value="formState.{{table_info.class_name}}" :bordered="false"/>
                 {%- elif column.ts_name is containing("Status") %}
                   <a-radio-group v-model:value="formState.{{table_info.class_name}}" :bordered="false" disabled>
@@ -59,9 +59,13 @@ import type {IResponse} from "@/utils/ajax";
 const formRef = ref<FormInstance>();
 const detailVisible = ref(false);
 const formState = ref<{{table_info.class_name}}RecordVo>({
-  {{range .TableColumn}}
-    {{if eq .TsType "string"}}{{table_info.class_name}}: '',{{else}}{{table_info.class_name}}: 0,{{end}}{{end}}
-
+{%- for column in table_info.columns %}
+    {%- if column.ts_type == "string"  %}
+    {{column.ts_name}}: '',
+    {%- else %}
+    {{column.ts_name}}: 0,
+    {%- endif %}
+{%- endfor %}
 });
 
 const handleVisible = async (id: number, open: boolean) => {

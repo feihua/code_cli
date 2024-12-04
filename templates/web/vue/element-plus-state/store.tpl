@@ -5,8 +5,19 @@ import { query{{table_info.class_name}}Detail1, query{{table_info.class_name}}Li
 
 export const use{{table_info.class_name}}Store = defineStore('{{table_info.object_name}}', () => {
   const detailRecordVo = ref<{{table_info.class_name}}RecordVo>({
-  {{range .TableColumn}}
-    {{if eq .TsType "string"}}{{table_info.class_name}}: '',{{else}}{{table_info.class_name}}: 0,{{end}}{{end}}
+{%- for column in table_info.columns %}
+  {%- if column.column_key =="PRI"  %}
+  {%- elif column.ts_name is containing("create") %}
+  {%- elif column.ts_name is containing("update") %}
+  {%- else %}
+    {%- if column.ts_type == "string"  %}
+    {{column.ts_name}}: '',
+    {%- else %}
+    {{column.ts_name}}: 0,
+    {%- endif %}
+  {%- endif %}
+{%- endfor %}
+
   });
 
   const updateVisible = ref<boolean>(false);

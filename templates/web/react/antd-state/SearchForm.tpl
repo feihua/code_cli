@@ -21,36 +21,32 @@ const AdvancedSearchForm: React.FC = () => {
       return (
           <>
               {%- for column in table_info.columns %}
-                <FormItem
-                  name="{{column.ts_name}}"
-                  label="{{column.column_comment}}"
-                  rules={[{required: true, message: '请输入{{column_comment.column_comment}!'}]}
-                >
                 {%- if column.column_key =="PRI"  %}
                 {%- elif column.ts_name is containing("create") %}
                 {%- elif column.ts_name is containing("update") %}
                 {%- elif column.ts_name is containing("sort") %}
                 {%- elif column.ts_name is containing("Sort") %}
                 {%- elif column.ts_name is containing("remark") %}
-                {%- elif column.ts_name is containing("Status") %}
+                {%- elif column.ts_name is containing("Status") or column.ts_name is containing("status") or column.ts_name is containing("Type")%}
+                <FormItem
+                  name="{{column.ts_name}}"
+                  label="{{column.column_comment}}"
+                  rules={[{required: true, message: '请输入{{column.column_comment}}!'}]}
+                >
                     <Select style={ {width: 200}}>
                         <Select.Option value="1">正常</Select.Option>
                         <Select.Option value="0">禁用</Select.Option>
                     </Select>
-                {%- elif column.ts_name is containing("status") %}
-                    <Select style={ {width: 200}}>
-                        <Select.Option value="1">正常</Select.Option>
-                        <Select.Option value="0">禁用</Select.Option>
-                    </Select>
-                {%- elif column.ts_name is containing("Type") %}
-                    <Select style={ {width: 200}}>
-                        <Select.Option value="1">正常</Select.Option>
-                        <Select.Option value="0">禁用</Select.Option>
-                    </Select>
-                {%- else %}
-                    <Input id="search-{{column.ts_name}}" placeholder={'请输入{{column.column_comment}!'}/>
-                {%- endif %}
                 </FormItem>
+                {%- else %}
+                <FormItem
+                  name="{{column.ts_name}}"
+                  label="{{column.column_comment}}"
+                  rules={[{required: true, message: '请输入{{column.column_comment}}!'}]}
+                >
+                    <Input id="search-{{column.ts_name}}" placeholder={'请输入{{column.column_comment}}!'}/>
+                </FormItem>
+                {%- endif %}
               {%- endfor %}
 
               <FormItem>

@@ -1,10 +1,10 @@
 <template>
 
   <div style=";background-color: white">
-    <AddForm @handleQuery="handleQueryWithPageParam" ref="addChildrenRef"/>
+    <AddModal @handleQuery="handleQueryWithPageParam" ref="addChildrenRef"/>
     <ListTable :tableData="tableData" @handleEditView="handleEditView" @handleDetailView="handleDetailView" @handleQuery="handleQueryWithPageParam"
                @handleSelectMore="handleSelectMore"/>
-    <UpdateForm v-model="dialogUpdateFormVisible" @handleQuery="handleQuery" @handleEdit="dialogUpdateFormVisible = false"
+    <UpdateModal v-model="dialogUpdateModalVisible" @handleQuery="handleQuery" @handleEdit="dialogUpdateModalVisible = false"
                ref="updateChildrenRef"/>
     <DetailModal v-model="detailFormVisible" ref="childrenRef" @handleEdit="detailFormVisible = false"/>
   </div>
@@ -16,12 +16,12 @@ import {onMounted, ref} from 'vue'
 import {query{{table_info.class_name}}List} from "./service";
 import type {IResponse} from "@/api/ajax";
 import type {Search{{table_info.class_name}}Param, List{{table_info.class_name}}Param, {{table_info.class_name}}RecordVo} from "./data.d";
-import AddForm from "./components/AddForm.vue";
-import UpdateForm from "./components/UpdateForm.vue";
+import AddModal from "./components/AddModal.vue";
+import UpdateModal from "./components/UpdateModal.vue";
 import ListTable from "./components/ListTable.vue";
 import DetailModal from "./components/DetailModal.vue";
 
-const dialogUpdateFormVisible = ref(false)
+const dialogUpdateModalVisible = ref(false)
 const detailFormVisible = ref(false)
 const childrenRef = ref();
 const addChildrenRef = ref();
@@ -45,7 +45,7 @@ const recordVo = ref<{{table_info.class_name}}RecordVo>({
 })
 
 const handleQuery = async (data: List{{table_info.class_name}}Param) => {
-  dialogUpdateFormVisible.value = false
+  dialogUpdateModalVisible.value = false
   detailFormVisible.value = false
   searchParam.value = {...data}
   const res: IResponse = await query{{table_info.class_name}}List({...data, ...searchParam.value, current: currentPage.value, pageSize: pageSize.value})
@@ -60,7 +60,7 @@ const handleQueryWithPageParam = async (data: List{{table_info.class_name}}Param
 
 const handleEditView = (row: {{table_info.class_name}}RecordVo) => {
   recordVo.value = row
-  dialogUpdateFormVisible.value = true
+  dialogUpdateModalVisible.value = true
   updateChildrenRef.value.query{{table_info.class_name}}Info(row.id)
 }
 

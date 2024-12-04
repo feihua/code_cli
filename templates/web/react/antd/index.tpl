@@ -18,9 +18,13 @@ const {{table_info.class_name}}: React.FC = () => {
     const [isShowDetailModal, setShowDetailModal] = useState<boolean>(false);
     const [{{table_info.object_name}}ListData, set{{table_info.class_name}}ListData] = useState<{{table_info.class_name}}Vo[]>([]);
     const [current{{table_info.class_name}}, setCurrent{{table_info.class_name}}] = useState<{{table_info.class_name}}Vo>({
-      {{- range .TableColumn}}
-        {{table_info.class_name}}: {{if eq .TsType `string`}}''{{else}}0{{end}},
-      {{- end}}
+    {%- for column in table_info.columns %}
+        {%- if column.ts_type == "string"  %}
+        {{column.ts_name}}: '',
+        {%- else %}
+        {{column.ts_name}}: 0,
+        {%- endif %}
+    {%- endfor %}
     });
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(10);

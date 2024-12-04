@@ -63,13 +63,13 @@ const {listParam, {{table_info.object_name}}List,} = storeToRefs(store)
 const {query{{table_info.class_name}}List} = store
 
 const columns = [
-{{- range .TableColumn}}
+{%- for column in table_info.columns %}
     {
         title: '{{column.column_comment}}',
-        dataIndex: '{{table_info.class_name}}',
-        key: '{{table_info.class_name}}',
+        dataIndex: '{{column.ts_name}}',
+        key: '{{column.ts_name}}',
     },
-{{- end}}
+{%- endfor %}
     {
       title: '操作',
       key: 'action',

@@ -18,9 +18,13 @@ const {{table_info.class_name}}: React.FC = () => {
   const [isShowEditModal, setShowEditModal] = useState<boolean>(false);
   const [isShowDetailModal, setShowDetailModal] = useState<boolean>(false);
   const [current{{table_info.class_name}}, setCurrent{{table_info.class_name}}] = useState<{{table_info.class_name}}Vo>({
-  {{range .TableColumn}}{{table_info.class_name}}: {{if eq .TsType `string`}}''{{else}}0{{end}},
-  {{end}}
-
+    {%- for column in table_info.columns %}
+        {%- if column.ts_type == "string"  %}
+        {{column.ts_name}}: '',
+        {%- else %}
+        {{column.ts_name}}: 0,
+        {%- endif %}
+    {%- endfor %}
   });
 
   const columns: ColumnsType<{{table_info.class_name}}Vo> = [

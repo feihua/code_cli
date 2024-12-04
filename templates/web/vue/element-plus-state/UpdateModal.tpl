@@ -3,36 +3,29 @@
     <el-form label-width="100px" :model="detailRecordVo" style="max-width: 380px" :rules="rules" ref="ruleFormRef">
     
     {%- for column in table_info.columns %}
-    <el-form-item label="{{column.column_comment}}">
       {%- if column.column_key =="PRI"  %}
       {%- elif column.ts_name is containing("create") %}
       {%- elif column.ts_name is containing("update") %}
       {%- elif column.ts_name is containing("remark") %}
-        <el-input v-model="detailRecordVo.{{table_info.class_name}}" :rows="2" type="textarea" 请输入{{column.column_comment}}/>
-      {%- elif column.ts_name is containing("Status") %}
-        <el-radio-group v-model="detailRecordVo.{{table_info.class_name}}" placeholder="请选择{{column.column_comment}}">
-          <el-radio :label="1">启用</el-radio>
-          <el-radio :label="0">禁用</el-radio>
-        </el-radio-group>
-      {%- elif column.ts_name is containing("status") %}
-        <el-radio-group v-model="detailRecordVo.{{table_info.class_name}}" placeholder="请选择{{column.column_comment}}">
-          <el-radio :label="1">启用</el-radio>
-          <el-radio :label="0">禁用</el-radio>
-        </el-radio-group>
-      {%- elif column.ts_name is containing("Sort") %}
-        <el-input-number v-model="detailRecordVo.{{table_info.class_name}}" placeholder="请输入{{column.column_comment}}"/>
-      {%- elif column.ts_name is containing("sort") %}
-        <el-input-number v-model="detailRecordVo.{{table_info.class_name}}" placeholder="请输入{{column.column_comment}}"/>
-      {%- elif column.ts_name is containing("Type") %}
-        <el-radio-group v-model="detailRecordVo.{{table_info.class_name}}" placeholder="请选择{{column.column_comment}}">
-          <el-radio :label="1">启用</el-radio>
-          <el-radio :label="0">禁用</el-radio>
-        </el-radio-group>
-      {%- else %}
-        <el-input v-model="detailRecordVo.{{table_info.class_name}}" placeholder="请输入{{column.column_comment}}"/>
-
-      {%- endif %}
+      <el-form-item label="{{column.column_comment}}">
+        <el-input v-model="addParam.{{table_info.class_name}}" :rows="2" type="textarea" 请输入{{column.column_comment}}/>
       </el-form-item>
+      {%- elif column.ts_name is containing("Status") or column.ts_name is containing("status") or column.ts_name is containing("Type") %}
+      <el-form-item label="{{column.column_comment}}">
+        <el-radio-group v-model="addParam.{{table_info.class_name}}" placeholder="请选择{{column.column_comment}}">
+          <el-radio :label="1">启用</el-radio>
+          <el-radio :label="0">禁用</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      {%- elif column.ts_name is containing("Sort")  or column.ts_name is containing("sort")%}
+      <el-form-item label="{{column.column_comment}}">
+        <el-input-number v-model="addParam.{{table_info.class_name}}" placeholder="请输入{{column.column_comment}}"/>
+      </el-form-item>
+      {%- else %}
+      <el-form-item label="{{column.column_comment}}">
+        <el-input v-model="addParam.{{table_info.class_name}}" placeholder="请输入{{column.column_comment}}"/>
+      </el-form-item>
+      {%- endif %}
     {%- endfor %}
 
         <el-form-item>

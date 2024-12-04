@@ -21,68 +21,22 @@
         {%- elif column.ts_name is containing("create") %}
         {%- elif column.ts_name is containing("update") %}
         {%- elif column.ts_name is containing("remark") %}
-        <a-form-item
-            name="{{column.ts_name}}"
-            label="{{column.column_comment}}"
-            :rules="[{ required: true, message: '请输入{{column.column_comment}}' }]"
-        >
+        <a-form-item name="{{column.ts_name}}" label="{{column.column_comment}}" :rules="[{ required: true, message: '请输入{{column.column_comment}}' }]">
             <a-textarea v-model:value="formState.{{column.ts_name}}" allow-clear placeholder="请选择{{column.column_comment}}"/>
        </a-form-item>
-        {%- elif column.ts_name is containing("Status") %}
-        <a-form-item
-            name="{{column.ts_name}}"
-            label="{{column.column_comment}}"
-            :rules="[{ required: true, message: '请输入{{column.column_comment}}' }]"
-        >
+        {%- elif column.ts_name is containing("Status") or column.ts_name is containing("status") or column.ts_name is containing("Type")%}
+        <a-form-item name="{{column.ts_name}}" label="{{column.column_comment}}" :rules="[{ required: true, message: '请输入{{column.column_comment}}' }]">
             <a-radio-group v-model:value="formState.{{column.ts_name}}" placeholder="请选择{{column.column_comment}}">
                 <a-radio :value="1">是</a-radio>
                 <a-radio :value="0">否</a-radio>
             </a-radio-group>
         </a-form-item>
-        {%- elif column.ts_name is containing("status") %}
-        <a-form-item
-            name="{{column.ts_name}}"
-            label="{{column.column_comment}}"
-            :rules="[{ required: true, message: '请输入{{column.column_comment}}' }]"
-        >
-            <a-radio-group v-model:value="formState.{{column.ts_name}}" placeholder="请选择{{column.column_comment}}">
-                <a-radio :value="1">是</a-radio>
-                <a-radio :value="0">否</a-radio>
-            </a-radio-group>
-        </a-form-item>
-        {%- elif column.ts_name is containing("Sort") %}
-        <a-form-item
-            name="{{column.ts_name}}"
-            label="{{column.column_comment}}"
-            :rules="[{ required: true, message: '请输入{{column.column_comment}}' }]"
-        >
+        {%- elif column.ts_name is containing("Sort") or column.ts_name is containing("sort")%}
+        <a-form-item name="{{column.ts_name}}" label="{{column.column_comment}}" :rules="[{ required: true, message: '请输入{{column.column_comment}}' }]">
             <a-input-number v-model:value="formState.{{column.ts_name}}" style="width: 234px" placeholder="请选择{{column.column_comment}}"/>
-        </a-form-item>
-        {%- elif column.ts_name is containing("sort") %}
-        <a-form-item
-            name="{{column.ts_name}}"
-            label="{{column.column_comment}}"
-            :rules="[{ required: true, message: '请输入{{column.column_comment}}' }]"
-        >
-            <a-input-number v-model:value="formState.{{column.ts_name}}" style="width: 234px" placeholder="请选择{{column.column_comment}}"/>
-        </a-form-item>
-        {%- elif column.ts_name is containing("Type") %}
-        <a-form-item
-            name="{{column.ts_name}}"
-            label="{{column.column_comment}}"
-            :rules="[{ required: true, message: '请输入{{column.column_comment}}' }]"
-        >
-            <a-radio-group v-model:value="formState.{{column.ts_name}}" placeholder="请选择{{column.column_comment}}">
-                <a-radio :value="1">是</a-radio>
-                <a-radio :value="0">否</a-radio>
-            </a-radio-group>
         </a-form-item>
         {%- else %}
-        <a-form-item
-            name="{{column.ts_name}}"
-            label="{{column.column_comment}}"
-            :rules="[{ required: true, message: '请输入{{column.column_comment}}' }]"
-        >
+        <a-form-item name="{{column.ts_name}}" label="{{column.column_comment}}" :rules="[{ required: true, message: '请输入{{column.column_comment}}' }]">
             <a-input v-model:value="formState.{{column.ts_name}}" placeholder="请选择{{column.column_comment}}"/>
         </a-form-item>
         {%- endif %}

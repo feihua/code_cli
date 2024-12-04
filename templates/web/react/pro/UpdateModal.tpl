@@ -62,41 +62,48 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
           <Input id="update-id"/>
         </FormItem>
 
-          {%- for column in table_info.columns %}
-            <FormItem
-              name="{{column.ts_name}}"
-              label="{{column.column_comment}}"
-              rules={[{required: true, message: '请输入{{column_comment.column_comment}!'}]}
-            >
-            {%- if column.column_key =="PRI"  %}
-            {%- elif column.ts_name is containing("create") %}
-            {%- elif column.ts_name is containing("update") %}
-            {%- elif column.ts_name is containing("Status") %}
-                <Radio.Group>
-                  <Radio value={0}>禁用</Radio>
-                  <Radio value={1}>正常</Radio>
-                </Radio.Group>
-            {%- elif column.ts_name is containing("status") %}
-                <Radio.Group>
-                  <Radio value={0}>禁用</Radio>
-                  <Radio value={1}>正常</Radio>
-                </Radio.Group>
-            {%- elif column.ts_name is containing("Sort") %}
-                <InputNumber style={ {width: 255} }/>
-            {%- elif column.ts_name is containing("sort") %}
-                <InputNumber style={ {width: 255} }/>
-            {%- elif column.ts_name is containing("Type") %}
-                <Radio.Group>
-                  <Radio value={0}>禁用</Radio>
-                  <Radio value={1}>正常</Radio>
-                </Radio.Group>
-            {%- elif column is containing("remark") %}
-                <Input.TextArea rows={2} placeholder={'请输入备注'}/>
-            {%- else %}
-                <Input id="update-{{column.ts_name}}" placeholder={'请输入{{column.column_comment}!'}/>
-            {%- endif %}
-            </FormItem>
-          {%- endfor %}
+      {%- for column in table_info.columns %}
+        {%- if column.column_key =="PRI"  %}
+        {%- elif column.ts_name is containing("create") %}
+        {%- elif column.ts_name is containing("update") %}
+        {%- elif column.ts_name is containing("Status") or column.ts_name is containing("status") or column.ts_name is containing("Type")%}
+        <FormItem
+          name="{{column.ts_name}}"
+          label="{{column.column_comment}}"
+          rules={[{required: true, message: '请输入{{column.column_comment}}!'}]}
+        >
+            <Radio.Group>
+              <Radio value={0}>禁用</Radio>
+              <Radio value={1}>正常</Radio>
+            </Radio.Group>
+        </FormItem>
+        {%- elif column.ts_name is containing("Sort") or column.ts_name is containing("sort") %}
+        <FormItem
+          name="{{column.ts_name}}"
+          label="{{column.column_comment}}"
+          rules={[{required: true, message: '请输入{{column.column_comment}}!'}]}
+        >
+            <InputNumber style={ {width: 255} }/>
+         </FormItem>
+        {%- elif column is containing("remark") %}
+        <FormItem
+          name="{{column.ts_name}}"
+          label="{{column.column_comment}}"
+          rules={[{required: true, message: '请输入{{column.column_comment}}!'}]}
+        >
+            <Input.TextArea rows={2} placeholder={'请输入备注'}/>
+        </FormItem>
+        {%- else %}
+        <FormItem
+          name="{{column.ts_name}}"
+          label="{{column.column_comment}}"
+          rules={[{required: true, message: '请输入{{column.column_comment}}!'}]}
+        >
+            <Input id="update-{{column.ts_name}}" placeholder={'请输入{{column.column_comment}}!'}/>
+        </FormItem>
+        {%- endif %}
+
+      {%- endfor %}
 
       </>
     );

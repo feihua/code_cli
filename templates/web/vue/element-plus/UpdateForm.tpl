@@ -7,39 +7,33 @@
         :rules="rules"
         ref="ruleFormRef"
     >
-    {{range .TableColumn}}
 
     {%- for column in table_info.columns %}
-    <el-form-item label="{{column.column_comment}}">
+
       {%- if column.column_key =="PRI"  %}
       {%- elif column.ts_name is containing("create") %}
       {%- elif column.ts_name is containing("update") %}
       {%- elif column.ts_name is containing("remark") %}
-        <el-input v-model="updateParam.{{table_info.class_name}}" :rows="2" type="textarea" 请输入备注/>
-      {%- elif column.ts_name is containing("Status") %}
+       <el-form-item label="{{column.column_comment}}">
+        <el-input v-model="updateParam.{{table_info.class_name}}" :rows="2" type="textarea"请输入{{column.column_comment}}"/>
+       </el-form-item>
+      {%- elif column.ts_name is containing("Status") or column.ts_name is containing("status") or column.ts_name is containing("Type") %}
+       <el-form-item label="{{column.column_comment}}">
         <el-radio-group v-model="addParam.{{table_info.class_name}}" placeholder="请选择{{column.column_comment}}">
           <el-radio :label="1">启用</el-radio>
           <el-radio :label="0">禁用</el-radio>
         </el-radio-group>
-      {%- elif column.ts_name is containing("status") %}
-        <el-radio-group v-model="addParam.{{table_info.class_name}}" placeholder="请选择{{column.column_comment}}">
-          <el-radio :label="1">启用</el-radio>
-          <el-radio :label="0">禁用</el-radio>
-        </el-radio-group>
-      {%- elif column.ts_name is containing("Sort") %}
+       </el-form-item>
+      {%- elif column.ts_name is containing("Sort") or column.ts_name is containing("sort") %}
+       <el-form-item label="{{column.column_comment}}">
         <el-input-number v-model="updateParam.{{table_info.class_name}}" placeholder="请输入{{column.column_comment}}"/>
-      {%- elif column.ts_name is containing("sort") %}
-        <el-input-number v-model="updateParam.{{table_info.class_name}}" placeholder="请输入{{column.column_comment}}"/>
-      {%- elif column.ts_name is containing("Type") %}
-        <el-radio-group v-model="addParam.{{table_info.class_name}}" placeholder="请选择{{column.column_comment}}">
-          <el-radio :label="1">启用</el-radio>
-          <el-radio :label="0">禁用</el-radio>
-        </el-radio-group>
+       </el-form-item>
       {%- else %}
+       <el-form-item label="{{column.column_comment}}">
         <el-input v-model="updateParam.{{table_info.class_name}}" placeholder="请输入{{column.column_comment}}"/>
-
+       </el-form-item>
       {%- endif %}
-      </el-form-item>
+
     {%- endfor %}
 
       <el-form-item>
@@ -62,8 +56,7 @@ import {query{{table_info.class_name}}Detail} from "../service";
 const ruleFormRef = ref<FormInstance>()
 let updateParam = ref<Update{{table_info.class_name}}Param>({
 {%- for column in table_info.columns %}
-  {%- if column.ts_name is containing("create") %}
-  {%- elif column.ts_name is containing("update") %}
+  {%- if column.ts_name is containing("create") or column.ts_name is containing("update") %}
   {%- else %}
     {%- if column.ts_type == "string"  %}
     {{column.ts_name}}: '',
