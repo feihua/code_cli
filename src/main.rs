@@ -5,22 +5,22 @@ pub mod util;
 use crate::model::db_info::DbInfo;
 use crate::service::go::hertz::Hertz;
 use crate::service::go::zero::Gozero;
+use crate::service::java::mybatis::Mybatis;
 use crate::service::rust::actix::Actix;
 use crate::service::rust::axum::Axum;
 use crate::service::rust::ntex::Ntex;
 use crate::service::rust::rocket::Rocket;
 use crate::service::rust::salvo::Salvo;
 use crate::service::web::angular::ng_zorro_antd::NgZorroAntd;
-use crate::util::db_util::DbUtil;
-use rust_embed::Embed;
-use tera::Tera;
-use crate::service::java::mybatis::Mybatis;
 use crate::service::web::react::antd::ReactAntd;
 use crate::service::web::react::antd_state::ReactAntdState;
 use crate::service::web::react::pro::ReactAntdPro;
 use crate::service::web::vue::antd::VueAntd;
 use crate::service::web::vue::element_plus::ElementPlus;
 use crate::service::web::vue::element_plus_state::ElementPlusState;
+use crate::util::db_util::DbUtil;
+use rust_embed::Embed;
+use tera::Tera;
 
 #[derive(Embed)]
 #[folder = "templates/"]
@@ -39,7 +39,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     info.table_db = String::from("better-pay"); //业务数据库
     info.table_name_str = String::from("sys_user,sys_role_menu"); //待生成的表
     info.t_prefix = String::from("sys_"); //生成时，待去掉的表前缀
-
 
     let table_info_list = DbUtil::get_tables(info);
     let orm_type = "";
