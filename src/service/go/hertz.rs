@@ -9,7 +9,7 @@ pub struct Hertz {
 
 impl Hertz {
 
-    pub fn generate(mut tera: &mut Tera, table_info: TableInfo) {
+    pub fn generate_hertz_curd(mut tera: &mut Tera, table_info: TableInfo) {
         let project_name = "github.com/feihua/hertz-admin";
         let package_name = "test";
         let author = "刘飞华";

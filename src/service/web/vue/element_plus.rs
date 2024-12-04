@@ -9,7 +9,7 @@ pub struct ElementPlus {
 
 impl ElementPlus {
 
-    pub fn generate(mut tera: &mut Tera, table_info: TableInfo) {
+    pub fn generate_vue_element_curd(mut tera: &mut Tera, table_info: TableInfo) {
         let package_name = "com.example.springboottpl";
         let author = "刘飞华";
         let fmt = "%Y/%m/%d %H:%M:%S";

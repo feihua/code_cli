@@ -42,22 +42,23 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 
     let table_info_list = DbUtil::get_tables(info);
+    let orm_type = "";
     for x in table_info_list {
-        // Mybatis::generate(&mut tera, x.clone());
-        // NgZorroAntd::generate(&mut tera, x.clone());
-        // Salvo::generate(&mut tera, x.clone());
-        // Rocket::generate(&mut tera, x.clone());
-        // Ntex::generate(&mut tera, x.clone());
-        // Axum::generate(&mut tera, x.clone());
-        // Actix::generate(&mut tera, x.clone());
-        // Hertz::generate(&mut tera, x.clone());
-        // Gozero::generate(&mut tera, x);
-        // ElementPlus::generate(&mut tera, x);
-        // ElementPlusState::generate(&mut tera, x);
-        // VueAntd::generate(&mut tera, x);
-        // ReactAntd::generate(&mut tera, x);
-        // ReactAntdState::generate(&mut tera, x);
-        ReactAntdPro::generate(&mut tera, x);
+        Mybatis::generate_mybatis_curd(&mut tera, x.clone());
+        NgZorroAntd::generate_ng_curd(&mut tera, x.clone());
+        Salvo::generate_salvo_curd(&mut tera, x.clone(), orm_type);
+        Rocket::generate_rocket_curd(&mut tera, x.clone(), orm_type);
+        Ntex::generate_ntex_curd(&mut tera, x.clone(), orm_type);
+        Axum::generate_axum_curd(&mut tera, x.clone(), orm_type);
+        Actix::generate_actix_curd(&mut tera, x.clone(), orm_type);
+        Hertz::generate_hertz_curd(&mut tera, x.clone());
+        Gozero::generate_go_zero_curd(&mut tera, x.clone());
+        ElementPlus::generate_vue_element_curd(&mut tera, x.clone());
+        ElementPlusState::generate_vue_element_state_curd(&mut tera, x.clone());
+        VueAntd::generate_vue_antd_curd(&mut tera, x.clone());
+        ReactAntd::generate_react_antd_curd(&mut tera, x.clone());
+        ReactAntdState::generate_react_antd_state_curd(&mut tera, x.clone());
+        ReactAntdPro::generate_react_antd_pro(&mut tera, x);
     }
 
     Ok(())

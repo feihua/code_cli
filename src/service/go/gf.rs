@@ -26,7 +26,7 @@ impl Angular {
     }
 
     fn create_zorro_from_tpl(tera: &mut Tera, object_name: &str, mut context: &mut Context) {
-        let path = String::from("web/angular/ng-zorro-antd/"); //数据库密码
+        let path = String::from("web/angular/ng-zorro-antd/");
         write_file(tera.clone(), &mut context, format!("{}{}", path, "component.css").as_str(), format!("{}{}/component.css",path, object_name).as_str());
         write_file(tera.clone(), &mut context, format!("{}{}", path, "data.d.ts").as_str(), format!("{}{}/data.d.ts",path, object_name).as_str());
         write_file(tera.clone(), &mut context, format!("{}{}", path, "service.ts").as_str(), format!("{}{}/service.ts",path, object_name).as_str());

@@ -34,7 +34,7 @@ impl Mybatis {
     }
 
     // 生成文件相关操作
-    pub fn generate(mut tera: &mut Tera, table_info: TableInfo) {
+    pub fn generate_mybatis_curd(mut tera: &mut Tera, table_info: TableInfo) {
         // 包名
         let package_name = "com.example.springboottpl";
         let author = "刘飞华";

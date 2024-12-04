@@ -3,13 +3,10 @@ use crate::util::file_util::write_file;
 use chrono::Local;
 use tera::{Context, Tera};
 
-pub struct Actix {
-
-}
+pub struct Actix {}
 
 impl Actix {
-
-    pub fn generate(mut tera: &mut Tera, table_info: TableInfo) {
+    pub fn generate_actix_curd(mut tera: &mut Tera, table_info: TableInfo, orm_type: &str) {
         let package_name = "sys";
         let author = "刘飞华";
         let fmt = "%Y/%m/%d %H:%M:%S";
@@ -21,27 +18,42 @@ impl Actix {
         context.insert("create_time", create_time.as_str());
         context.insert("package_name", package_name);
 
-        // Self::create_sea_from_tpl(
-        //     &mut tera,
-        //     table_info.table_name.as_str(),
-        //     &mut context,
-        //     package_name,
-        // );
-
-        // Self::create_rbatis_from_tpl(
-        //     &mut tera,
-        //     table_info.table_name.as_str(),
-        //     &mut context,
-        //     package_name,
-        // );
-
-        Self::create_rbatis_from_tpl(
-            &mut tera,
-            table_info.table_name.as_str(),
-            &mut context,
-            package_name,
-        );
-
+        if orm_type == "sea" {
+            Self::create_sea_from_tpl(
+                &mut tera,
+                table_info.table_name.as_str(),
+                &mut context,
+                package_name,
+            )
+        } else if orm_type == "diesel" {
+            Self::create_diesel_from_tpl(&mut tera, table_info.table_name.as_str(), &mut context, package_name, )
+        } else if orm_type == "rbatis" {
+            Self::create_rbatis_from_tpl(
+                &mut tera,
+                table_info.table_name.as_str(),
+                &mut context,
+                package_name,
+            )
+        } else {
+            Self::create_sea_from_tpl(
+                &mut tera,
+                table_info.table_name.as_str(),
+                &mut context,
+                package_name,
+            );
+            Self::create_diesel_from_tpl(
+                &mut tera,
+                table_info.table_name.as_str(),
+                &mut context,
+                package_name,
+            );
+            Self::create_rbatis_from_tpl(
+                &mut tera,
+                table_info.table_name.as_str(),
+                &mut context,
+                package_name,
+            )
+        }
     }
 
     fn create_sea_from_tpl(
@@ -113,5 +125,3 @@ impl Actix {
         );
     }
 }
-
-
