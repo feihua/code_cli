@@ -1,59 +1,29 @@
 use crate::model::table::TableInfo;
 use crate::util::file_util::write_file;
-use chrono::Local;
 use tera::{Context, Tera};
 
 pub struct Mybatis {}
 
 impl Mybatis {
-    // 生成文件相关操作(公共)
-    pub fn generate_common(tera: &mut Tera) {
-        // 包名
-        let package_name = "com.example.springboottpl";
-        let author = "刘飞华";
-        let fmt = "%Y/%m/%d %H:%M:%S";
-        let create_time = Local::now().format(fmt).to_string();
-
-        let mut context = Context::new();
-        context.insert("author", author);
-        context.insert("create_time", create_time.as_str());
-        context.insert("package_name", package_name);
-
-        write_file(
-            tera.clone(),
-            &mut context,
-            "java/util/Result.java",
-            "java/util/Result.java",
-        );
-        write_file(
-            tera.clone(),
-            &mut context,
-            "java/util/ResultPage.java",
-            "java/util/ResultPage.java",
-        );
-    }
-
     // 生成文件相关操作
-    pub fn generate_mybatis_curd(mut tera: &mut Tera, table_info: TableInfo) {
-        // 包名
-        let package_name = "com.example.springboottpl";
-        let author = "刘飞华";
-        let fmt = "%Y/%m/%d %H:%M:%S";
-        let create_time = Local::now().format(fmt).to_string();
-
-        let mut context = Context::new();
-        context.insert("table_info", &table_info);
-        context.insert("author", author);
-        context.insert("create_time", create_time.as_str());
-        context.insert("package_name", package_name);
-
-        Self::generate_common(&mut tera);
-        Self::create_from_tpl(&mut tera, table_info.class_name.as_str(), &mut context);
-        //     create_vue_from_tpl(tera.clone(), table_name, &mut context);
-        //     create_react_from_tpl(tera.clone(), table_name, &mut context);
+    pub fn generate_mybatis_curd(mut tera: &mut Tera, table_info: TableInfo, mut ctx: Context) {
+        Self::create_from_tpl(&mut tera, table_info.class_name.as_str(), &mut ctx);
     }
 
     fn create_from_tpl(tera: &mut Tera, class_name: &str, mut context: &mut Context) {
+        write_file(
+            tera.clone(),
+            &mut context,
+            "java/util/Result.java",
+            "java/util/Result.java",
+        );
+        write_file(
+            tera.clone(),
+            &mut context,
+            "java/util/ResultPage.java",
+            "java/util/ResultPage.java",
+        );
+
         write_file(
             tera.clone(),
             &mut context,
@@ -103,22 +73,4 @@ impl Mybatis {
             format!("java/vo/resp/{}Resp.java", class_name).as_str(),
         );
     }
-
-    // fn create_vue_from_tpl(mut tera: Tera, table_name: &str, mut context: &mut Context) {
-    //     write_file(tera.clone(), &mut context, "java/vue/index.vue", format!("java/vue/{}/index.vue", table_name).as_str());
-    //     write_file(tera.clone(), &mut context, "java/vue/data.d.ts", format!("java/vue/{}/data.d.ts", table_name).as_str());
-    //     write_file(tera.clone(), &mut context, "java/vue/service.ts", format!("java/vue/{}/service.ts", table_name).as_str());
-    //     write_file(tera.clone(), &mut context, "java/vue/components/AddForm.vue", format!("java/vue/{}/components/AddForm.vue", table_name).as_str());
-    //     write_file(tera.clone(), &mut context, "java/vue/components/ListTable.vue", format!("java/vue/{}/components/ListTable.vue", table_name).as_str());
-    //     write_file(tera.clone(), &mut context, "java/vue/components/UpdateForm.vue", format!("java/vue/{}/components/UpdateForm.vue", table_name).as_str());
-    // }
-    //
-    // fn create_react_from_tpl(mut tera: Tera, table_name: &str, mut context: &mut Context) {
-    //     write_file(tera.clone(), &mut context, "java/react/index.tsx", format!("java/react/{}/index.tsx", table_name).as_str());
-    //     write_file(tera.clone(), &mut context, "java/react/data.d.ts", format!("java/react/{}/data.d.ts", table_name).as_str());
-    //     write_file(tera.clone(), &mut context, "java/react/service.ts", format!("java/react/{}/service.ts", table_name).as_str());
-    //     write_file(tera.clone(), &mut context, "java/react/components/AddForm.tsx", format!("java/react/{}/components/AddForm.tsx", table_name).as_str());
-    //     write_file(tera.clone(), &mut context, "java/react/components/SearchForm.tsx", format!("java/react/{}/components/SearchForm.tsx", table_name).as_str());
-    //     write_file(tera.clone(), &mut context, "java/react/components/UpdateForm.tsx", format!("java/react/{}/components/UpdateForm.tsx", table_name).as_str());
-    // }
 }

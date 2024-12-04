@@ -1,61 +1,56 @@
 use crate::model::table::TableInfo;
 use crate::util::file_util::write_file;
-use chrono::Local;
 use tera::{Context, Tera};
 
 pub struct Axum {}
 
 impl Axum {
-    pub fn generate_axum_curd(mut tera: &mut Tera, table_info: TableInfo, orm_type: &str) {
+    pub fn generate_axum_curd(
+        mut tera: &mut Tera,
+        table_info: TableInfo,
+        orm_type: &str,
+        mut ctx: Context,
+    ) {
         let package_name = "sys";
-        let author = "刘飞华";
-        let fmt = "%Y/%m/%d %H:%M:%S";
-        let create_time = Local::now().format(fmt).to_string();
-
-        let mut context = Context::new();
-        context.insert("table_info", &table_info);
-        context.insert("author", author);
-        context.insert("create_time", create_time.as_str());
-        context.insert("package_name", package_name);
 
         if orm_type == "sea" {
             Self::create_sea_from_tpl(
                 &mut tera,
                 table_info.table_name.as_str(),
-                &mut context,
+                &mut ctx,
                 package_name,
             )
         } else if orm_type == "diesel" {
             Self::create_diesel_from_tpl(
                 &mut tera,
                 table_info.table_name.as_str(),
-                &mut context,
+                &mut ctx,
                 package_name,
             )
         } else if orm_type == "rbatis" {
             Self::create_rbatis_from_tpl(
                 &mut tera,
                 table_info.table_name.as_str(),
-                &mut context,
+                &mut ctx,
                 package_name,
             )
-        }else {
+        } else {
             Self::create_sea_from_tpl(
                 &mut tera,
                 table_info.table_name.as_str(),
-                &mut context,
+                &mut ctx,
                 package_name,
             );
             Self::create_diesel_from_tpl(
                 &mut tera,
                 table_info.table_name.as_str(),
-                &mut context,
+                &mut ctx,
                 package_name,
             );
             Self::create_rbatis_from_tpl(
                 &mut tera,
                 table_info.table_name.as_str(),
-                &mut context,
+                &mut ctx,
                 package_name,
             )
         }
