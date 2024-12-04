@@ -1,33 +1,33 @@
-package {{.ModuleName}}
+package {{table_info.table_name}}
 
 /*
-删除{{.Comment}}
-Author: {{.Author}}
-Date: {{.CreateTime}}
+删除{{table_info.table_comment}}
+Author: {{author}}
+Date: {{create_time}}
 */
 
 import (
 	"context"
 	"github.com/gogf/gf/v2/util/gconv"
-	"{{.ProjectName}}/internal/model"
-	"{{.ProjectName}}/internal/service"
+	"{{project_name}}/internal/model"
+	"{{project_name}}/internal/service"
 
-	"{{.ProjectName}}/api/{{.ModuleName}}/v1"
+	"{{project_name}}/api/{{table_info.table_name}}/v1"
 )
 
-// Delete{{.JavaName}} 删除{{.Comment}}
-func (c *ControllerV1) Delete{{.JavaName}}(ctx context.Context, req *v1.Delete{{.JavaName}}Req) (res *v1.Delete{{.JavaName}}Res, err error) {
-	var input = model.Delete{{.JavaName}}Input{}
+// Delete{{table_info.class_name}} 删除{{table_info.table_comment}}
+func (c *ControllerV1) Delete{{table_info.class_name}}(ctx context.Context, req *v1.Delete{{table_info.class_name}}Req) (res *v1.Delete{{table_info.class_name}}Res, err error) {
+	var input = model.Delete{{table_info.class_name}}Input{}
 	err = gconv.Struct(req, &input)
 	if err != nil {
 		return nil, err
 	}
-	_, err = service.{{.JavaName}}().Delete{{.JavaName}}(ctx, input)
+	_, err = service.{{table_info.class_name}}().Delete{{table_info.class_name}}(ctx, input)
 	if err != nil {
 		return nil, err
 	}
 
-	res = &v1.Delete{{.JavaName}}Res{}
+	res = &v1.Delete{{table_info.class_name}}Res{}
 
 	return
 }

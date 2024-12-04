@@ -1,36 +1,36 @@
 package assetmanager_approval_record
 
 /*
-{{.Comment}}相关逻辑
-Author: {{.Author}}
-Date: {{.CreateTime}}
+{{table_info.table_comment}}相关逻辑
+Author: {{author}}
+Date: {{create_time}}
 */
 
 import (
 	"context"
 	"github.com/gogf/gf/v2/util/gconv"
-	"{{.ProjectName}}/internal/dao"
-	"{{.ProjectName}}/internal/model"
-	"{{.ProjectName}}/internal/service"
+	"{{project_name}}/internal/dao"
+	"{{project_name}}/internal/model"
+	"{{project_name}}/internal/service"
 )
 
-type s{{.JavaName}} struct {
+type s{{table_info.class_name}} struct {
 }
 
 func init() {
-	service.Register{{.JavaName}}(New())
+	service.Register{{table_info.class_name}}(New())
 }
 
-func New() *s{{.JavaName}} {
-	return &s{{.JavaName}}{}
+func New() *s{{table_info.class_name}} {
+	return &s{{table_info.class_name}}{}
 }
 
-// Add{{.JavaName}} 添加{{.Comment}}
-func (s *s{{.JavaName}}) Add{{.JavaName}}(ctx context.Context, in model.Add{{.JavaName}}Input) (*model.Add{{.JavaName}}Output, error) {
+// Add{{table_info.class_name}} 添加{{table_info.table_comment}}
+func (s *s{{table_info.class_name}}) Add{{table_info.class_name}}(ctx context.Context, in model.Add{{table_info.class_name}}Input) (*model.Add{{table_info.class_name}}Output, error) {
 
-	out := &model.Add{{.JavaName}}Output{}
+	out := &model.Add{{table_info.class_name}}Output{}
 
-	_, err := dao.{{.UpperOriginalName}}.Ctx(ctx).Data(in).Insert()
+	_, err := dao.{{table_info.original_class_name}}.Ctx(ctx).Data(in).Insert()
 	if err != nil {
 		return nil, err
 	}
@@ -38,12 +38,12 @@ func (s *s{{.JavaName}}) Add{{.JavaName}}(ctx context.Context, in model.Add{{.Ja
 	return out, nil
 }
 
-// Delete{{.JavaName}} 删除{{.Comment}}
-func (s *s{{.JavaName}}) Delete{{.JavaName}}(ctx context.Context, in model.Delete{{.JavaName}}Input) (*model.Delete{{.JavaName}}Output, error) {
+// Delete{{table_info.class_name}} 删除{{table_info.table_comment}}
+func (s *s{{table_info.class_name}}) Delete{{table_info.class_name}}(ctx context.Context, in model.Delete{{table_info.class_name}}Input) (*model.Delete{{table_info.class_name}}Output, error) {
 
-	out := &model.Delete{{.JavaName}}Output{}
+	out := &model.Delete{{table_info.class_name}}Output{}
 
-	_, err := dao.{{.UpperOriginalName}}.Ctx(ctx).WhereIn("id", in.Ids).Delete()
+	_, err := dao.{{table_info.original_class_name}}.Ctx(ctx).WhereIn("id", in.Ids).Delete()
 	if err != nil {
 		return nil, err
 	}
@@ -51,12 +51,12 @@ func (s *s{{.JavaName}}) Delete{{.JavaName}}(ctx context.Context, in model.Delet
 	return out, nil
 }
 
-// Update{{.JavaName}} 更新{{.Comment}}
-func (s *s{{.JavaName}}) Update{{.JavaName}}(ctx context.Context, in model.Update{{.JavaName}}Input) (*model.Update{{.JavaName}}Output, error) {
+// Update{{table_info.class_name}} 更新{{table_info.table_comment}}
+func (s *s{{table_info.class_name}}) Update{{table_info.class_name}}(ctx context.Context, in model.Update{{table_info.class_name}}Input) (*model.Update{{table_info.class_name}}Output, error) {
 
-	out := &model.Update{{.JavaName}}Output{}
+	out := &model.Update{{table_info.class_name}}Output{}
 
-	_, err := dao.{{.UpperOriginalName}}.Ctx(ctx).Data(in).Where("id", in.Id).Update()
+	_, err := dao.{{table_info.original_class_name}}.Ctx(ctx).Data(in).Where("id", in.Id).Update()
 	if err != nil {
 		return nil, err
 	}
@@ -64,12 +64,12 @@ func (s *s{{.JavaName}}) Update{{.JavaName}}(ctx context.Context, in model.Updat
 	return out, nil
 }
 
-// Update{{.JavaName}}Status 更新{{.Comment}}状态
-func (s *s{{.JavaName}}) Update{{.JavaName}}Status(ctx context.Context, in model.Update{{.JavaName}}StatusInput) (*model.Update{{.JavaName}}StatusOutput, error) {
+// Update{{table_info.class_name}}Status 更新{{table_info.table_comment}}状态
+func (s *s{{table_info.class_name}}) Update{{table_info.class_name}}Status(ctx context.Context, in model.Update{{table_info.class_name}}StatusInput) (*model.Update{{table_info.class_name}}StatusOutput, error) {
 
-	out := &model.Update{{.JavaName}}StatusOutput{}
+	out := &model.Update{{table_info.class_name}}StatusOutput{}
 
-	_, err := dao.{{.UpperOriginalName}}.Ctx(ctx).Data(in).Where("id", in.Ids).Update()
+	_, err := dao.{{table_info.original_class_name}}.Ctx(ctx).Data(in).Where("id", in.Ids).Update()
 	if err != nil {
 		return nil, err
 	}
@@ -77,12 +77,12 @@ func (s *s{{.JavaName}}) Update{{.JavaName}}Status(ctx context.Context, in model
 	return out, nil
 }
 
-// Record{{.JavaName}}Detail 查询{{.Comment}}详情
-func (s *s{{.JavaName}}) Query{{.JavaName}}Detail(ctx context.Context, in model.Query{{.JavaName}}DetailInput) (*model.Query{{.JavaName}}DetailOutput, error) {
+// Record{{table_info.class_name}}Detail 查询{{table_info.table_comment}}详情
+func (s *s{{table_info.class_name}}) Query{{table_info.class_name}}Detail(ctx context.Context, in model.Query{{table_info.class_name}}DetailInput) (*model.Query{{table_info.class_name}}DetailOutput, error) {
 
-	out := &model.Query{{.JavaName}}DetailOutput{}
+	out := &model.Query{{table_info.class_name}}DetailOutput{}
 
-	record, err := dao.{{.UpperOriginalName}}.Ctx(ctx).Where("id", in.Id).One()
+	record, err := dao.{{table_info.original_class_name}}.Ctx(ctx).Where("id", in.Id).One()
 	if err != nil {
 		return nil, err
 	}
@@ -95,14 +95,14 @@ func (s *s{{.JavaName}}) Query{{.JavaName}}Detail(ctx context.Context, in model.
 	return out, nil
 }
 
-// Query{{.JavaName}}List 查询{{.Comment}}
-func (s *s{{.JavaName}}) Query{{.JavaName}}List(ctx context.Context, in model.Query{{.JavaName}}ListInput) (*model.Query{{.JavaName}}ListOutput, error) {
+// Query{{table_info.class_name}}List 查询{{table_info.table_comment}}
+func (s *s{{table_info.class_name}}) Query{{table_info.class_name}}List(ctx context.Context, in model.Query{{table_info.class_name}}ListInput) (*model.Query{{table_info.class_name}}ListOutput, error) {
 
-	out := &model.Query{{.JavaName}}ListOutput{
+	out := &model.Query{{table_info.class_name}}ListOutput{
 		PageNum:  in.PageNum,
 		PageSize: in.PageSize,
 	}
-	m := dao.{{.UpperOriginalName}}.Ctx(ctx)
+	m := dao.{{table_info.original_class_name}}.Ctx(ctx)
 
 	if err := m.Page(in.PageNum, in.PageSize).Scan(&out.List); err != nil {
 		return nil, err

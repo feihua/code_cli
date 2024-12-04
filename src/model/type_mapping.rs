@@ -86,21 +86,22 @@ impl TypeMapping {
 
     pub fn go_type(db_type: &str) -> String {
         let mut map = HashMap::new();
-
-        map.insert("int", String::from("number"));
-        map.insert("tinyint", String::from("number"));
-        map.insert("smallint", String::from("number"));
-        map.insert("integer", String::from("number"));
-        map.insert("double", String::from("number"));
-        map.insert("boolean", String::from("boolean"));
-        map.insert("decimal", String::from("number"));
-        map.insert("bigint", String::from("number"));
+        map.insert("int", String::from("int32"));
+        map.insert("tinyint", String::from("int32"));
+        map.insert("smallint", String::from("int32"));
+        map.insert("mediumint", String::from("int64"));
+        map.insert("bigint", String::from("int64"));
+        map.insert("bool", String::from("bool"));
+        map.insert("enum", String::from("string"));
+        map.insert("set", String::from("string"));
         map.insert("varchar", String::from("string"));
         map.insert("char", String::from("string"));
-        map.insert("date", String::from("string"));
-        map.insert("datetime", String::from("string"));
-        map.insert("timestamp", String::from("string"));
-        map.insert("time", String::from("string"));
+        map.insert("text", String::from("string"));
+        map.insert("date", String::from("time.Time"));
+        map.insert("datetime", String::from("time.Time"));
+        map.insert("timestamp", String::from("time.Time"));
+        map.insert("time", String::from("time.Time"));
+        map.insert("decimal", String::from("float64"));
 
         match map.get(db_type) {
             Some(v) => { v.to_string() }
