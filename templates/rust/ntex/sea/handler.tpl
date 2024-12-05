@@ -6,11 +6,11 @@ use crate::AppState;
 
 use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, NotSet, PaginatorTrait, QueryFilter, QueryTrait};
 use sea_orm::ActiveValue::Set;
-use crate::model::{ {{table_info.table_name}} };
-use crate::model::prelude::{ {{table_info.original_class_name}} };
-use crate::vo::*;
-use crate::vo::{{table_info.table_name}}_vo::*;
-use crate::vo::{err_result_msg, ok_result_msg, ok_result_page};
+use crate::model::{{module_name}}::{ {{table_info.table_name}} };
+use crate::model::{{module_name}}::prelude::{ {{table_info.original_class_name}} };
+use crate::vo::{{module_name}}::*;
+use crate::vo::{{module_name}}::{{table_info.table_name}}_vo::*;
+use crate::vo::{{module_name}}::{err_result_msg, ok_result_msg, ok_result_page};
 
 
 /**

@@ -1,10 +1,10 @@
-package {{package_name}}.dao;
+package {{package_name}}.dao.{{module_name}};
 
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
-import {{package_name}}.entity.{{table_info.class_name}};
+import {{package_name}}.entity.{{module_name}}.{{table_info.class_name}};
 
 /**
  * 描述：{{table_info.table_comment}}

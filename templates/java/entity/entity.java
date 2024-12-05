@@ -1,4 +1,4 @@
-package {{package_name}}.entity;
+package {{package_name}}.entity.{{module_name}};
 
 import java.io.Serializable;
 import java.util.Date;

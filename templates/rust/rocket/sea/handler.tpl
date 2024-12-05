@@ -9,11 +9,11 @@ use sea_orm::ActiveValue::Set;
 use rocket::serde::json::serde_json::json;
 use rocket::serde::json::{Json, Value};
 use crate::utils::auth::Token;
-use crate::model::{ {{table_info.original_class_name}} };
-use crate::model::prelude::{ {{table_info.original_class_name}} };
-use crate::vo::*;
-use crate::vo::{{table_info.table_name}}_vo::*;
-use crate::vo::error_handler::ErrorResponder;
+use crate::model::{{module_name}}::{ {{table_info.original_class_name}} };
+use crate::model::{{module_name}}::prelude::{ {{table_info.original_class_name}} };
+use crate::vo::{{module_name}}::*;
+use crate::vo::{{module_name}}::{{table_info.table_name}}_vo::*;
+use crate::vo::{{module_name}}::error_handler::ErrorResponder;
 
 /**
  *添加{{table_info.table_comment}}

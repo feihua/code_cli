@@ -7,10 +7,10 @@ use sea_orm::{ColumnTrait, EntityTrait, NotSet, PaginatorTrait, QueryFilter, Que
 use sea_orm::ActiveValue::Set;
 
 use crate::AppState;
-use crate::model::{ {{table_info.table_name}} };
-use crate::model::prelude::{ {{table_info.original_class_name}} };
-use crate::vo::*;
-use crate::vo::{{table_info.table_name}}_vo::*;
+use crate::model::{{module_name}}::{ {{table_info.table_name}} };
+use crate::model::{{module_name}}::prelude::{ {{table_info.original_class_name}} };
+use crate::vo::{{module_name}}::*;
+use crate::vo::{{module_name}}::{{table_info.table_name}}_vo::*;
 
 /**
  *添加{{table_info.table_comment}}

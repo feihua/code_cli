@@ -7,9 +7,9 @@ use rbatis::plugin::page::PageRequest;
 use rbs::to_value;
 use crate::{AppState};
 
-use crate::model::{{table_info.table_name}}::{ {{table_info.class_name}} };
-use crate::vo::*;
-use crate::vo::{{table_info.table_name}}_vo::*;
+use crate::model::{{module_name}}::{{table_info.table_name}}::{ {{table_info.class_name}} };
+use crate::vo::{{module_name}}::*;
+use crate::vo::{{module_name}}::{{table_info.table_name}}_vo::*;
 
 /**
  *添加{{table_info.table_comment}}

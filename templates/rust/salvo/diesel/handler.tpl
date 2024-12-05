@@ -10,11 +10,11 @@ use salvo::{Request, Response};
 use salvo::prelude::*;
 
 use crate::{RB, schema};
-use crate::model::{{table_info.table_name}}::{{table_info.original_class_name}};
+use crate::model::{{module_name}}::{{table_info.table_name}}::{{table_info.original_class_name}};
 use crate::schema::{{table_info.table_name}}::*;
 use crate::schema::{{table_info.table_name}}::dsl::{{table_info.table_name}};
-use crate::vo::*;
-use crate::vo::{{table_info.table_name}}_vo::*;
+use crate::vo::{{module_name}}::*;
+use crate::vo::{{module_name}}::{{table_info.table_name}}_vo::*;
 
 
 /**

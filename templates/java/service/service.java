@@ -1,10 +1,10 @@
-package {{package_name}}.service;
+package {{package_name}}.service.{{module_name}};
 
 import java.util.List;
 
 import {{package_name}}.util.*;
-import {{package_name}}.vo.req.*;
-import {{package_name}}.vo.resp.*;
+import {{package_name}}.vo.req.{{module_name}}.*;
+import {{package_name}}.vo.resp.{{module_name}}.*;
 
 /**
  * 描述：{{table_info.table_comment}}

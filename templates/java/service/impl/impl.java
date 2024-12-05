@@ -1,4 +1,4 @@
-package {{package_name}}.service.impl;
+package {{package_name}}.service.{{module_name}}.impl;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -7,12 +7,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import {{package_name}}.entity.*;
+import {{package_name}}.entity.{{module_name}}.*;
 import {{package_name}}.util.*;
-import {{package_name}}.vo.req.*;
-import {{package_name}}.vo.resp.*;
-import {{package_name}}.dao.{{table_info.class_name}}Dao;
-import {{package_name}}.service.{{table_info.class_name}}Service;
+import {{package_name}}.vo.req.{{module_name}}.*;
+import {{package_name}}.vo.resp.{{module_name}}.*;
+import {{package_name}}.dao.{{module_name}}.{{table_info.class_name}}Dao;
+import {{package_name}}.service.{{module_name}}.{{table_info.class_name}}Service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 

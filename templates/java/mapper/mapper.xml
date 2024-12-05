@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="{{package_name}}.dao.{{table_info.class_name}}Dao">
+<mapper namespace="{{package_name}}.dao.{{module_name}}.{{table_info.class_name}}Dao">
 
-    <resultMap id="BaseResultMap" type="{{package_name}}.entity.{{table_info.class_name}}">
+    <resultMap id="BaseResultMap" type="{{package_name}}.entity.{{module_name}}.{{table_info.class_name}}">
         {% for column in table_info.columns %}
         <result column="{{column.column_name}}" property="{{column.java_name}}" jdbcType="{{column.jdbc_type}}"/>
         {%- endfor %}
@@ -12,7 +12,7 @@
         {{table_info.all_column_str}}
     </sql>
     <!--添加{{table_info.table_comment}}-->
-    <insert id="insert{{table_info.class_name}}" parameterType="{{package_name}}.entity.{{table_info.class_name}}">
+    <insert id="insert{{table_info.class_name}}" parameterType="{{package_name}}.entity.{{module_name}}.{{table_info.class_name}}">
         insert into {{table_info.table_name}}
         <trim prefix="(" suffix=")" suffixOverrides=",">{% for column in table_info.columns %}
             <if test="{{column.java_name}} != null">
@@ -36,7 +36,7 @@
     </delete>
 
     <!--修改{{table_info.table_comment}}-->
-    <update id="update{{table_info.class_name}}" parameterType="{{package_name}}.entity.{{table_info.class_name}}">
+    <update id="update{{table_info.class_name}}" parameterType="{{package_name}}.entity.{{module_name}}.{{table_info.class_name}}">
         update {{table_info.table_name}}
         <set>{% for column in table_info.columns %}
             <if test="{{column.java_name}} != null">
@@ -51,7 +51,7 @@
     </update>
 
     <!--修改{{table_info.table_comment}}状态-->
-    <update id="update{{table_info.class_name}}Status" parameterType="{{package_name}}.entity.{{table_info.class_name}}">
+    <update id="update{{table_info.class_name}}Status" parameterType="{{package_name}}.entity.{{module_name}}.{{table_info.class_name}}">
         update {{table_info.table_name}}
         <set>{% for column in table_info.columns %}
             <if test="{{column.java_name}} != null">
@@ -66,7 +66,7 @@
     </update>
 
     <!--查询{{table_info.table_comment}}详情-->
-    <select id="query{{table_info.class_name}}Detail" parameterType="{{package_name}}.entity.{{table_info.class_name}}" resultMap="BaseResultMap">
+    <select id="query{{table_info.class_name}}Detail" parameterType="{{package_name}}.entity.{{module_name}}.{{table_info.class_name}}" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from {{table_info.table_name}}
@@ -78,7 +78,7 @@
     </select>
 
     <!--查询{{table_info.table_comment}}列表-->
-    <select id="query{{table_info.class_name}}List" parameterType="{{package_name}}.entity.{{table_info.class_name}}" resultMap="BaseResultMap">
+    <select id="query{{table_info.class_name}}List" parameterType="{{package_name}}.entity.{{module_name}}.{{table_info.class_name}}" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from {{table_info.table_name}}

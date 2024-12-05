@@ -1,4 +1,4 @@
-package {{package_name}}.controller;
+package {{package_name}}.controller.{{module_name}};
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import {{package_name}}.util.*;
-import {{package_name}}.vo.req.*;
-import {{package_name}}.vo.resp.*;
-import {{package_name}}.service.{{table_info.class_name}}Service;
+import {{package_name}}.vo.req.{{module_name}}.*;
+import {{package_name}}.vo.resp.{{module_name}}.*;
+import {{package_name}}.service.{{module_name}}.{{table_info.class_name}}Service;
 
 /**
  * 描述：{{table_info.table_comment}}

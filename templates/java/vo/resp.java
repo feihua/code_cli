@@ -1,4 +1,4 @@
-package {{package_name}}.vo.resp;
+package {{package_name}}.vo.resp.{{module_name}};
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

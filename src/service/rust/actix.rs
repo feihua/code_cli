@@ -10,48 +10,48 @@ impl Actix {
         table_info: TableInfo,
         orm_type: &str,
         mut ctx: Context,
+        module_name: &str,
     ) {
-        let package_name = "sys";
 
         if orm_type == "sea" {
             Self::create_sea_from_tpl(
                 &mut tera,
                 table_info.table_name.as_str(),
                 &mut ctx,
-                package_name,
+                module_name,
             )
         } else if orm_type == "diesel" {
             Self::create_diesel_from_tpl(
                 &mut tera,
                 table_info.table_name.as_str(),
                 &mut ctx,
-                package_name,
+                module_name,
             )
         } else if orm_type == "rbatis" {
             Self::create_rbatis_from_tpl(
                 &mut tera,
                 table_info.table_name.as_str(),
                 &mut ctx,
-                package_name,
+                module_name,
             )
         } else {
             Self::create_sea_from_tpl(
                 &mut tera,
                 table_info.table_name.as_str(),
                 &mut ctx,
-                package_name,
+                module_name,
             );
             Self::create_diesel_from_tpl(
                 &mut tera,
                 table_info.table_name.as_str(),
                 &mut ctx,
-                package_name,
+                module_name,
             );
             Self::create_rbatis_from_tpl(
                 &mut tera,
                 table_info.table_name.as_str(),
                 &mut ctx,
-                package_name,
+                module_name,
             )
         }
     }
@@ -60,20 +60,20 @@ impl Actix {
         tera: &mut Tera,
         table_name: &str,
         mut context: &mut Context,
-        package_name: &str,
+        module_name: &str,
     ) {
         let path = String::from("rust/actix/sea/");
         write_file(
             tera.clone(),
             &mut context,
             format!("{}{}", path, "vo.tpl").as_str(),
-            format!("{}{}/vo/{}_vo.rs", path, package_name, table_name).as_str(),
+            format!("{}/vo/{}/{}_vo.rs", path, module_name, table_name).as_str(),
         );
         write_file(
             tera.clone(),
             &mut context,
             format!("{}{}", path, "handler.tpl").as_str(),
-            format!("{}{}/handler/{}_handler.rs", path, package_name, table_name).as_str(),
+            format!("{}/handler/{}/{}_handler.rs", path, module_name, table_name).as_str(),
         );
     }
 
@@ -81,20 +81,20 @@ impl Actix {
         tera: &mut Tera,
         table_name: &str,
         mut context: &mut Context,
-        package_name: &str,
+        module_name: &str,
     ) {
         let path = String::from("rust/actix/diesel/");
         write_file(
             tera.clone(),
             &mut context,
             format!("{}{}", path, "vo.tpl").as_str(),
-            format!("{}{}/vo/{}_vo.rs", path, package_name, table_name).as_str(),
+            format!("{}/vo/{}/{}_vo.rs", path, module_name, table_name).as_str(),
         );
         write_file(
             tera.clone(),
             &mut context,
             format!("{}{}", path, "handler.tpl").as_str(),
-            format!("{}{}/handler/{}_handler.rs", path, package_name, table_name).as_str(),
+            format!("{}/handler/{}/{}_handler.rs", path, module_name, table_name).as_str(),
         );
     }
 
@@ -102,26 +102,26 @@ impl Actix {
         tera: &mut Tera,
         table_name: &str,
         mut context: &mut Context,
-        package_name: &str,
+        module_name: &str,
     ) {
         let path = String::from("rust/actix/rbatis/");
         write_file(
             tera.clone(),
             &mut context,
             format!("{}{}", path, "vo.tpl").as_str(),
-            format!("{}{}/vo/{}_vo.rs", path, package_name, table_name).as_str(),
+            format!("{}/vo/{}/{}_vo.rs", path, module_name, table_name).as_str(),
         );
         write_file(
             tera.clone(),
             &mut context,
             format!("{}{}", path, "model.tpl").as_str(),
-            format!("{}{}/model/{}_model.rs", path, package_name, table_name).as_str(),
+            format!("{}/model/{}/{}_model.rs", path, module_name, table_name).as_str(),
         );
         write_file(
             tera.clone(),
             &mut context,
             format!("{}{}", path, "handler.tpl").as_str(),
-            format!("{}{}/handler/{}_handler.rs", path, package_name, table_name).as_str(),
+            format!("{}/handler/{}/{}_handler.rs", path, module_name, table_name).as_str(),
         );
     }
 }

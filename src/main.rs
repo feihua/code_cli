@@ -51,7 +51,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // 数据库链接信息
     let mut info = DbInfo::default();
-    info.host = String::from("110.41.179.89"); //数据库ip
+    info.host = String::from("110.41.179.81"); //数据库ip
     info.port = 3306; //数据库端口
     info.user_name = String::from("root"); //数据库账号
     info.password = String::from("123456"); //数据库密码
@@ -65,16 +65,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let module_name = "system";
     for x in table_info_list {
         context.insert("table_info", &x);
-        // Mybatis::generate_mybatis_curd(&mut tera, x.clone(), context.clone());
+        context.insert("module_name", module_name);
+        // Mybatis::generate_mybatis_curd(&mut tera, x.clone(), context.clone(), module_name);
         // NgZorroAntd::generate_ng_curd(&mut tera, x.clone(), context.clone());
-        // Salvo::generate_salvo_curd(&mut tera, x.clone(), orm_type, context.clone());
-        // Rocket::generate_rocket_curd(&mut tera, x.clone(), orm_type, context.clone());
-        // Ntex::generate_ntex_curd(&mut tera, x.clone(), orm_type, context.clone());
-        // Axum::generate_axum_curd(&mut tera, x.clone(), orm_type, context.clone());
-        // Actix::generate_actix_curd(&mut tera, x.clone(), orm_type, context.clone());
-        // Hertz::generate_hertz_curd(&mut tera, x.clone(), context.clone());
-        Gozero::generate_go_zero_curd(&mut tera, x.clone(), context.clone());
-        // Gf::generate_gf_curd(&mut tera, x.clone(), context.clone(), module_name);
+        Salvo::generate_salvo_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
+        Rocket::generate_rocket_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
+        Ntex::generate_ntex_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
+        Axum::generate_axum_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
+        Actix::generate_actix_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
+        // Hertz::generate_hertz_curd(&mut tera, x.clone(), context.clone(), module_name);
+        // Gozero::generate_go_zero_curd(&mut tera, x.clone(), context.clone());
+        // Gf::generate_gf_curd(&mut tera, x.clone(), context.clone()module_name);
         // ElementPlus::generate_vue_element_curd(&mut tera, x.clone(), context.clone());
         // ElementPlusState::generate_vue_element_state_curd(&mut tera, x.clone(), context.clone());
         // VueAntd::generate_vue_antd_curd(&mut tera, x.clone(), context.clone());
