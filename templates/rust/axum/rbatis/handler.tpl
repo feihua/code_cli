@@ -41,7 +41,10 @@ pub async fn add_{{table_info.table_name}}(State(state): State<Arc<AppState>>, J
 
     let result = {{table_info.class_name}}::insert(&mut rb, &{{table_info.table_name}}).await;
 
-    Json(handle_result(result))
+    match result {
+        Ok(_u) => BaseResponse::<String>::ok_result(),
+        Err(err) => BaseResponse::<String>::err_result_msg(err.to_string()),
+    }
 }
 
 /**
@@ -55,7 +58,10 @@ pub async fn delete_{{table_info.table_name}}(State(state): State<Arc<AppState>>
 
     let result = {{table_info.class_name}}::delete_in_column(&mut rb, "id", &item.ids).await;
 
-    Json(handle_result(result))
+    match result {
+        Ok(_u) => BaseResponse::<String>::ok_result(),
+        Err(err) => BaseResponse::<String>::err_result_msg(err.to_string()),
+    }
 }
 
 /**
@@ -87,7 +93,10 @@ pub async fn update_{{table_info.table_name}}(State(state): State<Arc<AppState>>
 
     let result = {{table_info.class_name}}::update_by_column(&mut rb, &{{table_info.table_name}}, "id").await;
 
-    Json(handle_result(result))
+    match result {
+        Ok(_u) => BaseResponse::<String>::ok_result(),
+        Err(err) => BaseResponse::<String>::err_result_msg(err.to_string()),
+    }
 }
 
 /**
@@ -102,7 +111,10 @@ pub async fn update_{{table_info.table_name}}_status(State(state): State<Arc<App
    let param = vec![to_value!(1), to_value!(1)];
    let result = rb.exec("update {{table_info.table_name}} set status = ? where id in ?", param).await;
 
-    Json(handle_result(result))
+    match result {
+        Ok(_u) => BaseResponse::<String>::ok_result(),
+        Err(err) => BaseResponse::<String>::err_result_msg(err.to_string()),
+    }
 }
 
 /**
@@ -134,10 +146,10 @@ pub async fn query_{{table_info.table_name}}_detail(State(state): State<Arc<AppS
             {%- endfor %}
             };
 
-            Json(ok_result_data({{table_info.table_name}}))
+            BaseResponse::<Query{{table_info.class_name}}DetailResp>::ok_result_data({{table_info.table_name}})
         }
         Err(err) => {
-            Json(ok_result_code(1, err.to_string()))
+            BaseResponse::<String>::err_result_msg(err.to_string())
         }
     }
 
@@ -177,10 +189,10 @@ pub async fn query_{{table_info.table_name}}_list(State(state): State<Arc<AppSta
                 })
             }
 
-            Json(ok_result_page({{table_info.table_name}}_list_data, total))
+            BaseResponse::ok_result_page({{table_info.table_name}}_list_data, total)
         }
         Err(err) => {
-            Json(err_result_page({{table_info.table_name}}_list_data, err.to_string()))
+            BaseResponse::err_result_page({{table_info.table_name}}_list_data, err.to_string())
         }
     }
 

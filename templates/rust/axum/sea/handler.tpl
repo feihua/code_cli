@@ -38,9 +38,12 @@ pub async fn add_{{table_info.table_name}}(State(state): State<Arc<AppState>>, J
     {%- endfor %}
     };
 
-    {{table_info.original_class_name}}::insert({{table_info.table_name}}).exec(conn).await.unwrap();
+    let result = {{table_info.original_class_name}}::insert({{table_info.table_name}}).exec(conn).await;
 
-    Json(ok_result_msg("添加{{table_info.table_comment}}成功!"))
+    match result {
+        Ok(_u) => BaseResponse::<String>::ok_result(),
+        Err(err) => BaseResponse::<String>::err_result_msg(err.to_string()),
+    }
 }
 
 /**
@@ -52,9 +55,12 @@ pub async fn delete_{{table_info.table_name}}(State(state): State<Arc<AppState>>
     log::info!("delete_{{table_info.table_name}} params: {:?}", &item);
     let conn = &state.conn;
 
-   {{table_info.original_class_name}}::delete_many().filter({{table_info.original_class_name}}::Column::Id.is_in(item.ids)).exec(conn).await.unwrap();
+   let result = {{table_info.original_class_name}}::delete_many().filter({{table_info.original_class_name}}::Column::Id.is_in(item.ids)).exec(conn).await;
 
-    Json(ok_result_msg("删除{{table_info.table_comment}}成功!"))
+    match result {
+        Ok(_u) => BaseResponse::<String>::ok_result(),
+        Err(err) => BaseResponse::<String>::err_result_msg(err.to_string()),
+    }
 }
 
 /**
@@ -86,8 +92,11 @@ pub async fn update_{{table_info.table_name}}(State(state): State<Arc<AppState>>
     {%- endfor %}
     };
 
-    {{table_info.original_class_name}}::update({{table_info.table_name}}).exec(conn).await.unwrap();
-    Json(ok_result_msg("更新{{table_info.table_comment}}成功!"))
+    let result = {{table_info.original_class_name}}::update({{table_info.table_name}}).exec(conn).await;
+    match result {
+        Ok(_u) => BaseResponse::<String>::ok_result(),
+        Err(err) => BaseResponse::<String>::err_result_msg(err.to_string()),
+    }
 }
 
 /**
@@ -104,7 +113,7 @@ pub async fn update_{{table_info.table_name}}_status(State(state): State<Arc<App
     //    .filter({{table_info.original_class_name}}::Column::Id.is_in(item.ids))
     //    .exec(&conn)
     //    .await.unwrap();
-    Json(ok_result_msg("更新{{table_info.table_comment}}状态成功!"))
+    BaseResponse::<String>::ok_result()
 }
 
 /**
@@ -136,10 +145,10 @@ pub async fn query_{{table_info.table_name}}_detail(State(state): State<Arc<AppS
               {%- endfor %}
             };
 
-            Json(ok_result_data({{table_info.table_name}}))
+            BaseResponse::<Query{{table_info.class_name}}DetailResp>::ok_result_data({{table_info.table_name}})
         }
         Err(err) => {
-            Json(err_result_msg(err.to_string()))
+            BaseResponse::<String>::err_result_msg(err.to_string())
         }
     }
 
@@ -188,7 +197,7 @@ pub async fn query_{{table_info.table_name}}_list(State(state): State<Arc<AppSta
         })
     }
 
-    Json(ok_result_page({{table_info.table_name}}_list_data, total))
+    BaseResponse::ok_result_page({{table_info.table_name}}_list_data, total)
 
 }
 
