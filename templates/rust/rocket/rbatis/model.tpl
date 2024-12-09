@@ -37,7 +37,7 @@ rbatis::crud!({{table_info.class_name}} {},"{{table_info.table_name}}");
  *author：{{author}}
  *date：{{create_time}}
  */
-impl_select!({{table_info.class_name}}{select_by_id(id:&i32) -> Option => "`where id = #{id} limit 1`"}, "{{table_info.table_name}}");
+impl_select!({{table_info.class_name}}{select_by_id(id:&i64) -> Option => "`where id = #{id} limit 1`"}, "{{table_info.table_name}}");
 
 /**
  *分页查询{{table_info.table_comment}}

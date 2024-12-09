@@ -6,7 +6,8 @@ use rbatis::plugin::page::PageRequest;
 use crate::RB;
 use crate::utils::auth::Token;
 use rbs::to_value;
-use crate::model::{{module_name}}::{{table_info.table_name}}::{ {{table_info.class_name}} };
+use crate::common::result::BaseResponse;
+use crate::model::{{module_name}}::{{table_info.table_name}}_model::{ {{table_info.class_name}} };
 use crate::RB;
 use crate::vo::{{module_name}}::*;
 use crate::vo::{{module_name}}::{{table_info.table_name}}_vo::*;
@@ -135,9 +136,9 @@ pub async fn query_{{table_info.table_name}}_detail(item: Json<Query{{table_info
                 {%- elif column.is_nullable == "YES"  %}
                 {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default()
                 {%- elif column.rust_type == "DateTime"  %}
-                {{column.rust_name}}: x.{{column.rust_name}}.0.to_string()
+                {{column.rust_name}}: x.{{column.rust_name}}.to_string()
                 {%- else %}
-                {{column.rust_name}}: {{column.rust_name}}
+                {{column.rust_name}}: x.{{column.rust_name}}
                 {%- endif %}, //{{column.column_comment}}
             {%- endfor %}
             };
@@ -178,9 +179,9 @@ pub async fn query_{{table_info.table_name}}_list(item: Json<Query{{table_info.c
                     {%- elif column.is_nullable == "YES"  %}
                     {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default()
                     {%- elif column.rust_type == "DateTime"  %}
-                    {{column.rust_name}}: x.{{column.rust_name}}.0.to_string()
+                    {{column.rust_name}}: x.{{column.rust_name}}.to_string()
                     {%- else %}
-                    {{column.rust_name}}: {{column.rust_name}}
+                    {{column.rust_name}}: x.{{column.rust_name}}
                     {%- endif %}, //{{column.column_comment}}
                 {%- endfor %}
                 })

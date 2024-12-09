@@ -9,6 +9,7 @@ use sea_orm::ActiveValue::Set;
 use rocket::serde::json::serde_json::json;
 use rocket::serde::json::{Json, Value};
 use crate::utils::auth::Token;
+use crate::common::result::BaseResponse;
 use crate::model::{{module_name}}::{ {{table_info.original_class_name}} };
 use crate::model::{{module_name}}::prelude::{ {{table_info.original_class_name}} };
 use crate::vo::{{module_name}}::*;

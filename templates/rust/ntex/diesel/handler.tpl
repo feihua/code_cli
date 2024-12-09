@@ -10,6 +10,7 @@ use log::{debug, error};
 
 use crate::{RB, schema};
 
+use crate::common::result::BaseResponse;
 use crate::model::{{module_name}}::{{table_info.table_name}}::{{table_info.original_class_name}};
 use crate::schema::{{table_info.table_name}}::*;
 use crate::schema::{{table_info.table_name}}::dsl::{{table_info.table_name}};

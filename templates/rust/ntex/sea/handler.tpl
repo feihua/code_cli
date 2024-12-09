@@ -7,6 +7,7 @@ use crate::AppState;
 use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, NotSet, PaginatorTrait, QueryFilter, QueryTrait};
 use sea_orm::ActiveValue::Set;
 use crate::model::{{module_name}}::{ {{table_info.table_name}} };
+use crate::common::result::BaseResponse;
 use crate::model::{{module_name}}::prelude::{ {{table_info.original_class_name}} };
 use crate::vo::{{module_name}}::*;
 use crate::vo::{{module_name}}::{{table_info.table_name}}_vo::*;

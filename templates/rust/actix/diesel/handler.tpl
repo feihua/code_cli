@@ -5,6 +5,7 @@ use diesel::sql_types::*;
 use log::{debug, error, info};
 
 use crate::{RB, schema};
+use crate::common::result::BaseResponse;
 use crate::model::{{module_name}}::{{table_info.table_name}}::{{table_info.original_class_name}};
 use crate::schema::{{table_info.table_name}}::*;
 use crate::schema::{{table_info.table_name}}::dsl::{{table_info.table_name}};
@@ -21,7 +22,7 @@ pub async fn add_{{table_info.table_name}}(req: web::Json<Add{{table_info.class_
     info!("add_{{table_info.table_name}} params: {:?}", &req);
     let item = req.0;
 
-    let add_{{table_info.table_name}}_param = {{table_info.original_class_name}} {
+    let add_{{table_info.table_name}}_param = Add{{table_info.original_class_name}} {
     {%- for column in table_info.columns %}
         {%- if column.column_key =="PRI"  %}
         {{column.rust_name}}: 0
@@ -81,7 +82,7 @@ pub async fn update_{{table_info.table_name}}(req: web::Json<Update{{table_info.
     info!("update_{{table_info.table_name}} params: {:?}", &req);
     let item = req.0;
 
-    let update_{{table_info.table_name}}_param = {{table_info.original_class_name}} {
+    let update_{{table_info.table_name}}_param = Update{{table_info.original_class_name}} {
     {%- for column in table_info.columns %}
         {%- if column.column_key =="PRI"  %}
         {{column.rust_name}}: 0
@@ -194,11 +195,11 @@ pub async fn query_{{table_info.table_name}}_list(item: web::Json<Query{{table_i
                     {{table_info.table_name}}_list_data.push(Query{{table_info.class_name}}ListDataResp {
                     {%- for column in table_info.columns %}
                         {%- if column.column_key =="PRI"  %}
-                        {{column.rust_name}}: x.{{column.rust_name}}.unwrap()
+                        {{column.rust_name}}: x.{{column.rust_name}}
                         {%- elif column.is_nullable =="YES" %}
                         {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default()
                         {%- elif column.rust_type =="DateTime" %}
-                        {{column.rust_name}}: x.{{column.rust_name}}.unwrap().0.to_string()
+                        {{column.rust_name}}: x.{{column.rust_name}}.to_string()
                         {%- else %}
                         {{column.rust_name}}: x.{{column.rust_name}}
                         {%- endif %}, //{{column.column_comment}}

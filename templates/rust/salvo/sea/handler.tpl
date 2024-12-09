@@ -7,6 +7,7 @@ use sea_orm::{ColumnTrait, EntityTrait, NotSet, PaginatorTrait, QueryFilter, Que
 use sea_orm::ActiveValue::Set;
 
 use crate::AppState;
+use crate::common::result::BaseResponse;
 use crate::model::{{module_name}}::{ {{table_info.table_name}} };
 use crate::model::{{module_name}}::prelude::{ {{table_info.original_class_name}} };
 use crate::vo::{{module_name}}::*;
@@ -41,8 +42,11 @@ pub async fn add_{{table_info.table_name}}(req: &mut Request, depot: &mut Depot,
     {%- endfor %}
     };
 
-    {{table_info.original_class_name}}::insert({{table_info.table_name}}).exec(conn).await.unwrap();
-    res.render(Json(ok_result_msg("添加{{table_info.table_comment}}成功!")))
+    let result = {{table_info.original_class_name}}::insert({{table_info.table_name}}).exec(conn).await;
+    match result {
+        Ok(_u) => BaseResponse::<String>::ok_result(res),
+        Err(err) => BaseResponse::<String>::err_result_msg(res, err.to_string()),
+    }
 }
 
 /**
@@ -58,8 +62,11 @@ pub async fn delete_{{table_info.table_name}}(req: &mut Request, depot: &mut Dep
     let state = depot.obtain::<AppState>().unwrap();
     let conn = &state.conn;
 
-    {{table_info.original_class_name}}::delete_many().filter({{table_info.original_class_name}}::Column::Id.is_in(item.ids)).exec(conn).await.unwrap();
-    res.render(Json(ok_result_msg("删除{{table_info.table_comment}}成功!")))
+    let result = {{table_info.original_class_name}}::delete_many().filter({{table_info.original_class_name}}::Column::Id.is_in(item.ids)).exec(conn).await;
+    match result {
+        Ok(_u) => BaseResponse::<String>::ok_result(res),
+        Err(err) => BaseResponse::<String>::err_result_msg(res, err.to_string()),
+    }
 }
 
 /**
@@ -76,7 +83,7 @@ pub async fn update_{{table_info.table_name}}(req: &mut Request, depot: &mut Dep
     let conn = &state.conn;
 
     if {{table_info.original_class_name}}::find_by_id(item.id.clone()).one(conn).await.unwrap_or_default().is_none() {
-        return res.render(Json(err_result_msg("{{table_info.table_comment}}不存在,不能更新!")));
+        return BaseResponse::<String>::err_result_msg(res, "{{table_info.table_comment}}不存在,不能更新!".to_string())
     }
 
     let {{table_info.table_name}} = {{table_info.table_name}}::ActiveModel {
@@ -95,8 +102,11 @@ pub async fn update_{{table_info.table_name}}(req: &mut Request, depot: &mut Dep
     {%- endfor %}
     };
 
-    {{table_info.original_class_name}}::update({{table_info.table_name}}).exec(conn).await.unwrap();
-    res.render(Json(ok_result_msg("更新{{table_info.table_comment}}成功!")))
+    let result = {{table_info.original_class_name}}::update({{table_info.table_name}}).exec(conn).await;
+    match result {
+        Ok(_u) => BaseResponse::<String>::ok_result(res),
+        Err(err) => BaseResponse::<String>::err_result_msg(res, err.to_string()),
+    }
 }
 
 /**
@@ -119,7 +129,7 @@ pub async fn update_{{table_info.table_name}}_status(req: &mut Request, depot: &
     //    .await.unwrap();
 
 
-    res.render(Json(ok_result_msg("更新{{table_info.table_comment}}状态成功!")))
+    BaseResponse::<String>::ok_result_msg(res, "更新{{table_info.table_comment}}状态成功!".to_string())
 }
 
 /**
@@ -148,17 +158,17 @@ pub async fn query_{{table_info.table_name}}_detail(req: &mut Request, depot: &m
                 {%- elif column.is_nullable =="YES" %}
                 {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default()
                 {%- elif column.rust_type =="DateTime" %}
-                {{column.rust_name}}: x.{{column.rust_name}}.unwrap().0.to_string()
+                {{column.rust_name}}: x.{{column.rust_name}}.to_string()
                 {%- else %}
                 {{column.rust_name}}: x.{{column.rust_name}}
                 {%- endif %}, //{{column.column_comment}}
               {%- endfor %}
             };
 
-            res.render(Json(ok_result_data({{table_info.table_name}})))
+            BaseResponse::<Query{{table_info.class_name}}DetailResp>::ok_result_data(res, {{table_info.table_name}})
         }
         Err(err) => {
-            res.render(Json(ok_result_code(1,err.to_string())))
+            BaseResponse::<String>::err_result_msg(res, err.to_string())
         }
     }
 
@@ -202,7 +212,7 @@ pub async fn query_{{table_info.table_name}}_list(req: &mut Request, depot: &mut
             {%- elif column.is_nullable =="YES" %}
             {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default()
             {%- elif column.rust_type =="DateTime" %}
-            {{column.rust_name}}: x.{{column.rust_name}}.unwrap().0.to_string()
+            {{column.rust_name}}: x.{{column.rust_name}}.to_string()
             {%- else %}
             {{column.rust_name}}: x.{{column.rust_name}}
             {%- endif %}, //{{column.column_comment}}
@@ -210,6 +220,6 @@ pub async fn query_{{table_info.table_name}}_list(req: &mut Request, depot: &mut
         })
     }
 
-    res.render(Json(ok_result_page({{table_info.table_name}}_list_data, total)))
+    BaseResponse::<Vec<{{table_info.class_name}}ListDataResp>>::ok_result_page(res, {{table_info.table_name}}_list_data, total)
 
 }

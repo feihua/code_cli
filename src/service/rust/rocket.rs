@@ -94,6 +94,12 @@ impl Rocket {
         write_file(
             tera.clone(),
             &mut context,
+            format!("{}{}", path, "model.tpl").as_str(),
+            format!("{}/model/{}/{}_model.rs", path, module_name, table_name).as_str(),
+        );
+        write_file(
+            tera.clone(),
+            &mut context,
             format!("{}{}", path, "handler.tpl").as_str(),
             format!("{}/handler/{}/{}_handler.rs", path, module_name, table_name).as_str(),
         );

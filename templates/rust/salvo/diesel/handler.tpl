@@ -10,7 +10,8 @@ use salvo::{Request, Response};
 use salvo::prelude::*;
 
 use crate::{RB, schema};
-use crate::model::{{module_name}}::{{table_info.table_name}}::{{table_info.original_class_name}};
+use crate::common::result::BaseResponse;
+use crate::model::{{module_name}}::{{table_info.table_name}}_model::{Add{{table_info.original_class_name}}, Update{{table_info.original_class_name}}, {{table_info.original_class_name}}};
 use crate::schema::{{table_info.table_name}}::*;
 use crate::schema::{{table_info.table_name}}::dsl::{{table_info.table_name}};
 use crate::vo::{{module_name}}::*;
@@ -27,34 +28,35 @@ pub async fn add_{{table_info.table_name}}(req: &mut Request, res: &mut Response
     let item = req.parse_json::<Add{{table_info.class_name}}Req>().await.unwrap();
     log::info!("add_{{table_info.table_name}} params: {:?}", &item);
 
-    let add_{{table_info.table_name}}_param = {{table_info.original_class_name}} {
+    let add_{{table_info.table_name}}_param = Add{{table_info.original_class_name}} {
     {%- for column in table_info.columns %}
         {%- if column.column_key =="PRI"  %}
-        {{column.rust_name}}: 0
-        {%- elif column.rust_name is containing("create_time") %}
+        {%- elif column.rust_name is containing("create_time") %}, //{{column.column_comment}}
         {{column.rust_name}}: Default::default()
-        {%- elif column.rust_name is containing("create_by") %}
+        {%- elif column.rust_name is containing("create_by") %}, //{{column.column_comment}}
         {{column.rust_name}}: Default::default()
-        {%- elif column.rust_name is containing("update") %}
+        {%- elif column.rust_name is containing("update") %}, //{{column.column_comment}}
         {{column.rust_name}}: Default::default()
         {%- else %}
-        {{column.rust_name}}: item.{{column.rust_name}}
-        {%- endif %}, //{{column.column_comment}}
+        {{column.rust_name}}: item.{{column.rust_name}}, //{{column.column_comment}}
+        {%- endif %}
     {%- endfor %}
 
     };
 
-    let resp = match &mut RB.clone().get() {
+    match &mut RB.clone().get() {
         Ok(conn) => {
-            handle_result(diesel::insert_into({{table_info.table_name}}::table()).values(add_{{table_info.table_name}}_param).execute(conn))
+            let result = diesel::insert_into({{table_info.table_name}}::table()).values(add_{{table_info.table_name}}_param).execute(conn);
+            match result {
+                Ok(_u) => BaseResponse::<String>::ok_result(res),
+                Err(err) => BaseResponse::<String>::err_result_msg(res, err.to_string()),
+            };
         }
         Err(err) => {
             error!("err:{}", err.to_string());
-            err_result_msg(err.to_string())
+            BaseResponse::<String>::err_result_msg(res, err.to_string())
         }
-    };
-
-    res.render(Json(resp))
+    }
 }
 
 /**
@@ -66,17 +68,19 @@ pub async fn add_{{table_info.table_name}}(req: &mut Request, res: &mut Response
 pub async fn delete_{{table_info.table_name}}(req: &mut Request, res: &mut Response) {
     let item = req.parse_json::<Delete{{table_info.class_name}}Req>().await.unwrap();
     log::info!("delete_{{table_info.table_name}} params: {:?}", &item);
-    let resp = match &mut RB.clone().get() {
+    match &mut RB.clone().get() {
         Ok(conn) => {
-            handle_result(diesel::delete({{table_info.table_name}}.filter(id.eq_any(&item.ids))).execute(conn))
+            let result = diesel::delete({{table_info.table_name}}.filter(id.eq_any(&item.ids))).execute(conn);
+            match result {
+                Ok(_u) => BaseResponse::<String>::ok_result(res),
+                Err(err) => BaseResponse::<String>::err_result_msg(res, err.to_string()),
+            };
         }
         Err(err) => {
             error!("err:{}", err.to_string());
-            err_result_msg(err.to_string())
+            BaseResponse::<String>::err_result_msg(res, err.to_string())
         }
-    };
-
-    res.render(Json(resp))
+    }
 }
 
 /**
@@ -89,33 +93,33 @@ pub async fn update_{{table_info.table_name}}(req: &mut Request, res: &mut Respo
     let item = req.parse_json::<Update{{table_info.class_name}}Req>().await.unwrap();
     log::info!("update_{{table_info.table_name}} params: {:?}", &item);
 
-    let update_{{table_info.table_name}}_param = {{table_info.original_class_name}} {
+    let update_{{table_info.table_name}}_param = Update{{table_info.original_class_name}} {
     {%- for column in table_info.columns %}
-        {%- if column.column_key =="PRI"  %}
-        {{column.rust_name}}: 0
-        {%- elif column.rust_name is containing("create") %}
+        {%- if column.rust_name is containing("create") %}, //{{column.column_comment}}
         {{column.rust_name}}: Default::default()
-        {%- elif column.rust_name is containing("update") %}
+        {%- elif column.rust_name is containing("update") %}, //{{column.column_comment}}
         {{column.rust_name}}: Default::default()
         {%- else %}
-        {{column.rust_name}}: item.{{column.rust_name}}
-        {%- endif %}, //{{column.column_comment}}
+        {{column.rust_name}}: item.{{column.rust_name}}, //{{column.column_comment}}
+        {%- endif %}
     {%- endfor %}
 
     };
 
 
-    let resp = match &mut RB.clone().get() {
+    match &mut RB.clone().get() {
         Ok(conn) => {
-            handle_result(diesel::update({{table_info.table_name}}).filter(id.eq(&item.id)).set(update_{{table_info.table_name}}_param).execute(conn))
+            let result = diesel::update({{table_info.table_name}}).filter(id.eq(&item.id)).set(update_{{table_info.table_name}}_param).execute(conn);
+            match result {
+                Ok(_u) => BaseResponse::<String>::ok_result(res),
+                Err(err) => BaseResponse::<String>::err_result_msg(res, err.to_string()),
+            };
         }
         Err(err) => {
             error!("err:{}", err.to_string());
-            err_result_msg(err.to_string())
+            BaseResponse::<String>::err_result_msg(res, err.to_string())
         }
-    };
-
-    res.render(Json(resp))
+    }
 }
 
 /**
@@ -128,17 +132,19 @@ pub async fn update_{{table_info.table_name}}_status(req: &mut Request, res: &mu
     let item = req.parse_json::<Update{{table_info.class_name}}StatusReq>().await.unwrap();
     log::info!("update_{{table_info.table_name}}_status params: {:?}", &item);
 
-    let resp = match &mut RB.clone().get() {
+    match &mut RB.clone().get() {
         Ok(conn) => {
-            handle_result(diesel::update({{table_info.table_name}}).filter(id.eq_any(&item.ids)).set(status.eq(item.status)).execute(conn))
+            let result = diesel::update({{table_info.table_name}}).filter(id.eq_any(&item.ids)).set(status.eq(item.status)).execute(conn);
+            match result {
+                Ok(_u) => BaseResponse::<String>::ok_result(res),
+                Err(err) => BaseResponse::<String>::err_result_msg(res, err.to_string()),
+            };
         }
         Err(err) => {
             error!("err:{}", err.to_string());
-            err_result_msg(err.to_string())
+            BaseResponse::<String>::err_result_msg(res, err.to_string())
         }
-    };
-
-    res.render(Json(resp))
+    }
 }
 
 /**
@@ -171,13 +177,13 @@ pub async fn query_{{table_info.table_name}}_detail(req: &mut Request, res: &mut
               {%- endfor %}
               };
 
-              res.render(Json(ok_result_data(data)))
+              BaseResponse::<Query{{table_info.class_name}}DetailResp>::ok_result_data(res, data)
            }
 
         }
         Err(err) => {
             error!("err:{}", err.to_string());
-            res.render(Json(err_result_msg(err.to_string())))
+            BaseResponse::<String>::err_result_msg(res, err.to_string())
         }
     }
 }
@@ -207,24 +213,22 @@ pub async fn query_{{table_info.table_name}}_list(req: &mut Request, res: &mut R
                 for x in list {
                     {{table_info.table_name}}_list_data.push(Query{{table_info.class_name}}ListDataResp {
                     {%- for column in table_info.columns %}
-                        {%- if column.column_key =="PRI"  %}
-                        {{column.rust_name}}: x.{{column.rust_name}}.unwrap()
-                        {%- elif column.is_nullable =="YES" %}
+                        {%- if column.is_nullable =="YES" %}
                         {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default()
                         {%- elif column.rust_type =="DateTime" %}
-                        {{column.rust_name}}: x.{{column.rust_name}}.unwrap().0.to_string()
+                        {{column.rust_name}}: x.{{column.rust_name}}.to_string()
                         {%- else %}
                         {{column.rust_name}}: x.{{column.rust_name}}
                         {%- endif %}, //{{column.column_comment}}
                       {%- endfor %}
                     })
                 }
-            res.render(Json(ok_result_page({{table_info.table_name}}_list_data, 10)))
+            BaseResponse::<Vec<Query{{table_info.class_name}}ListDataResp>>::ok_result_page(res, {{table_info.table_name}}_list_data, 10)
             }
         }
         Err(err) => {
             error!("err:{}", err.to_string());
-            res.render(Json(err_result_msg(err.to_string())))
+            BaseResponse::<String>::err_result_page(res, err.to_string())
         }
     }
 

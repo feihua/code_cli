@@ -8,7 +8,8 @@ use rbs::to_value;
 use salvo::{Request, Response};
 use salvo::prelude::*;
 
-use crate::model::{{module_name}}::{{table_info.table_name}}::{ {{table_info.class_name}} };
+use crate::common::result::BaseResponse;
+use crate::model::{{module_name}}::{{table_info.table_name}}_model::{ {{table_info.class_name}} };
 use crate::RB;
 use crate::vo::{{module_name}}::*;
 use crate::vo::{{module_name}}::{{table_info.table_name}}_vo::*;
@@ -43,7 +44,10 @@ pub async fn add_{{table_info.table_name}}(req: &mut Request, res: &mut Response
 
     let result = {{table_info.class_name}}::insert(&mut RB.clone(), &{{table_info.table_name}}).await;
 
-    res.render(Json(handle_result(result)))
+    match result {
+        Ok(_u) => BaseResponse::<String>::ok_result(res),
+        Err(err) => BaseResponse::<String>::err_result_msg(res, err.to_string()),
+    }
 }
 
 /**
@@ -58,7 +62,10 @@ pub async fn delete_{{table_info.table_name}}(req: &mut Request, res: &mut Respo
 
     let result = {{table_info.class_name}}::delete_in_column(&mut RB.clone(), "id", &item.ids).await;
 
-    res.render(Json(handle_result(result)))
+    match result {
+        Ok(_u) => BaseResponse::<String>::ok_result(res),
+        Err(err) => BaseResponse::<String>::err_result_msg(res, err.to_string()),
+    }
 }
 
 /**
@@ -92,7 +99,10 @@ pub async fn update_{{table_info.table_name}}(req: &mut Request, res: &mut Respo
 
     let result = {{table_info.class_name}}::update_by_column(&mut RB.clone(), &{{table_info.table_name}}, "id").await;
 
-    res.render(Json(handle_result(result)))
+    match result {
+        Ok(_u) => BaseResponse::<String>::ok_result(res),
+        Err(err) => BaseResponse::<String>::err_result_msg(res, err.to_string()),
+    }
 }
 
 /**
@@ -109,7 +119,10 @@ pub async fn update_{{table_info.table_name}}_status(req: &mut Request, res: &mu
     let param = vec![to_value!(1), to_value!(1)];
     let result = rb.exec("update {{table_info.table_name}} set status = ? where id in ?", param).await;
 
-    res.render(Json(handle_result(result)))
+    match result {
+        Ok(_u) => BaseResponse::<String>::ok_result(res),
+        Err(err) => BaseResponse::<String>::err_result_msg(res, err.to_string()),
+    }
 }
 
 /**
@@ -135,18 +148,18 @@ pub async fn query_{{table_info.table_name}}_detail(req: &mut Request, res: &mut
                 {%- elif column.is_nullable == "YES"  %}
                 {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default()
                 {%- elif column.rust_type == "DateTime"  %}
-                {{column.rust_name}}: x.{{column.rust_name}}.0.to_string()
+                {{column.rust_name}}: x.{{column.rust_name}}.to_string()
                 {%- else %}
-                {{column.rust_name}}: {{column.rust_name}}
+                {{column.rust_name}}: x.{{column.rust_name}}
                 {%- endif %}, //{{column.column_comment}}
             {%- endfor %}
 
             };
 
-            res.render(Json(ok_result_data({{table_info.table_name}})))
+            BaseResponse::<Query{{table_info.class_name}}DetailResp>::ok_result_data(res, {{table_info.table_name}})
         }
         Err(err) => {
-            res.render(Json(ok_result_code(1,err.to_string())))
+            BaseResponse::<String>::err_result_msg(res, err.to_string())
         }
     }
 
@@ -172,25 +185,25 @@ pub async fn query_{{table_info.table_name}}_list(req: &mut Request, res: &mut R
             let mut {{table_info.table_name}}_list_data: Vec<{{table_info.class_name}}ListDataResp> = Vec::new();
 
             for x in d.records {
-                let {{table_info.table_name}} = Query{{table_info.class_name}}ListDataResp {
+                let {{table_info.table_name}} = {{table_info.class_name}}ListDataResp {
                 {%- for column in table_info.columns %}
                     {%- if column.column_key =="PRI"  %}
                     {{column.rust_name}}: x.{{column.rust_name}}.unwrap()
                     {%- elif column.is_nullable == "YES"  %}
                     {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default()
                     {%- elif column.rust_type == "DateTime"  %}
-                    {{column.rust_name}}: x.{{column.rust_name}}.0.to_string()
+                    {{column.rust_name}}: x.{{column.rust_name}}.to_string()
                     {%- else %}
-                    {{column.rust_name}}: {{column.rust_name}}
+                    {{column.rust_name}}: x.{{column.rust_name}}
                     {%- endif %}, //{{column.column_comment}}
                 {%- endfor %}
                 };
             }
 
-            res.render(Json(ok_result_page({{table_info.table_name}}_list_data, total)))
+            BaseResponse::<Vec<{{table_info.class_name}}ListDataResp>>::ok_result_page(res, {{table_info.table_name}}_list_data, total)
         }
         Err(err) => {
-            res.render(Json(err_result_page(err.to_string())))
+            BaseResponse::<String>::err_result_msg(res, err.to_string())
         }
     }
 

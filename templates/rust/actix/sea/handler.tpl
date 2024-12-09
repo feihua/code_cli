@@ -3,6 +3,7 @@ use sea_orm::{ColumnTrait, EntityTrait, NotSet, PaginatorTrait, QueryFilter, Que
 use sea_orm::ActiveValue::Set;
 use crate::AppState;
 
+use crate::common::result::BaseResponse;
 use crate::model::{{module_name}}::{ {{table_info.table_name}} };
 use crate::model::{{module_name}}::prelude::{ {{table_info.original_class_name}} };
 use crate::vo::{{module_name}}::*;

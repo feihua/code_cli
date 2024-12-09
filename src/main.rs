@@ -51,7 +51,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // 数据库链接信息
     let mut info = DbInfo::default();
-    info.host = String::from("110.41.179.891"); //数据库ip
+    info.host = String::from("110.41.179.89"); //数据库ip
     info.port = 3306; //数据库端口
     info.user_name = String::from("root"); //数据库账号
     info.password = String::from("oMbPi5munxCsBSsiLoPV"); //数据库密码

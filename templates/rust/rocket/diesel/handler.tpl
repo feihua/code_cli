@@ -5,6 +5,7 @@ use rocket::serde::json::{Json, Value};
 use rocket::serde::json::serde_json::json;
 
 use crate::{RB, schema};
+use crate::common::result::BaseResponse;
 use crate::model::{{module_name}}::{{table_info.table_name}}::{{table_info.original_class_name}};
 use crate::schema::{{table_info.table_name}}::*;
 use crate::schema::{{table_info.table_name}}::dsl::{{table_info.table_name}};
