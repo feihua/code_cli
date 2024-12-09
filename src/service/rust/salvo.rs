@@ -5,6 +5,7 @@ use tera::{Context, Tera};
 pub struct Salvo {}
 
 impl Salvo {
+
     pub fn generate_salvo_curd(
         mut tera: &mut Tera,
         table_info: TableInfo,
@@ -12,8 +13,6 @@ impl Salvo {
         mut ctx: Context,
         module_name: &str,
     ) {
-
-
         if orm_type == "sea" {
             Self::create_sea_from_tpl(
                 &mut tera,
@@ -67,6 +66,12 @@ impl Salvo {
         write_file(
             tera.clone(),
             &mut context,
+            format!("{}{}", path, "route.tpl").as_str(),
+            format!("{}/routes/{}/{}_route.rs", path, module_name, table_name).as_str(),
+        );
+        write_file(
+            tera.clone(),
+            &mut context,
             format!("{}{}", path, "vo.tpl").as_str(),
             format!("{}/vo/{}/{}_vo.rs", path, module_name, table_name).as_str(),
         );
@@ -88,6 +93,12 @@ impl Salvo {
         write_file(
             tera.clone(),
             &mut context,
+            format!("{}{}", path, "route.tpl").as_str(),
+            format!("{}/routes/{}/{}_route.rs", path, module_name, table_name).as_str(),
+        );
+        write_file(
+            tera.clone(),
+            &mut context,
             format!("{}{}", path, "vo.tpl").as_str(),
             format!("{}/vo/{}/{}_vo.rs", path, module_name, table_name).as_str(),
         );
@@ -106,6 +117,12 @@ impl Salvo {
         module_name: &str,
     ) {
         let path = String::from("rust/salvo/rbatis/");
+        write_file(
+            tera.clone(),
+            &mut context,
+            format!("{}{}", path, "route.tpl").as_str(),
+            format!("{}/routes/{}/{}_route.rs", path, module_name, table_name).as_str(),
+        );
         write_file(
             tera.clone(),
             &mut context,

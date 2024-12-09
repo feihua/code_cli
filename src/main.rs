@@ -51,10 +51,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // 数据库链接信息
     let mut info = DbInfo::default();
-    info.host = String::from("110.41.179.81"); //数据库ip
+    info.host = String::from("110.41.179.891"); //数据库ip
     info.port = 3306; //数据库端口
     info.user_name = String::from("root"); //数据库账号
-    info.password = String::from("123456"); //数据库密码
+    info.password = String::from("oMbPi5munxCsBSsiLoPV"); //数据库密码
     info.table_db = String::from("better-pay"); //业务数据库
     info.table_name_str = String::from("sys_"); //待生成的表
     info.t_prefix = String::from("sys_"); //生成时，待去掉的表前缀
@@ -69,10 +69,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         // Mybatis::generate_mybatis_curd(&mut tera, x.clone(), context.clone(), module_name);
         // NgZorroAntd::generate_ng_curd(&mut tera, x.clone(), context.clone());
         Salvo::generate_salvo_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
-        Rocket::generate_rocket_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
-        Ntex::generate_ntex_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
-        Axum::generate_axum_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
-        Actix::generate_actix_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
+        // Rocket::generate_rocket_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
+        // Ntex::generate_ntex_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
+        // Axum::generate_axum_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
+        // Actix::generate_actix_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
         // Hertz::generate_hertz_curd(&mut tera, x.clone(), context.clone(), module_name);
         // Gozero::generate_go_zero_curd(&mut tera, x.clone(), context.clone());
         // Gf::generate_gf_curd(&mut tera, x.clone(), context.clone()module_name);
