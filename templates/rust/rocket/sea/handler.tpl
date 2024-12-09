@@ -44,9 +44,12 @@ pub async fn add_{{table_info.table_name}}(db: &State<DatabaseConnection>, item:
     {%- endfor %}
     };
 
-    {{table_info.original_class_name}}::insert({{table_info.table_name}}).exec(db).await?;
+    let result = {{table_info.original_class_name}}::insert({{table_info.table_name}}).exec(db).await?;
 
-    Ok(json!(ok_result_msg("添加{{table_info.table_comment}}成功!")))
+    match result {
+        Ok(_u) => Ok(BaseResponse::<String>::ok_result()),
+        Err(err) => Ok(BaseResponse::<String>::err_result_msg(err.to_string())),
+    }
 }
 
 /**
@@ -60,9 +63,12 @@ pub async fn delete_{{table_info.table_name}}(db: &State<DatabaseConnection>, it
     let db = db as &DatabaseConnection;
     let req = item.0;
 
-    {{table_info.original_class_name}}::delete_many().filter({{table_info.original_class_name}}::Column::Id.is_in(req.ids)).exec(db).await?;
+    let result = {{table_info.original_class_name}}::delete_many().filter({{table_info.original_class_name}}::Column::Id.is_in(req.ids)).exec(db).await?;
 
-    Ok(json!(ok_result_msg("删除{{table_info.table_comment}}成功!")))
+    match result {
+        Ok(_u) => Ok(BaseResponse::<String>::ok_result()),
+        Err(err) => Ok(BaseResponse::<String>::err_result_msg(err.to_string())),
+    }
 }
 
 /**
@@ -96,8 +102,11 @@ pub async fn update_{{table_info.table_name}}(db: &State<DatabaseConnection>, it
     {%- endfor %}
     };
 
-    {{table_info.original_class_name}}::update({{table_info.table_name}}).exec(db).await?;
-    Ok(json!(ok_result_msg("更新{{table_info.table_comment}}成功!")))
+    let result = {{table_info.original_class_name}}::update({{table_info.table_name}}).exec(db).await?;
+    match result {
+        Ok(_u) => Ok(BaseResponse::<String>::ok_result()),
+        Err(err) => Ok(BaseResponse::<String>::err_result_msg(err.to_string())),
+    }
 }
 
 /**
@@ -117,7 +126,7 @@ pub async fn update_{{table_info.table_name}}_status(db: &State<DatabaseConnecti
     //    .exec(db)
     //    .await?;
 
-    Ok(json!(ok_result_msg("更新{{table_info.table_comment}}状态成功!")))
+     BaseResponse::<String>::ok_result_msg("更新{{table_info.table_comment}}状态成功!")
 }
 
 /**
@@ -150,10 +159,10 @@ pub async fn query_{{table_info.table_name}}_detail(db: &State<DatabaseConnectio
                   {%- endfor %}
                 };
 
-                Ok(json!(ok_result_data({{table_info.table_name}})))
+                BaseResponse::<Query{{table_info.class_name}}DetailResp>::ok_result_data({{table_info.table_name}})
             }
             Err(err) => {
-                Ok(json!(ok_result_code(1,err.to_string())))
+                BaseResponse::<String>::err_result_msg(err.to_string())
             }
         }
 
@@ -203,6 +212,6 @@ pub async fn query_{{table_info.table_name}}_list(db: &State<DatabaseConnection>
         })
     }
 
-    Ok(json!(ok_result_page({{table_info.table_name}}_list_data, total)))
+     BaseResponse::<Vec<{{table_info.class_name}}ListDataResp>>::ok_result_page({{table_info.table_name}}_list_data, total)
 }
 

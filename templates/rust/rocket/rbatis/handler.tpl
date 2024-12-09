@@ -44,7 +44,10 @@ pub async fn add_{{table_info.table_name}}(item: Json<Add{{table_info.class_name
 
     let result = {{table_info.class_name}}::insert(&mut rb, &{{table_info.table_name}}).await;
 
-    json!(&handle_result(result))
+    match result {
+        Ok(_u) => BaseResponse::<String>::ok_result(),
+        Err(err) => BaseResponse::<String>::err_result_msg(err.to_string()),
+    }
 }
 
 /**
@@ -59,7 +62,10 @@ pub async fn delete_{{table_info.table_name}}(item: Json<Delete{{table_info.clas
 
     let result = {{table_info.class_name}}::delete_in_column(&mut rb, "id", &item.ids).await;
 
-    json!(&handle_result(result))
+    match result {
+        Ok(_u) => BaseResponse::<String>::ok_result(),
+        Err(err) => BaseResponse::<String>::err_result_msg(err.to_string()),
+    }
 }
 
 /**
@@ -93,7 +99,10 @@ pub async fn update_{{table_info.table_name}}(item: Json<Update{{table_info.clas
 
     let result = {{table_info.class_name}}::update_by_column(&mut rb, &{{table_info.table_name}}, "id").await;
 
-    json!(&handle_result(result))
+    match result {
+        Ok(_u) => BaseResponse::<String>::ok_result(),
+        Err(err) => BaseResponse::<String>::err_result_msg(err.to_string()),
+    }
 }
 
 /**
@@ -110,7 +119,10 @@ pub async fn update_{{table_info.table_name}}_status(item: Json<Update{{table_in
     let param = vec![to_value!(1), to_value!(1)];
     let result = rb.exec("update {{table_info.table_name}} set status = ? where id in ?", param).await;
 
-    json!(&handle_result(result))
+    match result {
+        Ok(_u) => BaseResponse::<String>::ok_result(),
+        Err(err) => BaseResponse::<String>::err_result_msg(err.to_string()),
+    }
 }
 
 /**
@@ -143,10 +155,10 @@ pub async fn query_{{table_info.table_name}}_detail(item: Json<Query{{table_info
             {%- endfor %}
             };
 
-            json!(ok_result_data({{table_info.table_name}}))
+           Ok(BaseResponse::<Query{{table_info.class_name}}DetailResp>::ok_result_data({{table_info.table_name}})))
         }
         Err(err) => {
-            json!(ok_result_code(1, err.to_string()))
+            Ok(BaseResponse::<String>::ok_result_code(1, err.to_string())))
         }
     }
 }
@@ -187,10 +199,10 @@ pub async fn query_{{table_info.table_name}}_list(item: Json<Query{{table_info.c
                 })
             }
 
-            json!(ok_result_page({{table_info.table_name}}_list_data, total))
+            Ok(ResponsePage::<Vec<{{table_info.class_name}}ListDataResp>>::ok_result_page({{table_info.table_name}}_list_data, total))
         }
         Err(err) => {
-            json!(err_result_page(err.to_string()))
+            Ok(ResponsePage::<Vec<{{table_info.class_name}}ListDataResp>>::err_result_page({{table_info.table_name}}_list_data, err.to_string()))
         }
     }
 }

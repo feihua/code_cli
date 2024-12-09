@@ -42,11 +42,15 @@ pub async fn add_{{table_info.table_name}}(req: Json<Add{{table_info.class_name}
 
     match &mut RB.clone().get() {
         Ok(conn) => {
-            json!(handle_result(diesel::insert_into({{table_info.table_name}}::table()).values(add_{{table_info.table_name}}_param).execute(conn)))
+            diesel::insert_into({{table_info.table_name}}::table()).values(add_{{table_info.table_name}}_param).execute(conn);
+            match result {
+                Ok(_u) => BaseResponse::<String>::ok_result(),
+                Err(err) => BaseResponse::<String>::err_result_msg(err.to_string()),
+            }
         }
         Err(err) => {
             error!("err:{}", err.to_string());
-            json!(err_result_msg(err.to_string()))
+            BaseResponse::<String>::err_result_msg(err.to_string())
         }
     }
 }
@@ -61,11 +65,15 @@ pub async fn delete_{{table_info.table_name}}(item: Json<Delete{{table_info.clas
     log::info!("delete_{{table_info.table_name}} params: {:?}", &item);
     match &mut RB.clone().get() {
         Ok(conn) => {
-            json!(handle_result(diesel::delete({{table_info.table_name}}.filter(id.eq_any(&item.ids))).execute(conn)))
+            let result = diesel::delete({{table_info.table_name}}.filter(id.eq_any(&item.ids))).execute(conn);
+            match result {
+                Ok(_u) => BaseResponse::<String>::ok_result(),
+                Err(err) => BaseResponse::<String>::err_result_msg(err.to_string()),
+            }
         }
         Err(err) => {
             error!("err:{}", err.to_string());
-            json!(err_result_msg(err.to_string()))
+            BaseResponse::<String>::err_result_msg(err.to_string())
         }
     }
 }
@@ -97,11 +105,15 @@ pub async fn update_{{table_info.table_name}}(req: Json<Update{{table_info.class
 
     match &mut RB.clone().get() {
         Ok(conn) => {
-            json!(handle_result(diesel::update({{table_info.table_name}}_param).filter(id.eq(&item.id)).set(update_{{table_info.table_name}}_param).execute(conn)))
+            let result = diesel::update({{table_info.table_name}}_param).filter(id.eq(&item.id)).set(update_{{table_info.table_name}}_param).execute(conn);
+            match result {
+                Ok(_u) => BaseResponse::<String>::ok_result(),
+                Err(err) => BaseResponse::<String>::err_result_msg(err.to_string()),
+            }
         }
         Err(err) => {
             error!("err:{}", err.to_string());
-            json!(err_result_msg(err.to_string()))
+            BaseResponse::<String>::err_result_msg(err.to_string())
         }
     }
 }
@@ -117,11 +129,15 @@ pub async fn update_{{table_info.table_name}}_status(item: Json<Update{{table_in
 
     match &mut RB.clone().get() {
         Ok(conn) => {
-            json!(handle_result(diesel::update({{table_info.table_name}}).filter(id.eq_any(&item.ids)).set(status.eq(item.status)).execute(conn)))
+            let result = diesel::update({{table_info.table_name}}).filter(id.eq_any(&item.ids)).set(status.eq(item.status)).execute(conn);
+            match result {
+                Ok(_u) => BaseResponse::<String>::ok_result(),
+                Err(err) => BaseResponse::<String>::err_result_msg(err.to_string()),
+            }
         }
         Err(err) => {
             error!("err:{}", err.to_string());
-            json!(err_result_msg(err.to_string()))
+             BaseResponse::<String>::err_result_msg(err.to_string())
         }
     }
 }
@@ -154,13 +170,13 @@ pub async fn query_{{table_info.table_name}}_detail(item: Json<Query{{table_info
               {%- endfor %}
               };
 
-              json!(ok_result_data(data))
+              BaseResponse::<Query{{table_info.class_name}}DetailResp>::ok_result_data(data)
             }
 
         }
         Err(err) => {
             error!("err:{}", err.to_string());
-            json!(err_result_msg(err.to_string()))
+             BaseResponse::<String>::err_result_msg(err.to_string())
         }
     }
 }
@@ -203,11 +219,11 @@ pub async fn query_{{table_info.table_name}}_list(item: Json<Query{{table_info.c
                     })
                 }
             }
-            json!(ok_result_page({{table_info.table_name}}_list_data, 10))
+            BaseResponse::<Vec<{{table_info.class_name}}ListDataResp>>::ok_result_page({{table_info.table_name}}_list_data, total)
         }
         Err(err) => {
             error!("err:{}", err.to_string());
-            json!(err_result_msg(err.to_string()))
+            BaseResponse::<String>::err_result_msg(err.to_string())
         }
     }
 }
