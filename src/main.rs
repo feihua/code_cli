@@ -68,10 +68,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         context.insert("module_name", module_name);
         // Mybatis::generate_mybatis_curd(&mut tera, x.clone(), context.clone(), module_name);
         // NgZorroAntd::generate_ng_curd(&mut tera, x.clone(), context.clone());
-        Salvo::generate_salvo_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
+        // Salvo::generate_salvo_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
         // Rocket::generate_rocket_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
         // Ntex::generate_ntex_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
-        // Axum::generate_axum_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
+        Axum::generate_axum_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
         // Actix::generate_actix_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
         // Hertz::generate_hertz_curd(&mut tera, x.clone(), context.clone(), module_name);
         // Gozero::generate_go_zero_curd(&mut tera, x.clone(), context.clone());

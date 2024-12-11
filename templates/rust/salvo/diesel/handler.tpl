@@ -161,7 +161,7 @@ pub async fn query_{{table_info.table_name}}_detail(req: &mut Request, res: &mut
     match &mut RB.clone().get() {
         Ok(conn) => {
             let {{table_info.table_name}}_sql = sql_query("SELECT * FROM {{table_info.table_name}} WHERE id = ?");
-            let result = {{table_info.table_name}}_sql.bind::<Bigint, _>(&item.id).get_result(conn);
+            let result = {{table_info.table_name}}_sql.bind::<Bigint, _>(&item.id).get_result<{{table_info.original_class_name}}>(conn);
             if let Ok(x) = result {
               let data  =Query{{table_info.class_name}}DetailResp {
                {%- for column in table_info.columns %}
@@ -170,7 +170,7 @@ pub async fn query_{{table_info.table_name}}_detail(req: &mut Request, res: &mut
                 {%- elif column.is_nullable =="YES" %}
                 {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default()
                 {%- elif column.rust_type =="DateTime" %}
-                {{column.rust_name}}: x.{{column.rust_name}}.unwrap().0.to_string()
+                {{column.rust_name}}: x.{{column.rust_name}}.to_string()
                 {%- else %}
                 {{column.rust_name}}: x.{{column.rust_name}}
                 {%- endif %}, //{{column.column_comment}}

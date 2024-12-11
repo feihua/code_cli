@@ -11,7 +11,6 @@ use crate::model::{{module_name}}::{ {{table_info.table_name}} };
 use crate::model::{{module_name}}::prelude::{ {{table_info.original_class_name}} };
 use crate::vo::{{module_name}}::*;
 use crate::vo::{{module_name}}::{{table_info.table_name}}_vo::*;
-use crate::vo::{{module_name}}::{err_result_msg, ok_result_msg, ok_result_page};
 
 /**
  *添加{{table_info.table_comment}}
@@ -73,7 +72,7 @@ pub async fn update_{{table_info.table_name}}(State(state): State<Arc<AppState>>
     let conn = &state.conn;
 
     if {{table_info.original_class_name}}::find_by_id(item.id.clone()).one(conn).await.unwrap_or_default().is_none() {
-        return Json(err_result_msg("{{table_info.table_comment}}不存在,不能更新!"))
+        return BaseResponse::<String>::err_result_msg("{{table_info.table_comment}}不存在,不能更新!".to_string())
     }
 
     let {{table_info.table_name}} = {{table_info.table_name}}::ActiveModel {
@@ -138,7 +137,7 @@ pub async fn query_{{table_info.table_name}}_detail(State(state): State<Arc<AppS
                 {%- elif column.is_nullable =="YES" %}
                 {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default()
                 {%- elif column.rust_type =="DateTime" %}
-                {{column.rust_name}}: x.{{column.rust_name}}.unwrap().0.to_string()
+                {{column.rust_name}}: x.{{column.rust_name}}.to_string()
                 {%- else %}
                 {{column.rust_name}}: x.{{column.rust_name}}
                 {%- endif %}, //{{column.column_comment}}
@@ -189,7 +188,7 @@ pub async fn query_{{table_info.table_name}}_list(State(state): State<Arc<AppSta
             {%- elif column.is_nullable =="YES" %}
             {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default()
             {%- elif column.rust_type =="DateTime" %}
-            {{column.rust_name}}: x.{{column.rust_name}}.unwrap().0.to_string()
+            {{column.rust_name}}: x.{{column.rust_name}}.to_string()
             {%- else %}
             {{column.rust_name}}: x.{{column.rust_name}}
             {%- endif %}, //{{column.column_comment}}
