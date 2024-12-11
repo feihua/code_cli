@@ -56,8 +56,8 @@ pub struct Update{{table_info.class_name}}Req {
 /**
 更新{{table_info.table_comment}}状态请求参数
 */
-#[serde(crate = "rocket::serde")]
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(crate = "rocket::serde")]
 pub struct Update{{table_info.class_name}}StatusReq {
     pub ids: Vec<i64>,
     pub status: i8,

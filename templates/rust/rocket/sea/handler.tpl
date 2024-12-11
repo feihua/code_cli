@@ -8,13 +8,13 @@ use sea_orm::ActiveValue::Set;
 
 use rocket::serde::json::serde_json::json;
 use rocket::serde::json::{Json, Value};
-use crate::utils::auth::Token;
+use crate::common::error_handler::ErrorResponder;
+use crate::middleware::auth::Token;
 use crate::common::result::BaseResponse;
-use crate::model::{{module_name}}::{ {{table_info.original_class_name}} };
+use crate::model::{{module_name}}::{ {{table_info.table_name}} };
 use crate::model::{{module_name}}::prelude::{ {{table_info.original_class_name}} };
 use crate::vo::{{module_name}}::*;
 use crate::vo::{{module_name}}::{{table_info.table_name}}_vo::*;
-use crate::vo::{{module_name}}::error_handler::ErrorResponder;
 
 /**
  *添加{{table_info.table_comment}}
@@ -44,7 +44,7 @@ pub async fn add_{{table_info.table_name}}(db: &State<DatabaseConnection>, item:
     {%- endfor %}
     };
 
-    let result = {{table_info.original_class_name}}::insert({{table_info.table_name}}).exec(db).await?;
+    let result = {{table_info.original_class_name}}::insert({{table_info.table_name}}).exec(db).await;
 
     match result {
         Ok(_u) => Ok(BaseResponse::<String>::ok_result()),
@@ -63,7 +63,7 @@ pub async fn delete_{{table_info.table_name}}(db: &State<DatabaseConnection>, it
     let db = db as &DatabaseConnection;
     let req = item.0;
 
-    let result = {{table_info.original_class_name}}::delete_many().filter({{table_info.original_class_name}}::Column::Id.is_in(req.ids)).exec(db).await?;
+    let result = {{table_info.original_class_name}}::delete_many().filter({{table_info.original_class_name}}::Column::Id.is_in(req.ids)).exec(db).await;
 
     match result {
         Ok(_u) => Ok(BaseResponse::<String>::ok_result()),
@@ -83,7 +83,7 @@ pub async fn update_{{table_info.table_name}}(db: &State<DatabaseConnection>, it
     let req = item.0;
 
     if {{table_info.original_class_name}}::find_by_id(item.id.clone()).one(db).await?.is_none() {
-        return Ok(json!(err_result_msg("{{table_info.table_comment}}不存在,不能更新!")));
+        return Ok(BaseResponse::<String>::err_result_msg("{{table_info.table_comment}}不存在,不能更新!".to_string()));
     }
 
     let {{table_info.table_name}} = {{table_info.table_name}}::ActiveModel {
@@ -102,7 +102,7 @@ pub async fn update_{{table_info.table_name}}(db: &State<DatabaseConnection>, it
     {%- endfor %}
     };
 
-    let result = {{table_info.original_class_name}}::update({{table_info.table_name}}).exec(db).await?;
+    let result = {{table_info.original_class_name}}::update({{table_info.table_name}}).exec(db).await;
     match result {
         Ok(_u) => Ok(BaseResponse::<String>::ok_result()),
         Err(err) => Ok(BaseResponse::<String>::err_result_msg(err.to_string())),
@@ -124,9 +124,9 @@ pub async fn update_{{table_info.table_name}}_status(db: &State<DatabaseConnecti
     //    .col_expr({{table_info.original_class_name}}::Column::Status, Expr::value(item.status))
     //    .filter({{table_info.original_class_name}}::Column::Id.is_in(item.ids))
     //    .exec(db)
-    //    .await?;
+    //    .await;
 
-     BaseResponse::<String>::ok_result_msg("更新{{table_info.table_comment}}状态成功!")
+     Ok(BaseResponse::<String>::ok_result_msg("更新{{table_info.table_comment}}状态成功!".to_string()))
 }
 
 /**
@@ -139,7 +139,7 @@ pub async fn query_{{table_info.table_name}}_detail(db: &State<DatabaseConnectio
     log::info!("query_{{table_info.table_name}}_detail params: {:?}", &item);
     let db = db as &DatabaseConnection;
 
-    let result = {{table_info.original_class_name}}::find_by_id(item.id.clone()).one(db).await?;
+    let result = {{table_info.original_class_name}}::find_by_id(item.id.clone()).one(db).await;
 
         match result {
             Ok(d) => {
@@ -147,22 +147,20 @@ pub async fn query_{{table_info.table_name}}_detail(db: &State<DatabaseConnectio
 
                 let {{table_info.table_name}} = Query{{table_info.class_name}}DetailResp {
                    {%- for column in table_info.columns %}
-                    {%- if column.column_key =="PRI"  %}
-                    {{column.rust_name}}: x.{{column.rust_name}}.unwrap()
-                    {%- elif column.is_nullable =="YES" %}
-                    {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default()
+                    {%- if column.is_nullable =="YES" %}
+                    {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default(), //{{column.column_comment}}
                     {%- elif column.rust_type =="DateTime" %}
-                    {{column.rust_name}}: x.{{column.rust_name}}.unwrap().0.to_string()
+                    {{column.rust_name}}: x.{{column.rust_name}}.to_string(), //{{column.column_comment}}
                     {%- else %}
-                    {{column.rust_name}}: x.{{column.rust_name}}
-                    {%- endif %}, //{{column.column_comment}}
+                    {{column.rust_name}}: x.{{column.rust_name}}, //{{column.column_comment}}
+                    {%- endif %}
                   {%- endfor %}
                 };
 
-                BaseResponse::<Query{{table_info.class_name}}DetailResp>::ok_result_data({{table_info.table_name}})
+                Ok(BaseResponse::<Query{{table_info.class_name}}DetailResp>::ok_result_data({{table_info.table_name}}))
             }
             Err(err) => {
-                BaseResponse::<String>::err_result_msg(err.to_string())
+                Ok(BaseResponse::<String>::err_result_msg(err.to_string()))
             }
         }
 
@@ -190,24 +188,22 @@ pub async fn query_{{table_info.table_name}}_list(db: &State<DatabaseConnection>
         //.apply_if(item.{{column.rust_name}}.clone(), |query, v| { query.filter( {{table_info.class_name}}::Column::{{column.rust_name}}.eq(v))})
         {%- endif %}
       {%- endfor %}
-        .paginate(conn, item.page_size.clone());
+        .paginate(db, item.page_size.clone());
 
     let total = paginator.num_items().await.unwrap_or_default();
 
     let mut {{table_info.table_name}}_list_data: Vec<{{table_info.class_name}}ListDataResp> = Vec::new();
 
-    for x in paginator.fetch_page(item.page_no.clone() - 1).await? {
+    for x in paginator.fetch_page(item.page_no.clone() - 1).await {
         {{table_info.table_name}}_list_data.push({{table_info.class_name}}ListDataResp {
             {%- for column in table_info.columns %}
-            {%- if column.column_key =="PRI"  %}
-            {{column.rust_name}}: x.{{column.rust_name}}.unwrap()
-            {%- elif column.is_nullable =="YES" %}
-            {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default()
+            {%- if column.is_nullable =="YES" %}
+            {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default(), //{{column.column_comment}}
             {%- elif column.rust_type =="DateTime" %}
-            {{column.rust_name}}: x.{{column.rust_name}}.unwrap().0.to_string()
+            {{column.rust_name}}: x.{{column.rust_name}}.to_string(), //{{column.column_comment}}
             {%- else %}
-            {{column.rust_name}}: x.{{column.rust_name}}
-            {%- endif %}, //{{column.column_comment}}
+            {{column.rust_name}}: x.{{column.rust_name}}, //{{column.column_comment}}
+            {%- endif %}
           {%- endfor %}
         })
     }

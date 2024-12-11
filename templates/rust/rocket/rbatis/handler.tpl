@@ -4,11 +4,10 @@ use rbatis::rbdc::datetime::DateTime;
 use rbatis::plugin::page::PageRequest;
 
 use crate::RB;
-use crate::utils::auth::Token;
+use crate::middleware::auth::Token;
 use rbs::to_value;
 use crate::common::result::BaseResponse;
 use crate::model::{{module_name}}::{{table_info.table_name}}_model::{ {{table_info.class_name}} };
-use crate::RB;
 use crate::vo::{{module_name}}::*;
 use crate::vo::{{module_name}}::{{table_info.table_name}}_vo::*;
 
@@ -82,7 +81,7 @@ pub async fn update_{{table_info.table_name}}(item: Json<Update{{table_info.clas
     let {{table_info.table_name}} = {{table_info.class_name}} {
     {%- for column in table_info.columns %}
         {%- if column.column_key =="PRI"  %}
-        {{column.rust_name}}: Some(item.{{column.rust_name}})
+        {{column.rust_name}}: Some(req.{{column.rust_name}})
         {%- elif column.rust_name is containing("create_time") %}
         {{column.rust_name}}: None
         {%- elif column.rust_name is containing("create_by") %}
@@ -155,10 +154,10 @@ pub async fn query_{{table_info.table_name}}_detail(item: Json<Query{{table_info
             {%- endfor %}
             };
 
-           Ok(BaseResponse::<Query{{table_info.class_name}}DetailResp>::ok_result_data({{table_info.table_name}})))
+           BaseResponse::<Query{{table_info.class_name}}DetailResp>::ok_result_data({{table_info.table_name}})
         }
         Err(err) => {
-            Ok(BaseResponse::<String>::ok_result_code(1, err.to_string())))
+            BaseResponse::<String>::ok_result_code(1, err.to_string())
         }
     }
 }
@@ -177,14 +176,13 @@ pub async fn query_{{table_info.table_name}}_list(item: Json<Query{{table_info.c
     let page = &PageRequest::new(item.page_no.clone(), item.page_size.clone());
     let result = {{table_info.class_name}}::select_page(&mut rb, page).await;
 
+    let mut {{table_info.table_name}}_list_data: Vec<{{table_info.class_name}}ListDataResp> = Vec::new();
     match result {
         Ok(d) => {
             let total = d.total;
 
-            let mut {{table_info.table_name}}_list_data: Vec<{{table_info.class_name}}ListDataResp> = Vec::new();
-
             for x in d.records {
-                let {{table_info.table_name}} = Query{{table_info.class_name}}ListDataResp {
+                let {{table_info.table_name}} = {{table_info.class_name}}ListDataResp {
                 {%- for column in table_info.columns %}
                     {%- if column.column_key =="PRI"  %}
                     {{column.rust_name}}: x.{{column.rust_name}}.unwrap()
@@ -196,13 +194,14 @@ pub async fn query_{{table_info.table_name}}_list(item: Json<Query{{table_info.c
                     {{column.rust_name}}: x.{{column.rust_name}}
                     {%- endif %}, //{{column.column_comment}}
                 {%- endfor %}
-                })
+                };
+                {{table_info.table_name}}_list_data.push({{table_info.table_name}})
             }
 
-            Ok(ResponsePage::<Vec<{{table_info.class_name}}ListDataResp>>::ok_result_page({{table_info.table_name}}_list_data, total))
+            BaseResponse::<Vec<{{table_info.class_name}}ListDataResp>>::ok_result_page({{table_info.table_name}}_list_data, total)
         }
         Err(err) => {
-            Ok(ResponsePage::<Vec<{{table_info.class_name}}ListDataResp>>::err_result_page({{table_info.table_name}}_list_data, err.to_string()))
+            BaseResponse::<Vec<{{table_info.class_name}}ListDataResp>>::err_result_page({{table_info.table_name}}_list_data, err.to_string())
         }
     }
 }
