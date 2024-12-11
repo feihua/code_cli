@@ -11,7 +11,7 @@ use log::{debug, error};
 use crate::{RB, schema};
 
 use crate::common::result::BaseResponse;
-use crate::model::{{module_name}}::{{table_info.table_name}}::{{table_info.original_class_name}};
+use crate::model::{{module_name}}::{{table_info.table_name}}_model::*;
 use crate::schema::{{table_info.table_name}}::*;
 use crate::schema::{{table_info.table_name}}::dsl::{{table_info.table_name}};
 use crate::vo::{{module_name}}::*;
@@ -29,19 +29,18 @@ pub async fn add_{{table_info.table_name}}(item: Json<Add{{table_info.class_name
 
     let req = item.0;
 
-    let add_{{table_info.table_name}}_param = {{table_info.original_class_name}} {
+    let add_{{table_info.table_name}}_param = Add{{table_info.original_class_name}} {
     {%- for column in table_info.columns %}
         {%- if column.column_key =="PRI"  %}
-        {{column.rust_name}}: 0
-        {%- elif column.rust_name is containing("create_time") %}
+        {%- elif column.rust_name is containing("create_time") %}, //{{column.column_comment}}
         {{column.rust_name}}: Default::default()
-        {%- elif column.rust_name is containing("create_by") %}
+        {%- elif column.rust_name is containing("create_by") %}, //{{column.column_comment}}
         {{column.rust_name}}: Default::default()
-        {%- elif column.rust_name is containing("update") %}
+        {%- elif column.rust_name is containing("update") %}, //{{column.column_comment}}
         {{column.rust_name}}: Default::default()
         {%- else %}
-        {{column.rust_name}}: item.{{column.rust_name}}
-        {%- endif %}, //{{column.column_comment}}
+        {{column.rust_name}}: req.{{column.rust_name}}, //{{column.column_comment}}
+        {%- endif %}
     {%- endfor %}
 
     };
@@ -100,17 +99,15 @@ pub async fn update_{{table_info.table_name}}(item: Json<Update{{table_info.clas
 
     let req = item.0;
 
-    let update_{{table_info.table_name}}_param = {{table_info.original_class_name}} {
+    let update_{{table_info.table_name}}_param = Update{{table_info.original_class_name}} {
     {%- for column in table_info.columns %}
-        {%- if column.column_key =="PRI"  %}
-        {{column.rust_name}}: 0
-        {%- elif column.rust_name is containing("create") %}
+        {%- if column.rust_name is containing("create") %}, //{{column.column_comment}}
         {{column.rust_name}}: Default::default()
-        {%- elif column.rust_name is containing("update") %}
+        {%- elif column.rust_name is containing("update") %}, //{{column.column_comment}}
         {{column.rust_name}}: Default::default()
         {%- else %}
-        {{column.rust_name}}: item.{{column.rust_name}}
-        {%- endif %}, //{{column.column_comment}}
+        {{column.rust_name}}: req.{{column.rust_name}}, //{{column.column_comment}}
+        {%- endif %}
     {%- endfor %}
 
     };
@@ -170,19 +167,17 @@ pub async fn query_{{table_info.table_name}}_detail(item: Json<Query{{table_info
     match &mut RB.clone().get() {
         Ok(conn) => {
             let {{table_info.table_name}}_sql = sql_query("SELECT * FROM {{table_info.table_name}} WHERE id = ?");
-            let result = {{table_info.table_name}}_sql.bind::<Bigint, _>(&req.id).get_result(conn);
+            let result = {{table_info.table_name}}_sql.bind::<Bigint, _>(&req.id).get_result::<{{table_info.original_class_name}}>(conn);
             if let Ok(x) = result {
               let data  =Query{{table_info.class_name}}DetailResp {
                {%- for column in table_info.columns %}
-                {%- if column.column_key =="PRI"  %}
-                {{column.rust_name}}: x.{{column.rust_name}}.unwrap()
-                {%- elif column.is_nullable =="YES" %}
-                {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default()
+                {%- if column.is_nullable =="YES" %}
+                {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default(), //{{column.column_comment}}
                 {%- elif column.rust_type =="DateTime" %}
-                {{column.rust_name}}: x.{{column.rust_name}}.unwrap().0.to_string()
+                {{column.rust_name}}: x.{{column.rust_name}}.to_string(), //{{column.column_comment}}
                 {%- else %}
-                {{column.rust_name}}: x.{{column.rust_name}}
-                {%- endif %}, //{{column.column_comment}}
+                {{column.rust_name}}: x.{{column.rust_name}}, //{{column.column_comment}}
+                {%- endif %}
               {%- endfor %}
               };
 
@@ -217,24 +212,23 @@ pub async fn query_{{table_info.table_name}}_list(item: Json<Query{{table_info.c
 
     match &mut RB.clone().get() {
         Ok(conn) => {
-            let mut {{table_info.table_name}}_list_data: Vec<Query{{table_info.class_name}}ListDataResp> = Vec::new();
+            let mut {{table_info.table_name}}_list_data: Vec<{{table_info.class_name}}ListDataResp> = Vec::new();
             if let Ok(list) = query.load::<{{table_info.original_class_name}}>(conn) {
                 for x in list {
-                    {{table_info.table_name}}_list_data.push(Query{{table_info.class_name}}ListDataResp {
+                    {{table_info.table_name}}_list_data.push({{table_info.class_name}}ListDataResp {
                     {%- for column in table_info.columns %}
-                        {%- if column.column_key =="PRI"  %}
-                        {{column.rust_name}}: x.{{column.rust_name}}.unwrap()
-                        {%- elif column.is_nullable =="YES" %}
-                        {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default()
+                        {%- if column.is_nullable =="YES" %}
+                        {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default(), //{{column.column_comment}}
                         {%- elif column.rust_type =="DateTime" %}
-                        {{column.rust_name}}: x.{{column.rust_name}}.unwrap().0.to_string()
+                        {{column.rust_name}}: x.{{column.rust_name}}.to_string(), //{{column.column_comment}}
                         {%- else %}
-                        {{column.rust_name}}: x.{{column.rust_name}}
-                        {%- endif %}, //{{column.column_comment}}
+                        {{column.rust_name}}: x.{{column.rust_name}}, //{{column.column_comment}}
+                        {%- endif %}
                       {%- endfor %}
                     })
                 }
             }
+            let total = 0;
             BaseResponse::<Vec<{{table_info.class_name}}ListDataResp>>::ok_result_page({{table_info.table_name}}_list_data, total)
         }
         Err(err) => {

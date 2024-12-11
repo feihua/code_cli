@@ -11,7 +11,7 @@ use salvo::prelude::*;
 
 use crate::{RB, schema};
 use crate::common::result::BaseResponse;
-use crate::model::{{module_name}}::{{table_info.table_name}}_model::{Add{{table_info.original_class_name}}, Update{{table_info.original_class_name}}, {{table_info.original_class_name}}};
+use crate::model::{{module_name}}::{{table_info.table_name}}_model::*;
 use crate::schema::{{table_info.table_name}}::*;
 use crate::schema::{{table_info.table_name}}::dsl::{{table_info.table_name}};
 use crate::vo::{{module_name}}::*;

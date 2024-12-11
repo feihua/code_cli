@@ -11,7 +11,6 @@ use crate::common::result::BaseResponse;
 use crate::model::{{module_name}}::prelude::{ {{table_info.original_class_name}} };
 use crate::vo::{{module_name}}::*;
 use crate::vo::{{module_name}}::{{table_info.table_name}}_vo::*;
-use crate::vo::{{module_name}}::{err_result_msg, ok_result_msg, ok_result_page};
 
 
 /**
@@ -83,7 +82,7 @@ pub async fn update_{{table_info.table_name}}(item: Json<Update{{table_info.clas
     let req = item.0;
 
     if {{table_info.original_class_name}}::find_by_id(item.id.clone()).one(conn).await.unwrap_or_default().is_none() {
-        return Ok(HttpResponse::Ok().json(&err_result_msg("{{table_info.table_comment}}不存在,不能更新!")))
+        return Ok(BaseResponse::<String>::err_result_msg("{{table_info.table_comment}}不存在,不能更新!".to_string()))
     }
 
     let {{table_info.table_name}} = {{table_info.table_name}}::ActiveModel {
@@ -127,7 +126,7 @@ pub async fn update_{{table_info.table_name}}_status(item: Json<Update{{table_in
     //    .exec(&conn)
     //    .await.unwrap();
 
-     BaseResponse::<String>::ok_result_msg("更新{{table_info.table_comment}}状态成功!")
+     BaseResponse::<String>::ok_result_msg("更新{{table_info.table_comment}}状态成功!".to_string())
 }
 
 /**
@@ -140,7 +139,7 @@ pub async fn query_{{table_info.table_name}}_detail(item: Json<Query{{table_info
     info!("query_{{table_info.table_name}}_detail params: {:?}", &item);
     let conn = &data.conn;
 
-   let result = {{table_info.original_class_name}}::find_by_id(item.id.clone()).one(conn).await.unwrap_or_default();
+   let result = {{table_info.original_class_name}}::find_by_id(item.id.clone()).one(conn).await;
 
    match result {
        Ok(d) => {
@@ -148,12 +147,10 @@ pub async fn query_{{table_info.table_name}}_detail(item: Json<Query{{table_info
 
             let {{table_info.table_name}} = Query{{table_info.class_name}}DetailResp {
                {%- for column in table_info.columns %}
-                {%- if column.column_key =="PRI"  %}
-                {{column.rust_name}}: x.{{column.rust_name}}.unwrap()
-                {%- elif column.is_nullable =="YES" %}
+                {%- if column.is_nullable =="YES" %}
                 {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default()
                 {%- elif column.rust_type =="DateTime" %}
-                {{column.rust_name}}: x.{{column.rust_name}}.unwrap().0.to_string()
+                {{column.rust_name}}: x.{{column.rust_name}}.to_string()
                 {%- else %}
                 {{column.rust_name}}: x.{{column.rust_name}}
                 {%- endif %}, //{{column.column_comment}}
@@ -199,12 +196,10 @@ pub async fn query_{{table_info.table_name}}_list(item: Json<Query{{table_info.c
     for x in paginator.fetch_page(item.page_no.clone() - 1).await.unwrap_or_default() {
         {{table_info.table_name}}_list_data.push({{table_info.class_name}}ListDataResp {
             {%- for column in table_info.columns %}
-            {%- if column.column_key =="PRI"  %}
-            {{column.rust_name}}: x.{{column.rust_name}}.unwrap()
-            {%- elif column.is_nullable =="YES" %}
+            {%- if column.is_nullable =="YES" %}
             {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default()
             {%- elif column.rust_type =="DateTime" %}
-            {{column.rust_name}}: x.{{column.rust_name}}.unwrap().0.to_string()
+            {{column.rust_name}}: x.{{column.rust_name}}.to_string()
             {%- else %}
             {{column.rust_name}}: x.{{column.rust_name}}
             {%- endif %}, //{{column.column_comment}}

@@ -82,7 +82,7 @@ pub async fn update_{{table_info.table_name}}(item: Json<Update{{table_info.clas
     let {{table_info.table_name}} = {{table_info.class_name}} {
     {%- for column in table_info.columns %}
         {%- if column.column_key =="PRI"  %}
-        {{column.rust_name}}: Some(item.{{column.rust_name}})
+        {{column.rust_name}}: Some(req.{{column.rust_name}})
         {%- elif column.rust_name is containing("create_time") %}
         {{column.rust_name}}: None
         {%- elif column.rust_name is containing("create_by") %}
@@ -92,7 +92,7 @@ pub async fn update_{{table_info.table_name}}(item: Json<Update{{table_info.clas
         {%- elif column.rust_name is containing("update_by") %}
         {{column.rust_name}}: String::from("")
         {%- else %}
-        {{column.rust_name}}: item.{{column.rust_name}}
+        {{column.rust_name}}: req.{{column.rust_name}}
         {%- endif %}, //{{column.column_comment}}
     {%- endfor %}
     };
@@ -156,10 +156,10 @@ pub async fn query_{{table_info.table_name}}_detail(item: Json<Query{{table_info
 
             };
 
-           Ok(BaseResponse::<Query{{table_info.class_name}}DetailResp>::ok_result_data({{table_info.table_name}})))
+           Ok(BaseResponse::<Query{{table_info.class_name}}DetailResp>::ok_result_data({{table_info.table_name}}))
         }
         Err(err) => {
-            Ok(BaseResponse::<String>::ok_result_code(1, err.to_string())))
+            Ok(BaseResponse::<String>::ok_result_code(1, err.to_string()))
         }
     }
 }
@@ -199,10 +199,10 @@ pub async fn query_{{table_info.table_name}}_list(item: Json<Query{{table_info.c
                 })
             }
 
-            Ok(ResponsePage::<Vec<{{table_info.class_name}}ListDataResp>>::ok_result_page({{table_info.table_name}}_list_data, total))
+            Ok(BaseResponse::<Vec<{{table_info.class_name}}ListDataResp>>::ok_result_page({{table_info.table_name}}_list_data, total))
         }
         Err(err) => {
-            Ok(ResponsePage::<Vec<{{table_info.class_name}}ListDataResp>>::err_result_page({{table_info.table_name}}_list_data, err.to_string()))
+            Ok(BaseResponse::<Vec<{{table_info.class_name}}ListDataResp>>::err_result_page({{table_info.table_name}}_list_data, err.to_string()))
         }
     }
 }

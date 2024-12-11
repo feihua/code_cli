@@ -8,7 +8,7 @@ use log::{debug, error};
 use crate::{RB, schema};
 
 use crate::common::result::BaseResponse;
-use crate::model::{{module_name}}::{{table_info.table_name}}_model::{{table_info.original_class_name}};
+use crate::model::{{module_name}}::{{table_info.table_name}}_model::*;
 use crate::schema::{{table_info.table_name}}::*;
 use crate::schema::{{table_info.table_name}}::dsl::{{table_info.table_name}};
 use crate::vo::{{module_name}}::*;
@@ -23,10 +23,9 @@ use crate::vo::{{module_name}}::{{table_info.table_name}}_vo::*;
 pub async fn add_{{table_info.table_name}}(Json(req): Json<Add{{table_info.class_name}}Req>) -> impl IntoResponse {
     log::info!("add_{{table_info.table_name}} params: {:?}", &req);
 
-    let add_{{table_info.table_name}}_param = {{table_info.original_class_name}} {
+    let add_{{table_info.table_name}}_param = Add{{table_info.original_class_name}} {
     {%- for column in table_info.columns %}
         {%- if column.column_key =="PRI"  %}
-        {{column.rust_name}}: 0
         {%- elif column.rust_name is containing("create_time") %}
         {{column.rust_name}}: Default::default()
         {%- elif column.rust_name is containing("create_by") %}
@@ -85,11 +84,9 @@ pub async fn delete_{{table_info.table_name}}(Json(req): Json<Delete{{table_info
 pub async fn update_{{table_info.table_name}}(Json(req): Json<Update{{table_info.class_name}}Req>) -> impl IntoResponse {
     log::info!("update_{{table_info.table_name}} params: {:?}", &req);
 
-    let update_{{table_info.table_name}}_param = {{table_info.original_class_name}} {
+    let update_{{table_info.table_name}}_param = Update{{table_info.original_class_name}} {
     {%- for column in table_info.columns %}
-        {%- if column.column_key =="PRI"  %}
-        {{column.rust_name}}: 0
-        {%- elif column.rust_name is containing("create") %}
+        {%- if column.rust_name is containing("create") %}
         {{column.rust_name}}: Default::default()
         {%- elif column.rust_name is containing("update") %}
         {{column.rust_name}}: Default::default()
