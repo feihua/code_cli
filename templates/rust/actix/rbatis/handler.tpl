@@ -182,7 +182,7 @@ pub async fn query_{{table_info.table_name}}_list(item: web::Json<Query{{table_i
             let total = d.total;
 
             for x in d.records {
-                let {{table_info.table_name}} = Query{{table_info.class_name}}ListDataResp {
+                let {{table_info.table_name}} = {{table_info.class_name}}ListDataResp {
                 {%- for column in table_info.columns %}
                     {%- if column.column_key =="PRI"  %}
                     {{column.rust_name}}: x.{{column.rust_name}}.unwrap()
@@ -194,13 +194,14 @@ pub async fn query_{{table_info.table_name}}_list(item: web::Json<Query{{table_i
                     {{column.rust_name}}: x.{{column.rust_name}}
                     {%- endif %}, //{{column.column_comment}}
                 {%- endfor %}
-                })
+                };
+                {{table_info.table_name}}_list_data.push({{table_info.table_name}});
             }
 
             BaseResponse::<Vec<{{table_info.class_name}}ListDataResp>>::ok_result_page({{table_info.table_name}}_list_data, total)
         }
         Err(err) => {
-             BaseResponse::<Vec<{{table_info.class_name}}ListDataResp>>::err_result_page({table_info.table_name}}_list_data, err.to_string()),
+             BaseResponse::<Vec<{{table_info.class_name}}ListDataResp>>::err_result_page({{table_info.table_name}}_list_data, err.to_string())
         }
     }
 

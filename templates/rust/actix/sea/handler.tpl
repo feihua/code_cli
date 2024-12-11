@@ -8,7 +8,6 @@ use crate::model::{{module_name}}::{ {{table_info.table_name}} };
 use crate::model::{{module_name}}::prelude::{ {{table_info.original_class_name}} };
 use crate::vo::{{module_name}}::*;
 use crate::vo::{{module_name}}::{{table_info.table_name}}_vo::*;
-use crate::vo::{{module_name}}::{err_result_msg, ok_result_msg, ok_result_page};
 /**
  *添加{{table_info.table_comment}}
  *author：{{author}}
@@ -76,7 +75,7 @@ pub async fn update_{{table_info.table_name}}(item: web::Json<Update{{table_info
     let req = item.0;
 
     if {{table_info.original_class_name}}::find_by_id(item.id.clone()).one(conn).await.unwrap_or_default().is_none() {
-        return Ok(web::Json(err_result_msg("{{table_info.table_comment}}不存在,不能更新!")))
+        return BaseResponse::<String>::ok_result_msg("{{table_info.table_comment}}不存在,不能更新!".to_string())
     }
 
     let {{table_info.table_name}} = {{table_info.table_name}}::ActiveModel {
@@ -120,7 +119,7 @@ pub async fn update_{{table_info.table_name}}_status(item: web::Json<Update{{tab
     //    .exec(&conn)
     //    .await.unwrap();
 
-    BaseResponse::<String>::ok_result_msg("更新{{table_info.table_comment}}状态成功!")
+    BaseResponse::<String>::ok_result_msg("更新{{table_info.table_comment}}状态成功!".to_string())
 }
 
 /**
@@ -141,15 +140,13 @@ pub async fn query_{{table_info.table_name}}_detail(item: web::Json<Query{{table
 
             let {{table_info.table_name}} = Query{{table_info.class_name}}DetailResp {
                {%- for column in table_info.columns %}
-                {%- if column.column_key =="PRI"  %}
-                {{column.rust_name}}: x.{{column.rust_name}}.unwrap()
-                {%- elif column.is_nullable =="YES" %}
-                {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default()
+                {%- if column.is_nullable =="YES" %}
+                {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default(), //{{column.column_comment}}
                 {%- elif column.rust_type =="DateTime" %}
-                {{column.rust_name}}: x.{{column.rust_name}}.unwrap().0.to_string()
+                {{column.rust_name}}: x.{{column.rust_name}}.to_string(), //{{column.column_comment}}
                 {%- else %}
-                {{column.rust_name}}: x.{{column.rust_name}}
-                {%- endif %}, //{{column.column_comment}}
+                {{column.rust_name}}: x.{{column.rust_name}}, //{{column.column_comment}}
+                {%- endif %}
               {%- endfor %}
             };
 
@@ -193,15 +190,13 @@ pub async fn query_{{table_info.table_name}}_list(item: web::Json<Query{{table_i
     for x in paginator.fetch_page(item.page_no.clone() - 1).await.unwrap_or_default() {
         {{table_info.table_name}}_list_data.push({{table_info.class_name}}ListDataResp {
             {%- for column in table_info.columns %}
-            {%- if column.column_key =="PRI"  %}
-            {{column.rust_name}}: x.{{column.rust_name}}.unwrap()
-            {%- elif column.is_nullable =="YES" %}
-            {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default()
+            {%- if column.is_nullable =="YES" %}
+            {{column.rust_name}}: x.{{column.rust_name}}.unwrap_or_default(), //{{column.column_comment}}
             {%- elif column.rust_type =="DateTime" %}
-            {{column.rust_name}}: x.{{column.rust_name}}.unwrap().0.to_string()
+            {{column.rust_name}}: x.{{column.rust_name}}.to_string(), //{{column.column_comment}}
             {%- else %}
-            {{column.rust_name}}: x.{{column.rust_name}}
-            {%- endif %}, //{{column.column_comment}}
+            {{column.rust_name}}: x.{{column.rust_name}}, //{{column.column_comment}}
+            {%- endif %}
           {%- endfor %}
         })
     }

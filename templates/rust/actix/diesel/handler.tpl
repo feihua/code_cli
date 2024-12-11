@@ -6,7 +6,7 @@ use log::{debug, error, info};
 
 use crate::{RB, schema};
 use crate::common::result::BaseResponse;
-use crate::model::{{module_name}}::{{table_info.table_name}}::{{table_info.original_class_name}};
+use crate::model::{{module_name}}::{{table_info.table_name}}_model::*;
 use crate::schema::{{table_info.table_name}}::*;
 use crate::schema::{{table_info.table_name}}::dsl::{{table_info.table_name}};
 use crate::vo::{{module_name}}::*;
@@ -25,16 +25,15 @@ pub async fn add_{{table_info.table_name}}(req: web::Json<Add{{table_info.class_
     let add_{{table_info.table_name}}_param = Add{{table_info.original_class_name}} {
     {%- for column in table_info.columns %}
         {%- if column.column_key =="PRI"  %}
-        {{column.rust_name}}: 0
-        {%- elif column.rust_name is containing("create_time") %}
+        {%- elif column.rust_name is containing("create_time") %}, //{{column.column_comment}}
         {{column.rust_name}}: Default::default()
-        {%- elif column.rust_name is containing("create_by") %}
+        {%- elif column.rust_name is containing("create_by") %}, //{{column.column_comment}}
         {{column.rust_name}}: Default::default()
-        {%- elif column.rust_name is containing("update") %}
+        {%- elif column.rust_name is containing("update") %}, //{{column.column_comment}}
         {{column.rust_name}}: Default::default()
         {%- else %}
-        {{column.rust_name}}: item.{{column.rust_name}}
-        {%- endif %}, //{{column.column_comment}}
+        {{column.rust_name}}: item.{{column.rust_name}}, //{{column.column_comment}}
+        {%- endif %}
     {%- endfor %}
     };
 
@@ -88,9 +87,7 @@ pub async fn update_{{table_info.table_name}}(req: web::Json<Update{{table_info.
 
     let update_{{table_info.table_name}}_param = Update{{table_info.original_class_name}} {
     {%- for column in table_info.columns %}
-        {%- if column.column_key =="PRI"  %}
-        {{column.rust_name}}: 0
-        {%- elif column.rust_name is containing("create") %}
+        {%- if column.rust_name is containing("create") %}
         {{column.rust_name}}: Default::default()
         {%- elif column.rust_name is containing("update") %}
         {{column.rust_name}}: Default::default()
@@ -195,12 +192,12 @@ pub async fn query_{{table_info.table_name}}_list(item: web::Json<Query{{table_i
 
     debug!("SQL:{}", diesel::debug_query::<diesel::mysql::Mysql, _>(&query).to_string());
 
-    let mut {{table_info.table_name}}_list_data: Vec<Query{{table_info.class_name}}ListDataResp> = Vec::new();
+    let mut {{table_info.table_name}}_list_data: Vec<{{table_info.class_name}}ListDataResp> = Vec::new();
     match &mut RB.clone().get() {
         Ok(conn) => {
             if let Ok(list) = query.load::<{{table_info.original_class_name}}>(conn) {
                 for x in list {
-                    {{table_info.table_name}}_list_data.push(Query{{table_info.class_name}}ListDataResp {
+                    {{table_info.table_name}}_list_data.push({{table_info.class_name}}ListDataResp {
                     {%- for column in table_info.columns %}
                         {%- if column.column_key =="PRI"  %}
                         {{column.rust_name}}: x.{{column.rust_name}}
@@ -215,11 +212,12 @@ pub async fn query_{{table_info.table_name}}_list(item: web::Json<Query{{table_i
                     })
                 }
             }
+            let total = 0;
             BaseResponse::<Vec<{{table_info.class_name}}ListDataResp>>::ok_result_page({{table_info.table_name}}_list_data, total)
         }
         Err(err) => {
             error!("err:{}", err.to_string());
-            BaseResponse::<Vec<{{table_info.class_name}}ListDataResp>>::err_result_page({table_info.table_name}}_list_data, err.to_string()),
+            BaseResponse::<Vec<{{table_info.class_name}}ListDataResp>>::err_result_page({{table_info.table_name}}_list_data, err.to_string()),
         }
     }
 }
