@@ -366,14 +366,11 @@ dependencies = [
  "chrono",
  "clap",
  "clap_derive",
- "heck 0.5.0",
- "json",
- "mysql",
- "rust-embed",
- "serde",
- "serde_json",
+ "model",
+ "service",
  "tera",
  "tokio",
+ "util",
 ]
 
 [[package]]
@@ -997,12 +994,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "json"
-version = "0.12.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "078e285eafdfb6c4b434e0d31e8cfcb5115b651496faca5749b88fafd4f23bfd"
-
-[[package]]
 name = "lazy_static"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1130,6 +1121,13 @@ dependencies = [
  "log",
  "wasi 0.11.0+wasi-snapshot-preview1",
  "windows-sys 0.42.0",
+]
+
+[[package]]
+name = "model"
+version = "0.1.0"
+dependencies = [
+ "serde",
 ]
 
 [[package]]
@@ -1891,6 +1889,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "service"
+version = "0.1.0"
+dependencies = [
+ "model",
+ "tera",
+ "util",
+]
+
+[[package]]
 name = "sha1"
 version = "0.10.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2324,6 +2331,18 @@ dependencies = [
  "form_urlencoded",
  "idna",
  "percent-encoding",
+]
+
+[[package]]
+name = "util"
+version = "0.1.0"
+dependencies = [
+ "heck 0.5.0",
+ "model",
+ "mysql",
+ "rust-embed",
+ "serde",
+ "tera",
 ]
 
 [[package]]

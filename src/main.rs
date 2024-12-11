@@ -1,32 +1,23 @@
-pub mod model;
-mod service;
-pub mod util;
-
-use crate::model::db_info::DbInfo;
-use crate::service::go::hertz::Hertz;
-use crate::service::go::zero::Gozero;
-use crate::service::java::mybatis::Mybatis;
-use crate::service::rust::actix::Actix;
-use crate::service::rust::axum::Axum;
-use crate::service::rust::ntex::Ntex;
-use crate::service::rust::rocket::Rocket;
-use crate::service::rust::salvo::Salvo;
-use crate::service::web::angular::ng_zorro_antd::NgZorroAntd;
-use crate::service::web::react::antd::ReactAntd;
-use crate::service::web::react::antd_state::ReactAntdState;
-use crate::service::web::react::pro::ReactAntdPro;
-use crate::service::web::vue::antd::VueAntd;
-use crate::service::web::vue::element_plus::ElementPlus;
-use crate::service::web::vue::element_plus_state::ElementPlusState;
-use crate::util::db_util::DbUtil;
 use chrono::Local;
-use rust_embed::Embed;
+use ::model::db_info::DbInfo;
+use ::service::rust::rocket::Rocket;
 use tera::{Context, Tera};
-use crate::service::go::gf::Gf;
-
-#[derive(Embed)]
-#[folder = "templates/"]
-struct Asset;
+use ::util::db_util::DbUtil;
+use service::go::gf::Gf;
+use service::go::hertz::Hertz;
+use service::go::zero::Gozero;
+use service::java::mybatis::Mybatis;
+use service::rust::actix::Actix;
+use service::rust::axum::Axum;
+use service::rust::ntex::Ntex;
+use service::rust::salvo::Salvo;
+use service::web::angular::ng_zorro_antd::NgZorroAntd;
+use service::web::react::antd::ReactAntd;
+use service::web::react::antd_state::ReactAntdState;
+use service::web::react::pro::ReactAntdPro;
+use service::web::vue::antd::VueAntd;
+use service::web::vue::element_plus::ElementPlus;
+use service::web::vue::element_plus_state::ElementPlusState;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     // 模板引擎
@@ -51,7 +42,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // 数据库链接信息
     let mut info = DbInfo::default();
-    info.host = String::from("110.41.179.89"); //数据库ip
+    info.host = String::from("110.41.179.81"); //数据库ip
     info.port = 3306; //数据库端口
     info.user_name = String::from("root"); //数据库账号
     info.password = String::from("oMbPi5munxCsBSsiLoPV"); //数据库密码
@@ -66,22 +57,22 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     for x in table_info_list {
         context.insert("table_info", &x);
         context.insert("module_name", module_name);
-        // Mybatis::generate_mybatis_curd(&mut tera, x.clone(), context.clone(), module_name);
-        // NgZorroAntd::generate_ng_curd(&mut tera, x.clone(), context.clone());
-        // Salvo::generate_salvo_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
+        Mybatis::generate_mybatis_curd(&mut tera, x.clone(), context.clone(), module_name);
+        NgZorroAntd::generate_ng_curd(&mut tera, x.clone(), context.clone());
+        Salvo::generate_salvo_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
         Rocket::generate_rocket_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
-        // Ntex::generate_ntex_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
-        // Axum::generate_axum_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
-        // Actix::generate_actix_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
-        // Hertz::generate_hertz_curd(&mut tera, x.clone(), context.clone(), module_name);
-        // Gozero::generate_go_zero_curd(&mut tera, x.clone(), context.clone());
-        // Gf::generate_gf_curd(&mut tera, x.clone(), context.clone()module_name);
-        // ElementPlus::generate_vue_element_curd(&mut tera, x.clone(), context.clone());
-        // ElementPlusState::generate_vue_element_state_curd(&mut tera, x.clone(), context.clone());
-        // VueAntd::generate_vue_antd_curd(&mut tera, x.clone(), context.clone());
-        // ReactAntd::generate_react_antd_curd(&mut tera, x.clone(), context.clone());
-        // ReactAntdState::generate_react_antd_state_curd(&mut tera, x.clone(), context.clone());
-        // ReactAntdPro::generate_react_antd_pro(&mut tera, x, context.clone());
+        Ntex::generate_ntex_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
+        Axum::generate_axum_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
+        Actix::generate_actix_curd(&mut tera, x.clone(), orm_type, context.clone(), module_name);
+        Hertz::generate_hertz_curd(&mut tera, x.clone(), context.clone(), module_name);
+        Gozero::generate_go_zero_curd(&mut tera, x.clone(), context.clone());
+        Gf::generate_gf_curd(&mut tera, x.clone(), context.clone(), module_name);
+        ElementPlus::generate_vue_element_curd(&mut tera, x.clone(), context.clone());
+        ElementPlusState::generate_vue_element_state_curd(&mut tera, x.clone(), context.clone());
+        VueAntd::generate_vue_antd_curd(&mut tera, x.clone(), context.clone());
+        ReactAntd::generate_react_antd_curd(&mut tera, x.clone(), context.clone());
+        ReactAntdState::generate_react_antd_state_curd(&mut tera, x.clone(), context.clone());
+        ReactAntdPro::generate_react_antd_pro(&mut tera, x, context.clone());
     }
 
     Ok(())
