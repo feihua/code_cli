@@ -18,3 +18,9 @@ util = { path = "./util", version = "0.1.0" }
 model = { path = "./model", version = "0.1.0" }
 [workspace]
 members = ["model", 'service', "util"]
+
+[profile.release]
+opt-level = "z"
+panic = "abort"
+lto = true
+codegen-units = 1
