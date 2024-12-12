@@ -19,7 +19,7 @@ use crate::vo::{{module_name}}::{{table_info.table_name}}_vo::*;
  */
 #[post("/add_{{table_info.table_name}}")]
 pub async fn add_{{table_info.table_name}}(req: web::Json<Add{{table_info.class_name}}Req>) -> Result<impl Responder> {
-    info!("add_{{table_info.table_name}} params: {:?}", &req);
+    info!("add {{table_info.table_name}} params: {:?}", &req);
     let item = req.0;
 
     let add_{{table_info.table_name}}_param = Add{{table_info.original_class_name}} {
@@ -59,7 +59,7 @@ pub async fn add_{{table_info.table_name}}(req: web::Json<Add{{table_info.class_
  */
 #[post("/delete_{{table_info.table_name}}")]
 pub async fn delete_{{table_info.table_name}}(item: web::Json<Delete{{table_info.class_name}}Req>) -> Result<impl Responder> {
-    info!("delete_{{table_info.table_name}} params: {:?}", &item);
+    info!("delete {{table_info.table_name}} params: {:?}", &item);
     match &mut RB.clone().get() {
         Ok(conn) => {
             let result = diesel::delete({{table_info.table_name}}.filter(id.eq_any(&item.ids))).execute(conn);
@@ -82,7 +82,7 @@ pub async fn delete_{{table_info.table_name}}(item: web::Json<Delete{{table_info
  */
 #[post("/update_{{table_info.table_name}}")]
 pub async fn update_{{table_info.table_name}}(req: web::Json<Update{{table_info.class_name}}Req>) -> Result<impl Responder> {
-    info!("update_{{table_info.table_name}} params: {:?}", &req);
+    info!("update {{table_info.table_name}} params: {:?}", &req);
     let item = req.0;
 
     let update_{{table_info.table_name}}_param = Update{{table_info.original_class_name}} {
@@ -120,7 +120,7 @@ pub async fn update_{{table_info.table_name}}(req: web::Json<Update{{table_info.
  */
 #[post("/update_{{table_info.table_name}}_status")]
 pub async fn update_{{table_info.table_name}}_status(item: web::Json<Update{{table_info.class_name}}StatusReq>) -> Result<impl Responder> {
-    info!("update_{{table_info.table_name}}_status params: {:?}", &item);
+    info!("update {{table_info.table_name}}_status params: {:?}", &item);
 
     match &mut RB.clone().get() {
         Ok(conn) => {
@@ -144,7 +144,7 @@ pub async fn update_{{table_info.table_name}}_status(item: web::Json<Update{{tab
  */
 #[post("/query_{{table_info.table_name}}_detail")]
 pub async fn query_{{table_info.table_name}}_detail(item: web::Json<Query{{table_info.class_name}}DetailReq>) -> Result<impl Responder> {
-    info!("query_{{table_info.table_name}}_detail params: {:?}", &item);
+    info!("query {{table_info.table_name}}_detail params: {:?}", &item);
 
     match &mut RB.clone().get() {
         Ok(conn) => {
@@ -182,7 +182,7 @@ pub async fn query_{{table_info.table_name}}_detail(item: web::Json<Query{{table
  */
 #[post("/query_{{table_info.table_name}}_list")]
 pub async fn query_{{table_info.table_name}}_list(item: web::Json<Query{{table_info.class_name}}ListReq>) -> Result<impl Responder> {
-    info!("query_{{table_info.table_name}}_list params: {:?}", &item);
+    info!("query {{table_info.table_name}}_list params: {:?}", &item);
 
     let mut query = {{table_info.table_name}}::table().into_boxed();
 

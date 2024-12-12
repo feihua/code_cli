@@ -21,7 +21,7 @@ use crate::vo::{{module_name}}::{{table_info.table_name}}_vo::*;
  *date：{{create_time}}
  */
 pub async fn add_{{table_info.table_name}}(Json(req): Json<Add{{table_info.class_name}}Req>) -> impl IntoResponse {
-    log::info!("add_{{table_info.table_name}} params: {:?}", &req);
+    log::info!("add {{table_info.table_name}} params: {:?}", &req);
 
     let add_{{table_info.table_name}}_param = Add{{table_info.original_class_name}} {
     {%- for column in table_info.columns %}
@@ -60,7 +60,7 @@ pub async fn add_{{table_info.table_name}}(Json(req): Json<Add{{table_info.class
  *date：{{create_time}}
  */
 pub async fn delete_{{table_info.table_name}}(Json(req): Json<Delete{{table_info.class_name}}Req>) -> impl IntoResponse {
-    log::info!("delete_{{table_info.table_name}} params: {:?}", &req);
+    log::info!("delete {{table_info.table_name}} params: {:?}", &req);
     match &mut RB.clone().get() {
         Ok(conn) => {
             let result = diesel::delete({{table_info.table_name}}).filter(id.eq_any(&req.ids)).execute(conn);
@@ -82,7 +82,7 @@ pub async fn delete_{{table_info.table_name}}(Json(req): Json<Delete{{table_info
  *date：{{create_time}}
  */
 pub async fn update_{{table_info.table_name}}(Json(req): Json<Update{{table_info.class_name}}Req>) -> impl IntoResponse {
-    log::info!("update_{{table_info.table_name}} params: {:?}", &req);
+    log::info!("update {{table_info.table_name}} params: {:?}", &req);
 
     let update_{{table_info.table_name}}_param = Update{{table_info.original_class_name}} {
     {%- for column in table_info.columns %}
@@ -118,7 +118,7 @@ pub async fn update_{{table_info.table_name}}(Json(req): Json<Update{{table_info
  *date：{{create_time}}
  */
 pub async fn update_{{table_info.table_name}}_status(Json(req): Json<Update{{table_info.class_name}}StatusReq>) -> impl IntoResponse {
-    log::info!("update_{{table_info.table_name}}_status params: {:?}", &req);
+    log::info!("update {{table_info.table_name}}_status params: {:?}", &req);
 
     match &mut RB.clone().get() {
         Ok(conn) => {
@@ -141,7 +141,7 @@ pub async fn update_{{table_info.table_name}}_status(Json(req): Json<Update{{tab
  *date：{{create_time}}
  */
 pub async fn query_{{table_info.table_name}}_detail(Json(req): Json<Query{{table_info.class_name}}DetailReq>) -> Result<impl IntoResponse, impl IntoResponse> {
-    log::info!("query_{{table_info.table_name}}_detail params: {:?}", &req);
+    log::info!("query {{table_info.table_name}}_detail params: {:?}", &req);
 
     match &mut RB.clone().get() {
         Ok(conn) => {
@@ -181,7 +181,7 @@ pub async fn query_{{table_info.table_name}}_detail(Json(req): Json<Query{{table
  *date：{{create_time}}
  */
 pub async fn query_{{table_info.table_name}}_list(Json(req): Json<Query{{table_info.class_name}}ListReq>) -> impl IntoResponse {
-    log::info!("query_{{table_info.table_name}}_list params: {:?}", &req);
+    log::info!("query {{table_info.table_name}}_list params: {:?}", &req);
     let mut query = {{table_info.table_name}}::table().into_boxed();
 
     //if let Some(i) = &req.status {

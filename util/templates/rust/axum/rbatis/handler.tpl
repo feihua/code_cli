@@ -18,7 +18,7 @@ use crate::vo::{{module_name}}::{{table_info.table_name}}_vo::*;
  *date：{{create_time}}
  */
 pub async fn add_{{table_info.table_name}}(State(state): State<Arc<AppState>>, Json(item): Json<Add{{table_info.class_name}}Req>) -> impl IntoResponse {
-    log::info!("add_{{table_info.table_name}} params: {:?}", &item);
+    log::info!("add {{table_info.table_name}} params: {:?}", &item);
     let mut rb = &state.batis;
 
     let {{table_info.table_name}} = {{table_info.class_name}} {
@@ -29,9 +29,9 @@ pub async fn add_{{table_info.table_name}}(State(state): State<Arc<AppState>>, J
         {{column.rust_name}}: None
         {%- elif column.rust_name is containing("create_by") %}
         {{column.rust_name}}: String::from("")
-        {%- elif column.rust_name is containing("update_time") %}
+        {%- elif column.rust_name is containing("update time") %}
         {{column.rust_name}}: None
-        {%- elif column.rust_name is containing("update_by") %}
+        {%- elif column.rust_name is containing("update by") %}
         {{column.rust_name}}: String::from("")
         {%- else %}
         {{column.rust_name}}: item.{{column.rust_name}}
@@ -53,7 +53,7 @@ pub async fn add_{{table_info.table_name}}(State(state): State<Arc<AppState>>, J
  *date：{{create_time}}
  */
 pub async fn delete_{{table_info.table_name}}(State(state): State<Arc<AppState>>, Json(item): Json<Delete{{table_info.class_name}}Req>) -> impl IntoResponse {
-    log::info!("delete_{{table_info.table_name}} params: {:?}", &item);
+    log::info!("delete {{table_info.table_name}} params: {:?}", &item);
     let mut rb = &state.batis;
 
     let result = {{table_info.class_name}}::delete_in_column(&mut rb, "id", &item.ids).await;
@@ -70,7 +70,7 @@ pub async fn delete_{{table_info.table_name}}(State(state): State<Arc<AppState>>
  *date：{{create_time}}
  */
 pub async fn update_{{table_info.table_name}}(State(state): State<Arc<AppState>>, Json(item): Json<Update{{table_info.class_name}}Req>) -> impl IntoResponse {
-    log::info!("update_{{table_info.table_name}} params: {:?}", &item);
+    log::info!("update {{table_info.table_name}} params: {:?}", &item);
     let mut rb = &state.batis;
 
     let {{table_info.table_name}} = {{table_info.class_name}} {
@@ -81,9 +81,9 @@ pub async fn update_{{table_info.table_name}}(State(state): State<Arc<AppState>>
         {{column.rust_name}}: None
         {%- elif column.rust_name is containing("create_by") %}
         {{column.rust_name}}: String::from("")
-        {%- elif column.rust_name is containing("update_time") %}
+        {%- elif column.rust_name is containing("update time") %}
         {{column.rust_name}}: None
-        {%- elif column.rust_name is containing("update_by") %}
+        {%- elif column.rust_name is containing("update by") %}
         {{column.rust_name}}: String::from("")
         {%- else %}
         {{column.rust_name}}: item.{{column.rust_name}}
@@ -105,7 +105,7 @@ pub async fn update_{{table_info.table_name}}(State(state): State<Arc<AppState>>
  *date：{{create_time}}
  */
 pub async fn update_{{table_info.table_name}}_status(State(state): State<Arc<AppState>>, Json(item): Json<Update{{table_info.class_name}}StatusReq>) -> impl IntoResponse {
-    log::info!("update_{{table_info.table_name}}_status params: {:?}", &item);
+    log::info!("update {{table_info.table_name}}_status params: {:?}", &item);
     let mut rb = &state.batis;
 
    let param = vec![to_value!(1), to_value!(1)];
@@ -123,7 +123,7 @@ pub async fn update_{{table_info.table_name}}_status(State(state): State<Arc<App
  *date：{{create_time}}
  */
 pub async fn query_{{table_info.table_name}}_detail(State(state): State<Arc<AppState>>, Json(item): Json<Query{{table_info.class_name}}DetailReq>) -> impl IntoResponse {
-    log::info!("query_{{table_info.table_name}}_detail params: {:?}", &item);
+    log::info!("query {{table_info.table_name}}_detail params: {:?}", &item);
     let mut rb = &state.batis;
 
      let result = {{table_info.class_name}}::select_by_id(&mut rb, &item.id).await;
@@ -162,7 +162,7 @@ pub async fn query_{{table_info.table_name}}_detail(State(state): State<Arc<AppS
  *date：{{create_time}}
  */
 pub async fn query_{{table_info.table_name}}_list(State(state): State<Arc<AppState>>, Json(item): Json<Query{{table_info.class_name}}ListReq>) -> impl IntoResponse {
-    log::info!("query_{{table_info.table_name}}_list params: {:?}", &item);
+    log::info!("query {{table_info.table_name}}_list params: {:?}", &item);
     let mut rb = &state.batis;
 
     let page=&PageRequest::new(item.page_no, item.page_size);

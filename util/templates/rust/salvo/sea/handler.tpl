@@ -21,7 +21,7 @@ use crate::vo::{{module_name}}::{{table_info.table_name}}_vo::*;
 #[handler]
 pub async fn add_{{table_info.table_name}}(req: &mut Request, depot: &mut Depot, res: &mut Response) {
     let item = req.parse_json::<Add{{table_info.class_name}}Req>().await.unwrap();
-    log::info!("add_{{table_info.table_name}} params: {:?}", &item);
+    log::info!("add {{table_info.table_name}} params: {:?}", &item);
 
     let state = depot.obtain::<AppState>().unwrap();
     let conn = &state.conn;
@@ -57,7 +57,7 @@ pub async fn add_{{table_info.table_name}}(req: &mut Request, depot: &mut Depot,
 #[handler]
 pub async fn delete_{{table_info.table_name}}(req: &mut Request, depot: &mut Depot, res: &mut Response) {
     let item = req.parse_json::<Delete{{table_info.class_name}}Req>().await.unwrap();
-    log::info!("delete_{{table_info.table_name}} params: {:?}", &item);
+    log::info!("delete {{table_info.table_name}} params: {:?}", &item);
 
     let state = depot.obtain::<AppState>().unwrap();
     let conn = &state.conn;
@@ -77,7 +77,7 @@ pub async fn delete_{{table_info.table_name}}(req: &mut Request, depot: &mut Dep
 #[handler]
 pub async fn update_{{table_info.table_name}}(req: &mut Request, depot: &mut Depot, res: &mut Response) {
     let item = req.parse_json::<Update{{table_info.class_name}}Req>().await.unwrap();
-    log::info!("update_{{table_info.table_name}} params: {:?}", &item);
+    log::info!("update {{table_info.table_name}} params: {:?}", &item);
 
     let state = depot.obtain::<AppState>().unwrap();
     let conn = &state.conn;
@@ -92,9 +92,9 @@ pub async fn update_{{table_info.table_name}}(req: &mut Request, depot: &mut Dep
         {{column.rust_name}}: Set(item.{{column.rust_name}})
         {%- elif column.rust_name is containing("create") %}
         {{column.rust_name}}: NotSet
-        {%- elif column.rust_name is containing("update_by") %}
+        {%- elif column.rust_name is containing("update by") %}
         {{column.rust_name}}: Set(String::from(""))
-        {%- elif column.rust_name is containing("update_time") %}
+        {%- elif column.rust_name is containing("update time") %}
         {{column.rust_name}}: NotSet
         {%- else %}
         {{column.rust_name}}: Set(item.{{column.rust_name}})
@@ -117,7 +117,7 @@ pub async fn update_{{table_info.table_name}}(req: &mut Request, depot: &mut Dep
 #[handler]
 pub async fn update_{{table_info.table_name}}_status(req: &mut Request, depot: &mut Depot, res: &mut Response) {
     let item = req.parse_json::<Update{{table_info.class_name}}StatusReq>().await.unwrap();
-    log::info!("update_{{table_info.table_name}}_status params: {:?}", &item);
+    log::info!("update {{table_info.table_name}}_status params: {:?}", &item);
 
     //let state = depot.obtain::<AppState>().unwrap();
     //let conn = &state.conn;
@@ -140,7 +140,7 @@ pub async fn update_{{table_info.table_name}}_status(req: &mut Request, depot: &
 #[handler]
 pub async fn query_{{table_info.table_name}}_detail(req: &mut Request, depot: &mut Depot, res: &mut Response) {
     let item = req.parse_json::<Query{{table_info.class_name}}DetailReq>().await.unwrap();
-    log::info!("query_{{table_info.table_name}}_detail params: {:?}", &item);
+    log::info!("query {{table_info.table_name}}_detail params: {:?}", &item);
 
     let state = depot.obtain::<AppState>().unwrap();
     let conn = &state.conn;
@@ -182,7 +182,7 @@ pub async fn query_{{table_info.table_name}}_detail(req: &mut Request, depot: &m
 #[handler]
 pub async fn query_{{table_info.table_name}}_list(req: &mut Request, depot: &mut Depot, res: &mut Response) {
     let item = req.parse_json::<Query{{table_info.class_name}}ListReq>().await.unwrap();
-    log::info!("query_{{table_info.table_name}}_list params: {:?}", &item);
+    log::info!("query {{table_info.table_name}}_list params: {:?}", &item);
 
     let state = depot.obtain::<AppState>().unwrap();
     let conn = &state.conn;

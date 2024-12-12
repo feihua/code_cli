@@ -19,7 +19,7 @@ use crate::vo::{{module_name}}::{{table_info.table_name}}_vo::*;
  */
 #[web::post("/add{{table_info.class_name}}")]
 pub async fn add_{{table_info.table_name}}(item: Json<Add{{table_info.class_name}}Req>) -> Result<impl web::Responder, web::Error> {
-    info!("add_{{table_info.table_name}} params: {:?}", &item);
+    info!("add {{table_info.table_name}} params: {:?}", &item);
 
     let req = item.0;
 
@@ -31,9 +31,9 @@ pub async fn add_{{table_info.table_name}}(item: Json<Add{{table_info.class_name
         {{column.rust_name}}: None
         {%- elif column.rust_name is containing("create_by") %}
         {{column.rust_name}}: String::from("")
-        {%- elif column.rust_name is containing("update_time") %}
+        {%- elif column.rust_name is containing("update time") %}
         {{column.rust_name}}: None
-        {%- elif column.rust_name is containing("update_by") %}
+        {%- elif column.rust_name is containing("update by") %}
         {{column.rust_name}}: String::from("")
         {%- else %}
         {{column.rust_name}}: req.{{column.rust_name}}
@@ -58,7 +58,7 @@ pub async fn add_{{table_info.table_name}}(item: Json<Add{{table_info.class_name
  */
 #[web::post("/delete{{table_info.class_name}}")]
 pub async fn delete_{{table_info.table_name}}(item: Json<Delete{{table_info.class_name}}Req>) -> Result<impl web::Responder, web::Error> {
-    info!("delete_{{table_info.table_name}} params: {:?}", &item);
+    info!("delete {{table_info.table_name}} params: {:?}", &item);
 
     let result = {{table_info.class_name}}::delete_in_column(&mut RB.clone(), "id", &item.ids).await;
 
@@ -75,7 +75,7 @@ pub async fn delete_{{table_info.table_name}}(item: Json<Delete{{table_info.clas
  */
 #[web::post("/update{{table_info.class_name}}")]
 pub async fn update_{{table_info.table_name}}(item: Json<Update{{table_info.class_name}}Req>) -> Result<impl web::Responder, web::Error> {
-    info!("update_{{table_info.table_name}} params: {:?}", &item);
+    info!("update {{table_info.table_name}} params: {:?}", &item);
 
     let req = item.0;
 
@@ -87,9 +87,9 @@ pub async fn update_{{table_info.table_name}}(item: Json<Update{{table_info.clas
         {{column.rust_name}}: None
         {%- elif column.rust_name is containing("create_by") %}
         {{column.rust_name}}: String::from("")
-        {%- elif column.rust_name is containing("update_time") %}
+        {%- elif column.rust_name is containing("update time") %}
         {{column.rust_name}}: None
-        {%- elif column.rust_name is containing("update_by") %}
+        {%- elif column.rust_name is containing("update by") %}
         {{column.rust_name}}: String::from("")
         {%- else %}
         {{column.rust_name}}: req.{{column.rust_name}}
@@ -112,7 +112,7 @@ pub async fn update_{{table_info.table_name}}(item: Json<Update{{table_info.clas
  */
 #[web::post("/update{{table_info.class_name}}Status")]
 pub async fn update_{{table_info.table_name}}_status(item: Json<Update{{table_info.class_name}}Req>) -> Result<impl web::Responder, web::Error> {
-    info!("update_{{table_info.table_name}}_status params: {:?}", &item);
+    info!("update {{table_info.table_name}}_status params: {:?}", &item);
     let rb=&mut RB.clone();
 
     let req = item.0;
@@ -133,7 +133,7 @@ pub async fn update_{{table_info.table_name}}_status(item: Json<Update{{table_in
  */
 #[web::post("/query{{table_info.class_name}}Detail")]
 pub async fn query_{{table_info.table_name}}_detail(item: Json<Query{{table_info.class_name}}DetailReq>) -> Result<impl web::Responder, web::Error> {
-    info!("query_{{table_info.table_name}}_detail params: {:?}", &item);
+    info!("query {{table_info.table_name}}_detail params: {:?}", &item);
 
    let result = {{table_info.class_name}}::select_by_id(&mut RB.clone(), &item.id).await;
 
@@ -172,7 +172,7 @@ pub async fn query_{{table_info.table_name}}_detail(item: Json<Query{{table_info
  */
 #[web::post("/query{{table_info.class_name}}List")]
 pub async fn query_{{table_info.table_name}}_list(item: Json<Query{{table_info.class_name}}ListReq>) -> Result<impl web::Responder, web::Error> {
-    info!("query_{{table_info.table_name}}_list params: {:?}", &item);
+    info!("query {{table_info.table_name}}_list params: {:?}", &item);
 
 
     let page=&PageRequest::new(item.page_no.clone(), item.page_size.clone());

@@ -18,7 +18,7 @@ use crate::vo::{{module_name}}::{{table_info.table_name}}_vo::*;
  */
 #[post("/add{{table_info.class_name}}", data = "<item>")]
 pub async fn add_{{table_info.table_name}}(item: Json<Add{{table_info.class_name}}Req>, _auth: Token) -> Value {
-    log::info!("add_{{table_info.table_name}} params: {:?}", &item);
+    log::info!("add {{table_info.table_name}} params: {:?}", &item);
     let mut rb = RB.to_owned();
 
     let req = item.0;
@@ -31,9 +31,9 @@ pub async fn add_{{table_info.table_name}}(item: Json<Add{{table_info.class_name
         {{column.rust_name}}: None
         {%- elif column.rust_name is containing("create_by") %}
         {{column.rust_name}}: String::from("")
-        {%- elif column.rust_name is containing("update_time") %}
+        {%- elif column.rust_name is containing("update time") %}
         {{column.rust_name}}: None
-        {%- elif column.rust_name is containing("update_by") %}
+        {%- elif column.rust_name is containing("update by") %}
         {{column.rust_name}}: String::from("")
         {%- else %}
         {{column.rust_name}}: req.{{column.rust_name}}
@@ -56,7 +56,7 @@ pub async fn add_{{table_info.table_name}}(item: Json<Add{{table_info.class_name
  */
 #[post("/delete{{table_info.class_name}}", data = "<item>")]
 pub async fn delete_{{table_info.table_name}}(item: Json<Delete{{table_info.class_name}}Req>, _auth: Token) -> Value {
-    log::info!("delete_{{table_info.table_name}} params: {:?}", &item);
+    log::info!("delete {{table_info.table_name}} params: {:?}", &item);
     let mut rb = RB.to_owned();
 
     let result = {{table_info.class_name}}::delete_in_column(&mut rb, "id", &item.ids).await;
@@ -74,7 +74,7 @@ pub async fn delete_{{table_info.table_name}}(item: Json<Delete{{table_info.clas
  */
 #[post("/update{{table_info.class_name}}", data = "<item>")]
 pub async fn update_{{table_info.table_name}}(item: Json<Update{{table_info.class_name}}Req>, _auth: Token) -> Value {
-    log::info!("update_{{table_info.table_name}} params: {:?}", &item);
+    log::info!("update {{table_info.table_name}} params: {:?}", &item);
     let mut rb = RB.to_owned();
     let req = item.0;
 
@@ -86,9 +86,9 @@ pub async fn update_{{table_info.table_name}}(item: Json<Update{{table_info.clas
         {{column.rust_name}}: None
         {%- elif column.rust_name is containing("create_by") %}
         {{column.rust_name}}: String::from("")
-        {%- elif column.rust_name is containing("update_time") %}
+        {%- elif column.rust_name is containing("update time") %}
         {{column.rust_name}}: None
-        {%- elif column.rust_name is containing("update_by") %}
+        {%- elif column.rust_name is containing("update by") %}
         {{column.rust_name}}: String::from("")
         {%- else %}
         {{column.rust_name}}: req.{{column.rust_name}}
@@ -111,7 +111,7 @@ pub async fn update_{{table_info.table_name}}(item: Json<Update{{table_info.clas
  */
 #[post("/update{{table_info.class_name}}Status", data = "<item>")]
 pub async fn update_{{table_info.table_name}}_status(item: Json<Update{{table_info.class_name}}StatusReq>, _auth: Token) -> Value {
-    log::info!("update_{{table_info.table_name}}_status params: {:?}", &item);
+    log::info!("update {{table_info.table_name}}_status params: {:?}", &item);
     let mut rb = RB.to_owned();
     let req = item.0;
 
@@ -131,7 +131,7 @@ pub async fn update_{{table_info.table_name}}_status(item: Json<Update{{table_in
  */
 #[post("/query{{table_info.class_name}}Detail", data = "<item>")]
 pub async fn query_{{table_info.table_name}}_detail(item: Json<Query{{table_info.class_name}}DetailReq>, _auth: Token) -> Value {
-    log::info!("query_{{table_info.table_name}}_detail params: {:?}", &item);
+    log::info!("query {{table_info.table_name}}_detail params: {:?}", &item);
     let mut rb = RB.to_owned();
 
     let result = {{table_info.class_name}}::select_by_id(&mut rb, &item.id).await;
@@ -170,7 +170,7 @@ pub async fn query_{{table_info.table_name}}_detail(item: Json<Query{{table_info
  */
 #[post("/query{{table_info.class_name}}List", data = "<item>")]
 pub async fn query_{{table_info.table_name}}_list(item: Json<Query{{table_info.class_name}}ListReq>, _auth: Token) -> Value {
-    log::info!("query_{{table_info.table_name}}_list params: {:?}", &item);
+    log::info!("query {{table_info.table_name}}_list params: {:?}", &item);
     let mut rb = RB.to_owned();
 
     let page = &PageRequest::new(item.page_no.clone(), item.page_size.clone());

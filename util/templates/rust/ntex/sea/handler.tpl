@@ -20,7 +20,7 @@ use crate::vo::{{module_name}}::{{table_info.table_name}}_vo::*;
  */
 #[web::post("/add{{table_info.class_name}}")]
 pub async fn add_{{table_info.table_name}}(item: Json<Add{{table_info.class_name}}Req>, data: State<AppState>) -> Result<impl web::Responder, web::Error> {
-    info!("add_{{table_info.table_name}} params: {:?}", &item);
+    info!("add {{table_info.table_name}} params: {:?}", &item);
     let conn = &data.conn;
 
     let req = item.0;
@@ -56,7 +56,7 @@ pub async fn add_{{table_info.table_name}}(item: Json<Add{{table_info.class_name
  */
 #[web::post("/delete{{table_info.class_name}}")]
 pub async fn delete_{{table_info.table_name}}(item: Json<Delete{{table_info.class_name}}Req>, data: State<AppState>) -> Result<impl web::Responder, web::Error> {
-    info!("delete_{{table_info.table_name}} params: {:?}", &item);
+    info!("delete {{table_info.table_name}} params: {:?}", &item);
     let conn = &data.conn;
     let req = item.0;
 
@@ -75,7 +75,7 @@ pub async fn delete_{{table_info.table_name}}(item: Json<Delete{{table_info.clas
  */
 #[web::post("/update{{table_info.class_name}}")]
 pub async fn update_{{table_info.table_name}}(item: Json<Update{{table_info.class_name}}Req>, data: State<AppState>) -> Result<impl web::Responder, web::Error> {
-    info!("update_{{table_info.table_name}} params: {:?}", &item);
+    info!("update {{table_info.table_name}} params: {:?}", &item);
 
     let conn = &data.conn;
 
@@ -91,9 +91,9 @@ pub async fn update_{{table_info.table_name}}(item: Json<Update{{table_info.clas
         {{column.rust_name}}: Set(req.{{column.rust_name}})
         {%- elif column.rust_name is containing("create") %}
         {{column.rust_name}}: NotSet
-        {%- elif column.rust_name is containing("update_by") %}
+        {%- elif column.rust_name is containing("update by") %}
         {{column.rust_name}}: Set(String::from(""))
-        {%- elif column.rust_name is containing("update_time") %}
+        {%- elif column.rust_name is containing("update time") %}
         {{column.rust_name}}: NotSet
         {%- else %}
         {{column.rust_name}}: Set(req.{{column.rust_name}})
@@ -115,7 +115,7 @@ pub async fn update_{{table_info.table_name}}(item: Json<Update{{table_info.clas
  */
 #[web::post("/update{{table_info.class_name}}Status")]
 pub async fn update_{{table_info.table_name}}_status(item: Json<Update{{table_info.class_name}}Req>, data: State<AppState>) -> Result<impl web::Responder, web::Error> {
-    info!("update_{{table_info.table_name}}_status params: {:?}", &item);
+    info!("update {{table_info.table_name}}_status params: {:?}", &item);
     let conn = &data.conn;
 
     let req = item.0;
@@ -136,7 +136,7 @@ pub async fn update_{{table_info.table_name}}_status(item: Json<Update{{table_in
  */
 #[web::post("/query{{table_info.class_name}}Detail")]
 pub async fn query_{{table_info.table_name}}_detail(item: Json<Query{{table_info.class_name}}DetailReq>, data: State<AppState>) -> Result<impl web::Responder, web::Error> {
-    info!("query_{{table_info.table_name}}_detail params: {:?}", &item);
+    info!("query {{table_info.table_name}}_detail params: {:?}", &item);
     let conn = &data.conn;
 
    let result = {{table_info.original_class_name}}::find_by_id(item.id.clone()).one(conn).await;
@@ -173,7 +173,7 @@ pub async fn query_{{table_info.table_name}}_detail(item: Json<Query{{table_info
  */
 #[web::post("/query{{table_info.class_name}}List")]
 pub async fn query_{{table_info.table_name}}_list(item: Json<Query{{table_info.class_name}}ListReq>, data: State<AppState>) -> Result<impl web::Responder, web::Error> {
-    info!("query_{{table_info.table_name}}_list params: {:?}", &item);
+    info!("query {{table_info.table_name}}_list params: {:?}", &item);
     let conn = &data.conn;
 
     let paginator = {{table_info.original_class_name}}::find()

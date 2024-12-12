@@ -22,7 +22,7 @@ use crate::vo::{{module_name}}::{{table_info.table_name}}_vo::*;
 #[handler]
 pub async fn add_{{table_info.table_name}}(req: &mut Request, res: &mut Response) {
     let item = req.parse_json::<Add{{table_info.class_name}}Req>().await.unwrap();
-    log::info!("add_{{table_info.table_name}} params: {:?}", &item);
+    log::info!("add {{table_info.table_name}} params: {:?}", &item);
 
     let {{table_info.table_name}} = {{table_info.class_name}} {
     {%- for column in table_info.columns %}
@@ -32,9 +32,9 @@ pub async fn add_{{table_info.table_name}}(req: &mut Request, res: &mut Response
         {{column.rust_name}}: None
         {%- elif column.rust_name is containing("create_by") %}
         {{column.rust_name}}: String::from("")
-        {%- elif column.rust_name is containing("update_time") %}
+        {%- elif column.rust_name is containing("update time") %}
         {{column.rust_name}}: None
-        {%- elif column.rust_name is containing("update_by") %}
+        {%- elif column.rust_name is containing("update by") %}
         {{column.rust_name}}: String::from("")
         {%- else %}
         {{column.rust_name}}: item.{{column.rust_name}}
@@ -76,7 +76,7 @@ pub async fn delete_{{table_info.table_name}}(req: &mut Request, res: &mut Respo
 #[handler]
 pub async fn update_{{table_info.table_name}}(req: &mut Request, res: &mut Response) {
     let item = req.parse_json::<Update{{table_info.class_name}}Req>().await.unwrap();
-    log::info!("update_{{table_info.table_name}} params: {:?}", &item);
+    log::info!("update {{table_info.table_name}} params: {:?}", &item);
 
     let {{table_info.table_name}} = {{table_info.class_name}} {
     {%- for column in table_info.columns %}
@@ -86,9 +86,9 @@ pub async fn update_{{table_info.table_name}}(req: &mut Request, res: &mut Respo
         {{column.rust_name}}: None
         {%- elif column.rust_name is containing("create_by") %}
         {{column.rust_name}}: String::from("")
-        {%- elif column.rust_name is containing("update_time") %}
+        {%- elif column.rust_name is containing("update time") %}
         {{column.rust_name}}: None
-        {%- elif column.rust_name is containing("update_by") %}
+        {%- elif column.rust_name is containing("update by") %}
         {{column.rust_name}}: String::from("")
         {%- else %}
         {{column.rust_name}}: item.{{column.rust_name}}
@@ -113,7 +113,7 @@ pub async fn update_{{table_info.table_name}}(req: &mut Request, res: &mut Respo
 #[handler]
 pub async fn update_{{table_info.table_name}}_status(req: &mut Request, res: &mut Response) {
     let item = req.parse_json::<Update{{table_info.class_name}}Req>().await.unwrap();
-    log::info!("update_{{table_info.table_name}}_status params: {:?}", &item);
+    log::info!("update {{table_info.table_name}}_status params: {:?}", &item);
 
     let rb = &mut RB.clone();
     let param = vec![to_value!(1), to_value!(1)];
@@ -133,7 +133,7 @@ pub async fn update_{{table_info.table_name}}_status(req: &mut Request, res: &mu
 #[handler]
 pub async fn query_{{table_info.table_name}}_detail(req: &mut Request, res: &mut Response) {
     let item = req.parse_json::<Query{{table_info.class_name}}DetailReq>().await.unwrap();
-    log::info!("query_{{table_info.table_name}}_detail params: {:?}", &item);
+    log::info!("query {{table_info.table_name}}_detail params: {:?}", &item);
 
     let result = {{table_info.class_name}}::select_by_id(&mut RB.clone(), &item.id).await;
 
@@ -173,7 +173,7 @@ pub async fn query_{{table_info.table_name}}_detail(req: &mut Request, res: &mut
 #[handler]
 pub async fn query_{{table_info.table_name}}_list(req: &mut Request, res: &mut Response) {
     let item = req.parse_json::<Query{{table_info.class_name}}ListReq>().await.unwrap();
-    log::info!("query_{{table_info.table_name}}_list params: {:?}", &item);
+    log::info!("query {{table_info.table_name}}_list params: {:?}", &item);
 
     let page=&PageRequest::new(item.page_no, item.page_size);
     let result = {{table_info.class_name}}::select_page(&mut RB.clone(), page).await;

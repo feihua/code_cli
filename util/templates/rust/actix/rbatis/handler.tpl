@@ -16,7 +16,7 @@ use crate::vo::{{module_name}}::{{table_info.table_name}}_vo::*;
  */
 #[post("/add{{table_info.class_name}}")]
 pub async fn add_{{table_info.table_name}}(item: web::Json<Add{{table_info.class_name}}Req>, data: web::Data<AppState>) -> Result<impl Responder> {
-    log::info!("add_{{table_info.table_name}} params: {:?}", &item);
+    log::info!("add {{table_info.table_name}} params: {:?}", &item);
     let mut rb = &data.batis;
 
     let req = item.0;
@@ -29,9 +29,9 @@ pub async fn add_{{table_info.table_name}}(item: web::Json<Add{{table_info.class
         {{column.rust_name}}: None
         {%- elif column.rust_name is containing("create_by") %}
         {{column.rust_name}}: String::from("")
-        {%- elif column.rust_name is containing("update_time") %}
+        {%- elif column.rust_name is containing("update time") %}
         {{column.rust_name}}: None
-        {%- elif column.rust_name is containing("update_by") %}
+        {%- elif column.rust_name is containing("update by") %}
         {{column.rust_name}}: String::from("")
         {%- else %}
         {{column.rust_name}}: req.{{column.rust_name}}
@@ -54,7 +54,7 @@ pub async fn add_{{table_info.table_name}}(item: web::Json<Add{{table_info.class
  */
 #[post("/delete{{table_info.class_name}}")]
 pub async fn delete_{{table_info.table_name}}(item: web::Json<Delete{{table_info.class_name}}Req>, data: web::Data<AppState>) -> Result<impl Responder> {
-    log::info!("delete_{{table_info.table_name}} params: {:?}", &item);
+    log::info!("delete {{table_info.table_name}} params: {:?}", &item);
     let mut rb = &data.batis;
 
     let result = {{table_info.class_name}}::delete_in_column(&mut rb, "id", &item.ids).await;
@@ -72,7 +72,7 @@ pub async fn delete_{{table_info.table_name}}(item: web::Json<Delete{{table_info
  */
 #[post("/update{{table_info.class_name}}")]
 pub async fn update_{{table_info.table_name}}(item: web::Json<Update{{table_info.class_name}}Req>, data: web::Data<AppState>) -> Result<impl Responder> {
-    log::info!("update_{{table_info.table_name}} params: {:?}", &item);
+    log::info!("update {{table_info.table_name}} params: {:?}", &item);
     let mut rb = &data.batis;
     let req = item.0;
 
@@ -84,9 +84,9 @@ pub async fn update_{{table_info.table_name}}(item: web::Json<Update{{table_info
         {{column.rust_name}}: None
         {%- elif column.rust_name is containing("create_by") %}
         {{column.rust_name}}: String::from("")
-        {%- elif column.rust_name is containing("update_time") %}
+        {%- elif column.rust_name is containing("update time") %}
         {{column.rust_name}}: None
-        {%- elif column.rust_name is containing("update_by") %}
+        {%- elif column.rust_name is containing("update by") %}
         {{column.rust_name}}: String::from("")
         {%- else %}
         {{column.rust_name}}: req.{{column.rust_name}}
@@ -110,7 +110,7 @@ pub async fn update_{{table_info.table_name}}(item: web::Json<Update{{table_info
  */
 #[post("/update{{table_info.class_name}}Status")]
 pub async fn update_{{table_info.table_name}}_status(item: web::Json<Update{{table_info.class_name}}StatusReq>, data: web::Data<AppState>) -> Result<impl Responder> {
-    log::info!("update_{{table_info.table_name}}_status params: {:?}", &item);
+    log::info!("update {{table_info.table_name}}_status params: {:?}", &item);
     let mut rb = &data.batis;
     let req = item.0;
 
@@ -130,7 +130,7 @@ pub async fn update_{{table_info.table_name}}_status(item: web::Json<Update{{tab
  */
 #[post("/query{{table_info.class_name}}Detail")]
 pub async fn query_{{table_info.table_name}}_detail(item: web::Json<Query{{table_info.class_name}}DetailReq>, data: web::Data<AppState>) -> Result<impl Responder> {
-    log::info!("query_{{table_info.table_name}}_detail params: {:?}", &item);
+    log::info!("query {{table_info.table_name}}_detail params: {:?}", &item);
     let mut rb = &data.batis;
 
     let result = {{table_info.class_name}}::select_by_id(&mut rb, &item.id).await;
@@ -169,7 +169,7 @@ pub async fn query_{{table_info.table_name}}_detail(item: web::Json<Query{{table
  */
 #[post("/query{{table_info.class_name}}List")]
 pub async fn query_{{table_info.table_name}}_list(item: web::Json<Query{{table_info.class_name}}ListReq>, data: web::Data<AppState>) -> Result<impl Responder> {
-    log::info!("query_{{table_info.table_name}}_list params: {:?}", &item);
+    log::info!("query {{table_info.table_name}}_list params: {:?}", &item);
     let mut rb = &data.batis;
 
     let page=&PageRequest::new(item.page_no.clone(), item.page_size.clone());
