@@ -12,7 +12,7 @@ pub fn write_file(mut tera: Tera, context: &mut Context, template_file_name: &st
 
     let result = tera.render_str(template_file_str.unwrap(), &context);
     let r = result.unwrap();
-    println!("{}", r);
+    // println!("{}", r);
 
     let cwd = std::env::current_dir().unwrap();
     let folder = cwd.as_path().join("generate").join(target_file_name);
