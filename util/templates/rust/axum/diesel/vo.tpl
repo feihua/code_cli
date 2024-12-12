@@ -4,7 +4,7 @@
 
 use serde::{Deserialize, Serialize};
 
-/**
+/*
 添加{{table_info.table_comment}}请求参数
 */
 #[derive(Debug, Serialize, Deserialize)]
@@ -24,7 +24,7 @@ pub struct Add{{table_info.class_name}}Req {
 
 }
 
-/**
+/*
 删除{{table_info.table_comment}}请求参数
 */
 #[derive(Debug, Serialize, Deserialize)]
@@ -32,7 +32,7 @@ pub struct Delete{{table_info.class_name}}Req {
     pub ids: Vec<i64>,
 }
 
-/**
+/*
 更新{{table_info.table_comment}}请求参数
 */
 #[derive(Debug, Serialize, Deserialize)]
@@ -50,7 +50,7 @@ pub struct Update{{table_info.class_name}}Req {
 {%- endfor %}
 }
 
-/**
+/*
 更新{{table_info.table_comment}}状态请求参数
 */
 #[derive(Debug, Serialize, Deserialize)]
@@ -59,7 +59,7 @@ pub struct Update{{table_info.class_name}}StatusReq {
     pub status: i8,
 }
 
-/**
+/*
 查询{{table_info.table_comment}}详情请求参数
 */
 #[derive(Debug, Serialize, Deserialize)]
@@ -67,7 +67,7 @@ pub struct Query{{table_info.class_name}}DetailReq {
     pub id: i64,
 }
 
-/**
+/*
 查询{{table_info.table_comment}}详情响应参数
 */
 #[derive(Debug, Serialize, Deserialize)]
@@ -82,7 +82,7 @@ pub struct Query{{table_info.class_name}}DetailResp {
 
 }
 
-/**
+/*
 查询{{table_info.table_comment}}列表请求参数
 */
 #[derive(Debug, Serialize, Deserialize)]
@@ -105,7 +105,7 @@ pub struct Query{{table_info.class_name}}ListReq {
 
 }
 
-/**
+/*
 查询{{table_info.table_comment}}列表响应参数
 */
 #[derive(Debug, Serialize, Deserialize)]

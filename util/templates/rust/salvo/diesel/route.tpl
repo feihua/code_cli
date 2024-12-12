@@ -1,6 +1,6 @@
 use salvo::Router;
 
-/**
+/*
  *构建{{table_info.table_comment}}路由
  *author：{{author}}
  *date：{{create_time}}

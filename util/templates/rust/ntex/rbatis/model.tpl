@@ -5,7 +5,7 @@
 use rbatis::rbdc::datetime::DateTime;
 use serde::{Deserialize, Serialize};
 
-/**
+/*
  *{{table_info.table_comment}}
  *author：{{author}}
  *date：{{create_time}}
@@ -25,21 +25,21 @@ pub struct {{table_info.class_name}} {
 {%- endfor %}
 }
 
-/**
+/*
  *{{table_info.table_comment}}基本操作
  *author：{{author}}
  *date：{{create_time}}
  */
 rbatis::crud!({{table_info.class_name}} {},"{{table_info.table_name}}");
 
-/**
+/*
  *根据id查询{{table_info.table_comment}}
  *author：{{author}}
  *date：{{create_time}}
  */
 impl_select!({{table_info.class_name}}{select_by_id(id:&i64) -> Option => "`where id = #{id} limit 1`"}, "{{table_info.table_name}}");
 
-/**
+/*
  *分页查询{{table_info.table_comment}}
  *author：{{author}}
  *date：{{create_time}}
@@ -49,7 +49,7 @@ impl_select_page!({{table_info.class_name}}{select_page() =>"
        order by create_time desc"
 },"{{table_info.table_name}}");
 
-/**
+/*
  *根据条件分页查询{{table_info.table_comment}}
  *author：{{author}}
  *date：{{create_time}}

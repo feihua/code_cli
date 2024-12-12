@@ -67,6 +67,12 @@ impl Axum {
         write_file(
             tera.clone(),
             &mut context,
+            format!("{}{}", path, "route.tpl").as_str(),
+            format!("{}/routes/{}/{}_route.rs", path, module_name, table_name).as_str(),
+        );
+        write_file(
+            tera.clone(),
+            &mut context,
             format!("{}{}", path, "vo.tpl").as_str(),
             format!("{}/vo/{}/{}_vo.rs", path, module_name, table_name).as_str(),
         );
@@ -85,6 +91,12 @@ impl Axum {
         module_name: &str,
     ) {
         let path = String::from("rust/axum/diesel/");
+        write_file(
+            tera.clone(),
+            &mut context,
+            format!("{}{}", path, "route.tpl").as_str(),
+            format!("{}/routes/{}/{}_route.rs", path, module_name, table_name).as_str(),
+        );
         write_file(
             tera.clone(),
             &mut context,
@@ -112,6 +124,12 @@ impl Axum {
         module_name: &str,
     ) {
         let path = String::from("rust/axum/rbatis/");
+        write_file(
+            tera.clone(),
+            &mut context,
+            format!("{}{}", path, "route.tpl").as_str(),
+            format!("{}/routes/{}/{}_route.rs", path, module_name, table_name).as_str(),
+        );
         write_file(
             tera.clone(),
             &mut context,

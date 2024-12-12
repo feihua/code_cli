@@ -15,7 +15,7 @@ use crate::vo::{{module_name}}::*;
 use crate::vo::{{module_name}}::{{table_info.table_name}}_vo::*;
 
 
-/**
+/*
  *添加{{table_info.table_comment}}
  *author：{{author}}
  *date：{{create_time}}
@@ -54,7 +54,7 @@ pub async fn add_{{table_info.table_name}}(Json(req): Json<Add{{table_info.class
     }
 }
 
-/**
+/*
  *删除{{table_info.table_comment}}
  *author：{{author}}
  *date：{{create_time}}
@@ -76,7 +76,7 @@ pub async fn delete_{{table_info.table_name}}(Json(req): Json<Delete{{table_info
     }
 }
 
-/**
+/*
  *更新{{table_info.table_comment}}
  *author：{{author}}
  *date：{{create_time}}
@@ -112,7 +112,7 @@ pub async fn update_{{table_info.table_name}}(Json(req): Json<Update{{table_info
     }
 }
 
-/**
+/*
  *更新{{table_info.table_comment}}状态
  *author：{{author}}
  *date：{{create_time}}
@@ -135,7 +135,7 @@ pub async fn update_{{table_info.table_name}}_status(Json(req): Json<Update{{tab
     }
 }
 
-/**
+/*
  *查询{{table_info.table_comment}}详情
  *author：{{author}}
  *date：{{create_time}}
@@ -175,7 +175,7 @@ pub async fn query_{{table_info.table_name}}_detail(Json(req): Json<Query{{table
     }
 }
 
-/**
+/*
  *查询{{table_info.table_comment}}列表
  *author：{{author}}
  *date：{{create_time}}
