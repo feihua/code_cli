@@ -157,7 +157,7 @@ pub async fn query_{{table_info.table_name}}_detail(item: Json<Query{{table_info
            BaseResponse::<Query{{table_info.class_name}}DetailResp>::ok_result_data({{table_info.table_name}})
         }
         Err(err) => {
-            BaseResponse::<String>::ok_result_code(1, err.to_string())
+            BaseResponse::<Query{{table_info.class_name}}DetailResp>::err_result_data(Query{{table_info.class_name}}DetailResp::new(), err.to_string())
         }
     }
 }

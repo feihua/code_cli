@@ -159,7 +159,7 @@ pub async fn query_{{table_info.table_name}}_detail(req: &mut Request, res: &mut
             BaseResponse::<Query{{table_info.class_name}}DetailResp>::ok_result_data(res, {{table_info.table_name}})
         }
         Err(err) => {
-            BaseResponse::<String>::err_result_msg(res, err.to_string())
+            BaseResponse::<Query{{table_info.class_name}}DetailResp>::err_result_data(res, Query{{table_info.class_name}}DetailResp::new(), err.to_string())
         }
     }
 

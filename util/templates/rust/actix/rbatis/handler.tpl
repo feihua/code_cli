@@ -156,7 +156,7 @@ pub async fn query_{{table_info.table_name}}_detail(item: web::Json<Query{{table
             BaseResponse::<Query{{table_info.class_name}}DetailResp>::ok_result_data({{table_info.table_name}})
         }
         Err(err) => {
-            BaseResponse::<String>::err_result_msg(err.to_string())
+            BaseResponse::<Query{{table_info.class_name}}DetailResp>::err_result_data(Query{{table_info.class_name}}DetailResp::new(), err.to_string())
         }
     }
 

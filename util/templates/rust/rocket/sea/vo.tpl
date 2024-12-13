@@ -88,6 +88,20 @@ pub struct Query{{table_info.class_name}}DetailResp {
 
 }
 
+impl Query{{table_info.class_name}}DetailResp {
+    pub fn new() -> Query{{table_info.class_name}}DetailResp {
+        Query{{table_info.class_name}}DetailResp {
+        {%- for column in table_info.columns %}
+          {%- if column.rust_type =="String"  %}
+          {{column.rust_name}}: "".to_string(), //{{column.column_comment}}
+          {%- else %}
+          {{column.rust_name}}: 0, //{{column.column_comment}}
+          {%- endif %}
+        {%- endfor %}
+        }
+    }
+}
+
 /*
 查询{{table_info.table_comment}}列表请求参数
 */

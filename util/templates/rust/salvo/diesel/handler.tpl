@@ -183,7 +183,7 @@ pub async fn query_{{table_info.table_name}}_detail(req: &mut Request, res: &mut
         }
         Err(err) => {
             error!("err:{}", err.to_string());
-            BaseResponse::<String>::err_result_msg(res, err.to_string())
+            BaseResponse::<Query{{table_info.class_name}}DetailResp>::err_result_data(res, Query{{table_info.class_name}}DetailResp::new(), err.to_string())
         }
     }
 }
